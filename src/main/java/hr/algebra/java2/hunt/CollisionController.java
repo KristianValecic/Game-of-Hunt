@@ -59,7 +59,7 @@ public class CollisionController {
                     return false;
                 }
             case "left": // treba provjeriti gornju i donju lijevu stranu igraca akoi prolazi lijevo | provjerava je li je dotakao lijevi kraj mape
-                if (playerMapPosition.intersects(0.0, 0.0, mapBounds.getMaxX(), mapBounds.getMinY())
+                if (playerMapPosition.intersects(0.0, 0.0, mapBounds.getMinX(), mapBounds.getMaxY())
                     /*playerMapPosition.getMinX() < 0.0 || playerMapPosition.getMinX()+playerMapPosition.getHeight() < 0.0*/){
                     System.out.println("left Bounds");
                     return  true;
