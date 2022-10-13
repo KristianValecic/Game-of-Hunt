@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.GameScreenController">
+   <children>
+      <ImageView fx:id="playerOne" fitHeight="50.0" fitWidth="45.0" layoutX="270.0" layoutY="321.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@TestPic.png" />
+         </image>
+      </ImageView>
+      <Circle fill="DODGERBLUE" layoutX="417.0" layoutY="237.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+   </children>
+</Pane>
