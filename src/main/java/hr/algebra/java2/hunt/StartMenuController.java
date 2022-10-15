@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -21,8 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class StartMenuController implements Initializable{
-    private final int MAX_PLAYERS = 5;
+public class StartMenuController implements Initializable {
+    private static final int MIN_PLAYERS = 2;
+    private final int MAX_PLAYERS = 2;
     private final String DELIMTER = "/";
     @FXML
     private Button btnAddPlayer;
@@ -31,10 +34,13 @@ public class StartMenuController implements Initializable{
     private Button btnStartGame;
     @FXML
     private FlowPane flpnMainMenu;
+    @FXML
+    private Label lblErrorForm;
     private static FlowPane flpnParentToPlayerCard;
     @FXML
     private Label lblPlayerCounter;
     private static Label lblPlayerCounterFormParent;
+
 
     //PLAYER CARD VAR
     //Kako napraviti da ima imena koliko je igraca dodano
@@ -42,6 +48,8 @@ public class StartMenuController implements Initializable{
     private TextField tfPlayerName;
     @FXML
     private Label lblPlayerRole;
+    @FXML
+    private ImageView imgCharacter;
 
     private static List<Player> playersList = new ArrayList<>();
 
@@ -51,16 +59,18 @@ public class StartMenuController implements Initializable{
 //    public StartMenuController() {
 //    }
 
+    //private GameScreenController gameScreenController;
+
     @FXML
     protected void onClickAddPlayer() {
-        if (playerCounter == MAX_PLAYERS){
+        if (playerCounter == MAX_PLAYERS) {
             return;
         }
 
         createPLayerCard();
 
         playerCounter++;
-        if(playerCounter == MAX_PLAYERS){
+        if (playerCounter == MAX_PLAYERS) {
             flpnMainMenu.getChildren().remove(btnAddPlayer);
         }
         lblPlayerCounter.setText(playerCounter + DELIMTER + MAX_PLAYERS);
@@ -76,19 +86,23 @@ public class StartMenuController implements Initializable{
         }
     }
 
-    public void startGame(){
-        if (!validInputs())
+    public void startGame() {
+        if (!validInputs()){
+            lblErrorForm.setText("Invalid inputs");
+            return;
+        }
 
         for (int i = 0; i < playerCounter; i++) {
             String playerName = String.valueOf(
-                    ((TextField)((GridPane)((Pane)flpnParentToPlayerCard.getChildren().get(i == MAX_PLAYERS ? i : i+1))
-                    .getChildren().get(0)) //0 is index of gidpane in window
-                    .getChildren().get(1)).getText() // 1 is index of wanted textfield
+                    ((TextField) ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i == MAX_PLAYERS-1 ? i : i + 1))
+                            .getChildren().get(0)) //0 is index of gidpane in window
+                            .getChildren().get(1)).getText() // 1 is index of wanted textfield
             );
             playersList.get(i).setName(playerName);
         }
 
         try {
+            GameScreenController.setPlayersList(playersList);
             SceneUtils.createScene(StartMenuAplication.getMainStage(), "playingField.fxml", "Game of Hunt");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -96,12 +110,12 @@ public class StartMenuController implements Initializable{
     }
 
     @FXML
-    protected void onClickRemovePlayer()  {
+    protected void onClickRemovePlayer() {
 
-        flpnParentToPlayerCard.getChildren().remove(playerCounter == MAX_PLAYERS ? playerCounter-1 : playerCounter);
-        playersList.remove(playerCounter-1);
+        flpnParentToPlayerCard.getChildren().remove(playerCounter == MAX_PLAYERS ? playerCounter - 1 : playerCounter);
+        playersList.remove(playerCounter - 1);
 
-        if(playerCounter == MAX_PLAYERS){
+        if (playerCounter == MAX_PLAYERS) {
             flpnParentToPlayerCard.getChildren().add(0, btnAddPlayerFromParent);
         }
         playerCounter--;
@@ -110,21 +124,32 @@ public class StartMenuController implements Initializable{
 
     private boolean validInputs() {
         //provjerava jesu sva imena unesena
-        return false;
+        if (playerCounter < MIN_PLAYERS)
+        {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if(url.toString().contains("startMenu.fxml")){
+        if (url.toString().contains("startMenu.fxml")) {
             lblPlayerCounterFormParent = lblPlayerCounter;
             flpnParentToPlayerCard = flpnMainMenu;
             btnAddPlayerFromParent = btnAddPlayer;
-        } else if(url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1){
+
+            lblPlayerCounter.setText(playerCounter + DELIMTER + MAX_PLAYERS);
+            //
+            //TODO napravi validaciju startanja igre i dodavanje odabrane kolicine igraca, igraci se ne postavljaju u mapu
+            //
+        } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
-            playersList.add(new Player(PlayerRole.Hunter));
-        } else if(url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() > 1){
+            imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/hunterSprite.png"));
+            playersList.add(new Player(PlayerRole.Hunter, imgCharacter.getImage()));
+        } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() > 1) {
             lblPlayerRole.setText(PlayerRole.Survivor.toString());
-            playersList.add(new Player(PlayerRole.Survivor));
+            imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/"+PlayerRole.Survivor.toString().toLowerCase()+"Sprite.png"));
+            playersList.add(new Player(PlayerRole.Survivor, imgCharacter.getImage()));
         }
     }
 }

@@ -12,7 +12,7 @@
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="620.0" prefWidth="782.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.StartMenuController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="23.0" />
-    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="659.0" minWidth="10.0" prefWidth="659.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="659.0" minWidth="10.0" prefWidth="659.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="14.0" />
   </columnConstraints>
   <rowConstraints>
@@ -56,5 +56,10 @@
             <Button fx:id="btnStartGame" alignment="CENTER" mnemonicParsing="false" onAction="#startGame" prefHeight="35.0" prefWidth="256.0" text="Start Game" GridPane.columnIndex="1" />
          </children>
       </GridPane>
+      <Label fx:id="lblErrorForm" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
    </children>
 </GridPane>

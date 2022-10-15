@@ -26,7 +26,7 @@
             <RowConstraints maxHeight="61.0" minHeight="4.0" prefHeight="35.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ImageView fitHeight="110.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ImageView fx:id="imgCharacter" fitHeight="110.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="tfPlayerName" alignment="CENTER" prefHeight="25.0" prefWidth="134.0" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <FlowPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
