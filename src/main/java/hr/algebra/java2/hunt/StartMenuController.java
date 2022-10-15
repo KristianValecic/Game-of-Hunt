@@ -24,14 +24,25 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class StartMenuController implements Initializable {
+    private static final String DELIMTER = "/";
     private static final int MIN_PLAYERS = 2;
-    private final int MAX_PLAYERS = 2;
-    private final String DELIMTER = "/";
+    private static final int MAX_PLAYERS = 2;
+    private static final int MAX_MATCHES = 7;
+    private static final int MIN_MATCHES = 1;
+    private static final String MAX_MATCHES_ERROR_MSG = "Maximum amount of matches is "+MAX_MATCHES;
+    private static final String MIN_MATCHES_ERROR_MSG = "Minimum amount matches is "+MIN_MATCHES;
+    private static int matchCounter = 1;
+    private static int playerCounter = 0;
+    private static Button btnAddPlayerFromParent;
+    private static List<Player> playersList = new ArrayList<>();
     @FXML
     private Button btnAddPlayer;
-    private static Button btnAddPlayerFromParent;
     @FXML
-    private Button btnStartGame;
+    private Button btnAddMatch;
+    @FXML
+    private Button btnSubMatch;
+    @FXML
+    private Label lblMatchCounter;
     @FXML
     private FlowPane flpnMainMenu;
     @FXML
@@ -43,23 +54,12 @@ public class StartMenuController implements Initializable {
 
 
     //PLAYER CARD VAR
-    //Kako napraviti da ima imena koliko je igraca dodano
     @FXML
     private TextField tfPlayerName;
     @FXML
     private Label lblPlayerRole;
     @FXML
     private ImageView imgCharacter;
-
-    private static List<Player> playersList = new ArrayList<>();
-
-    private static int playerCounter = 0;
-    //private int playerCounterSaveState;
-
-//    public StartMenuController() {
-//    }
-
-    //private GameScreenController gameScreenController;
 
     @FXML
     protected void onClickAddPlayer() {
@@ -122,6 +122,38 @@ public class StartMenuController implements Initializable {
         lblPlayerCounterFormParent.setText(playerCounter + DELIMTER + MAX_PLAYERS);
     }
 
+    @FXML
+    protected void onClickAddMatch() {
+        if (matchCounter >= MAX_MATCHES){
+            lblErrorForm.setText(MAX_MATCHES_ERROR_MSG);
+            return;
+        }
+        matchCounter++;
+        if (matchCounter == MAX_MATCHES) {btnAddMatch.setOpacity(0.5);}
+        else {
+            btnSubMatch.setOpacity(1);
+            lblErrorForm.setText("");
+        }
+
+        lblMatchCounter.setText(Integer.toString(matchCounter));
+    }
+    @FXML
+    protected void onClickSubtractMatch() {
+        if (matchCounter <= MIN_MATCHES){
+            lblErrorForm.setText(MIN_MATCHES_ERROR_MSG);
+            btnSubMatch.setOpacity(0.5);
+            return;
+        }
+        matchCounter--;
+        if (matchCounter == MIN_MATCHES) {btnSubMatch.setOpacity(0.5);}
+        else {
+            btnAddMatch.setOpacity(1);
+            lblErrorForm.setText("");
+        }
+
+        lblMatchCounter.setText(Integer.toString(matchCounter));
+    }
+
     private boolean validInputs() {
         //provjerava jesu sva imena unesena
         if (playerCounter < MIN_PLAYERS)
@@ -138,10 +170,9 @@ public class StartMenuController implements Initializable {
             flpnParentToPlayerCard = flpnMainMenu;
             btnAddPlayerFromParent = btnAddPlayer;
 
+            lblMatchCounter.setText(Integer.toString(matchCounter));
             lblPlayerCounter.setText(playerCounter + DELIMTER + MAX_PLAYERS);
-            //
-            //TODO napravi validaciju startanja igre i dodavanje odabrane kolicine igraca, igraci se ne postavljaju u mapu
-            //
+
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
             imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/hunterSprite.png"));

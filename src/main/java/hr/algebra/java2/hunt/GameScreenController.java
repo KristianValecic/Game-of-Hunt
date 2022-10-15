@@ -40,23 +40,23 @@ public class GameScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         movementController = new MovementController(pane);
-        fillPlayerImageViewList();
-        for (ImageView player:playersImageViewList) {
-            //movementController.makeMovable(player, pane);
-            player.relocate(spawnPointX += pane.getWidth()+spawnPointX, spawnPointy+=pane.getHeight());
-            player.setFitWidth(50);
-            player.setPreserveRatio(true);
-            player.setSmooth(true);
-            pane.getChildren().add(player);
+        //fillPlayerImageViewList();
+        for (Player player:playersList) {
+            //postavljaju se spriteovi na mapu
+            player.getPlayerSprite().relocate(spawnPointX += pane.getWidth()+spawnPointX, spawnPointy+=pane.getHeight());
+            player.getPlayerSprite().setFitWidth(50);
+            player.getPlayerSprite().setPreserveRatio(true);
+            player.getPlayerSprite().setSmooth(true);
+            pane.getChildren().add(player.getPlayerSprite());
         }
-        playersImageViewList.forEach(p -> movementController.makeMovable(p, pane));
+        playersList.forEach(p -> movementController.makeMovable(p, pane));
     }
 
-    private void fillPlayerImageViewList() {
-        for (Player p : playersList) {
-            ImageView iw = new ImageView();
-            iw.setImage(p.getPlayerImage());
-            playersImageViewList.add(iw);
-        }
-    }
+//    private void fillPlayerImageViewList() {
+//        for (Player p : playersList) {
+//            ImageView iw = new ImageView();
+//            iw.setImage(p.getPlayerImage());
+//            playersImageViewList.add(iw);
+//        }
+//    }
 }
