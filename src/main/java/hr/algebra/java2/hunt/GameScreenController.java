@@ -1,5 +1,6 @@
 package hr.algebra.java2.hunt;
 
+import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.Player;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -28,11 +29,11 @@ public class GameScreenController implements Initializable {
     //@FXML
    // private ImageView playerOne;
 
-    private static List<Player> playersList = new ArrayList<>();
+    //private static List<Player> playersList = new ArrayList<>();
 
-    public static void setPlayersList(List<Player> playersList) {
-        GameScreenController.playersList = playersList;
-    }
+//    public static void setPlayersList(List<Player> playersList) {
+//        GameScreenController.playersList = playersList;
+//    }
 
     private static List<ImageView> playersImageViewList = new ArrayList<>();
     private MovementController movementController;
@@ -41,7 +42,7 @@ public class GameScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         movementController = new MovementController(pane);
         //fillPlayerImageViewList();
-        for (Player player:playersList) {
+        for (Player player: Game.getPlayersList()) {
             //postavljaju se spriteovi na mapu
             player.getPlayerSprite().relocate(spawnPointX += pane.getWidth()+spawnPointX, spawnPointy+=pane.getHeight());
             player.getPlayerSprite().setFitWidth(50);
@@ -49,7 +50,7 @@ public class GameScreenController implements Initializable {
             player.getPlayerSprite().setSmooth(true);
             pane.getChildren().add(player.getPlayerSprite());
         }
-        playersList.forEach(p -> movementController.makeMovable(p, pane));
+        Game.getPlayersList().forEach(p -> movementController.makeMovable(p, pane));
     }
 
 //    private void fillPlayerImageViewList() {

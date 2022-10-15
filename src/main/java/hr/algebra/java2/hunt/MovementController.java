@@ -71,31 +71,28 @@ public class MovementController {
                 ImageView sprite = p.getPlayerSprite();
 
                 if (wPressed.get()) {
-                    if (!isTest(p, up) && !collisionController.checkCollisionWithMap(sprite, up)) {
+                    if (collisionWithObj(p, up) == 0 && !collisionController.checkCollisionWithMap(sprite, up)) {
                         sprite.setLayoutY(sprite.getLayoutY() - movementVariable);
                         System.out.println("w");
                     }
                 }
 
                 if (sPressed.get()) {
-
-                    if (!isTest(p, down) && !collisionController.checkCollisionWithMap(sprite, down)) {
+                    if (collisionWithObj(p, down) == 0  && !collisionController.checkCollisionWithMap(sprite, down)) {
                         sprite.setLayoutY(sprite.getLayoutY() + movementVariable);
                         System.out.println("s");
                     }
                 }
 
                 if (aPressed.get()) {
-
-                    if (!isTest(p, left) && !collisionController.checkCollisionWithMap(sprite, left)) {
+                    if (collisionWithObj(p, left) == 0  && !collisionController.checkCollisionWithMap(sprite, left)) {
                         sprite.setLayoutX(sprite.getLayoutX() - movementVariable);
                         System.out.println("a");
                     }
                 }
 
                 if (dPressed.get()) {
-
-                    if (!isTest(p, right) && !collisionController.checkCollisionWithMap(sprite, right)) {
+                    if (collisionWithObj(p, right) == 0  && !collisionController.checkCollisionWithMap(sprite, right)) {
                         sprite.setLayoutX(sprite.getLayoutX() + movementVariable);
                         System.out.println("d");
                     }
@@ -104,20 +101,22 @@ public class MovementController {
         }
     };
 
-    private boolean isTest(Player player, String moveDirection) {
+    private int collisionWithObj(Player player, String moveDirection) {
         boolean test = false;
         for (Node mapObject : gameMapPane.getChildren()) {
             if (!mapObject.equals(player.getPlayerSprite())) {
                 test = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
                 if (test) {
                     if(player.getPlayerRole() == PlayerRole.Hunter || mapObject.getClass().equals(player.getPlayerSprite().getClass())){
-                        System.out.println("Player killed");//TODO: Igrac koji je ulovljen treba nestati, to ste treba brojati kao score za huntera
+                        System.out.println("Player killed");//TODO: Igrac koji je ulovljen treba nestati (return 2), to se treba brojati kao score za huntera
+                        //TODO kada je ulovljen igrac restartaju se poz. tada je gotov 1 match. impl. tajmer za match
+                        return 2;
                     }
-                    return test;
+                    return 1;
                 }
             }
         }
-        return test;
+        return 0;
     }
 
     private void movementSetup() {

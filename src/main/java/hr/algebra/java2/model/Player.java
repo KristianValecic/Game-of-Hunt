@@ -6,7 +6,8 @@ import javafx.scene.image.ImageView;
 public class Player {
     private String playerName;
     private PlayerRole playerRole;
-    private Image playerImage;
+    //private Image playerImage;
+    private int score;
 
     private ImageView playerSprite = new ImageView();
 

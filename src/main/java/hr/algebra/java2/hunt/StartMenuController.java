@@ -1,8 +1,11 @@
 package hr.algebra.java2.hunt;
 
+import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.Player;
 import hr.algebra.java2.model.PlayerRole;
 import hr.algebra.java2.utilities.SceneUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -102,7 +105,9 @@ public class StartMenuController implements Initializable {
         }
 
         try {
-            GameScreenController.setPlayersList(playersList);
+            //GameScreenController.setPlayersList(playersList);
+            Game.setPlayersList(playersList);
+            Game.setMatchesCount(matchCounter);
             SceneUtils.createScene(StartMenuAplication.getMainStage(), "playingField.fxml", "Game of Hunt");
         } catch (IOException e) {
             throw new RuntimeException(e);
