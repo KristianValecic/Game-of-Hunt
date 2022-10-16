@@ -1,5 +1,6 @@
 package hr.algebra.java2.hunt;
 
+import hr.algebra.java2.model.HunterPlayer;
 import hr.algebra.java2.model.Player;
 import hr.algebra.java2.model.PlayerRole;
 import javafx.animation.AnimationTimer;
@@ -70,48 +71,66 @@ public class MovementController {
             for (Player p : players) {
                 ImageView sprite = p.getPlayerSprite();
                 int collision = 0;
+
                 if (wPressed.get()) {
                     collision = collisionWithObj(p, up);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, up)) {
                         sprite.setLayoutY(sprite.getLayoutY() - movementVariable);
                         System.out.println("w");
-                    }else if(collision == 2){
+                    } else if (collision == 2) {
                         System.out.println("Player killed");
+                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
                     }
                 }
 
                 if (sPressed.get()) {
                     collision = collisionWithObj(p, down);
-                    if (collision == 0  && !collisionController.checkCollisionWithMap(sprite, down)) {
+                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, down)) {
                         sprite.setLayoutY(sprite.getLayoutY() + movementVariable);
                         System.out.println("s");
-                    }else if(collision == 2){
+                    } else if (collision == 2) {
                         System.out.println("Player killed");
+                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
                     }
                 }
 
                 if (aPressed.get()) {
                     collision = collisionWithObj(p, left);
-                    if (collision == 0  && !collisionController.checkCollisionWithMap(sprite, left)) {
+                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, left)) {
                         sprite.setLayoutX(sprite.getLayoutX() - movementVariable);
                         System.out.println("a");
-                    }else if(collision == 2){
+                    } else if (collision == 2) { // znaci da je nekog ubio, dotako
                         System.out.println("Player killed");
+                        //((HunterPlayer)p).setVictimPlayer();
+                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
                     }
                 }
 
                 if (dPressed.get()) {
                     collision = collisionWithObj(p, right);
-                    if (collision == 0  && !collisionController.checkCollisionWithMap(sprite, right)) {
+                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, right)) {
                         sprite.setLayoutX(sprite.getLayoutX() + movementVariable);
                         System.out.println("d");
-                    }else if(collision == 2){
+                    } else if (collision == 2) {
                         System.out.println("Player killed");
+                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
                     }
                 }
             }
-        }
+            }
     };
+
+    private void killPlayer(ImageView victimPlayerSprite) {
+        for (Player p:players) {
+            if (p.getPlayerSprite().equals(victimPlayerSprite)) {
+                gameMapPane.getChildren().remove(p.getPlayerSprite());
+                players.remove(p);
+            }
+        }
+    }
+
+    //TODO: Igrac koji je ulovljen treba nestati (return 2), to se treba brojati kao score za huntera
+    //TODO kada je ulovljen igrac restartaju se poz. tada je gotov 1 match. impl. tajmer za match
 
     private int collisionWithObj(Player player, String moveDirection) {
         boolean test = false;
@@ -119,9 +138,8 @@ public class MovementController {
             if (!mapObject.equals(player.getPlayerSprite())) {
                 test = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
                 if (test) {
-                    if(player.getPlayerRole() == PlayerRole.Hunter || mapObject.getClass().equals(player.getPlayerSprite().getClass())){
-                        //TODO: Igrac koji je ulovljen treba nestati (return 2), to se treba brojati kao score za huntera
-                        //TODO kada je ulovljen igrac restartaju se poz. tada je gotov 1 match. impl. tajmer za match
+                    if (player.getClass().equals(HunterPlayer.class) && mapObject.getClass().equals(player.getPlayerSprite().getClass())) {
+                        ((HunterPlayer)player).setVictimPlayer((ImageView) mapObject);
                         return 2;
                     }
                     return 1;

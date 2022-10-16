@@ -13,11 +13,6 @@ public class StartMenuAplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-//        FXMLLoader fxmlLoader = new FXMLLoader(StartMenuAplication.class.getResource("startMenu.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load());
-//        stage.setTitle("Game of Hunt");
-//        stage.setScene(scene);
-//        stage.show();
         this.mainStage = stage;
         SceneUtils.createScene(stage, "startMenu.fxml", "Game of Hunt");
     }

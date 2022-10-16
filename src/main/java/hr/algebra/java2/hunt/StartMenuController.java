@@ -1,6 +1,7 @@
 package hr.algebra.java2.hunt;
 
 import hr.algebra.java2.model.Game;
+import hr.algebra.java2.model.HunterPlayer;
 import hr.algebra.java2.model.Player;
 import hr.algebra.java2.model.PlayerRole;
 import hr.algebra.java2.utilities.SceneUtils;
@@ -116,7 +117,6 @@ public class StartMenuController implements Initializable {
 
     @FXML
     protected void onClickRemovePlayer() {
-
         flpnParentToPlayerCard.getChildren().remove(playerCounter == MAX_PLAYERS ? playerCounter - 1 : playerCounter);
         playersList.remove(playerCounter - 1);
 
@@ -181,7 +181,7 @@ public class StartMenuController implements Initializable {
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
             imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/hunterSprite.png"));
-            playersList.add(new Player(PlayerRole.Hunter, imgCharacter.getImage()));
+            playersList.add(new HunterPlayer(PlayerRole.Hunter, imgCharacter.getImage()));
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() > 1) {
             lblPlayerRole.setText(PlayerRole.Survivor.toString());
             imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/"+PlayerRole.Survivor.toString().toLowerCase()+"Sprite.png"));

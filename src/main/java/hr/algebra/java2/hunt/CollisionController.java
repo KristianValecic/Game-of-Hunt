@@ -78,7 +78,7 @@ public class CollisionController {
         //2. compare with map bounds
         switch (keyPressed) {
             case "up":
-                if (objectBounds.intersects(playerMapPosition.getMinX()+2, playerMapPosition.getMinY(), playerMapPosition.getWidth()-3, 0.0))
+                if (objectBounds.intersects(playerMapPosition.getMinX()+2, playerMapPosition.getMinY(), playerMapPosition.getWidth()-4, 0.0))
                 {
                     System.out.println("top object hit");
                     return true;
@@ -87,7 +87,7 @@ public class CollisionController {
                 }
 
             case "down":
-                if (objectBounds.intersects(playerMapPosition.getMinX()+2, playerMapPosition.getMaxY(), playerMapPosition.getWidth()-3, 0.0)) {
+                if (objectBounds.intersects(playerMapPosition.getMinX()+2, playerMapPosition.getMaxY(), playerMapPosition.getWidth()-4, 0.0)) {
                     System.out.println("Down object hit");
                     return true;
                 } else {
