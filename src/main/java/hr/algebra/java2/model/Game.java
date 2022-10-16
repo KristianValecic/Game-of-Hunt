@@ -7,6 +7,8 @@ public class Game {
     private static List<Player> playersList = new ArrayList<>(); //mozda static
     private static int matchesCount;
 
+    private Game() {}
+
     public static List<Player> getPlayersList() {
         return playersList;
     }
@@ -22,10 +24,6 @@ public class Game {
     public static void setMatchesCount(int gameMatchesCount) {
        matchesCount = gameMatchesCount;
     }
-//    public Game(List<Player> playersList, int matchesCount) {
-//        this.playersList = playersList;
-//        this.matchesCount = matchesCount;
-//    }
 
-    private Game() {}
+
 }

@@ -1,9 +1,6 @@
 package hr.algebra.java2.hunt;
 
-import hr.algebra.java2.model.Game;
-import hr.algebra.java2.model.HunterPlayer;
-import hr.algebra.java2.model.Player;
-import hr.algebra.java2.model.PlayerRole;
+import hr.algebra.java2.model.*;
 import hr.algebra.java2.utilities.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -104,6 +101,9 @@ public class StartMenuController implements Initializable {
             );
             playersList.get(i).setName(playerName);
         }
+
+        //sets time
+        GameTimer.setMatchTime(0, 5);
 
         try {
             //GameScreenController.setPlayersList(playersList);
