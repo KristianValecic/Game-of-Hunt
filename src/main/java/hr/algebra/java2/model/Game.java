@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private static List<Player> playersList = new ArrayList<>(); //mozda static
+    private static List<Player> playersList = new ArrayList<>();
+    private static List<Player> alivePlayersList = new ArrayList<>();
     private static int matchesCount;
 
-    private Game() {}
+    private static int matchCounter = 1;
+
+    private Game() {
+    }
 
     public static List<Player> getPlayersList() {
         return playersList;
@@ -17,12 +21,21 @@ public class Game {
         return matchesCount;
     }
 
+    public static List<Player> getAlivePlayersList() {
+        return alivePlayersList;
+    }
+
     public static void setPlayersList(List<Player> gamePlayersList) {
         playersList = gamePlayersList;
+        alivePlayersList = (gamePlayersList);
     }
 
     public static void setMatchesCount(int gameMatchesCount) {
-       matchesCount = gameMatchesCount;
+        matchesCount = gameMatchesCount;
+    }
+
+    public static void matchEnd() {
+        matchCounter++;
     }
 
 

@@ -102,8 +102,8 @@ public class StartMenuController implements Initializable {
             playersList.get(i).setName(playerName);
         }
 
-        //sets time
-        GameTimer.setMatchTime(0, 5);
+        //sets time of match
+        GameTimer.setMatchTime(0, 3);
 
         try {
             //GameScreenController.setPlayersList(playersList);
