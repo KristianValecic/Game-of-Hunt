@@ -69,32 +69,44 @@ public class MovementController {
         public void handle(long timestamp) {
             for (Player p : players) {
                 ImageView sprite = p.getPlayerSprite();
-
+                int collision = 0;
                 if (wPressed.get()) {
-                    if (collisionWithObj(p, up) == 0 && !collisionController.checkCollisionWithMap(sprite, up)) {
+                    collision = collisionWithObj(p, up);
+                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, up)) {
                         sprite.setLayoutY(sprite.getLayoutY() - movementVariable);
                         System.out.println("w");
+                    }else if(collision == 2){
+                        System.out.println("Player killed");
                     }
                 }
 
                 if (sPressed.get()) {
-                    if (collisionWithObj(p, down) == 0  && !collisionController.checkCollisionWithMap(sprite, down)) {
+                    collision = collisionWithObj(p, down);
+                    if (collision == 0  && !collisionController.checkCollisionWithMap(sprite, down)) {
                         sprite.setLayoutY(sprite.getLayoutY() + movementVariable);
                         System.out.println("s");
+                    }else if(collision == 2){
+                        System.out.println("Player killed");
                     }
                 }
 
                 if (aPressed.get()) {
-                    if (collisionWithObj(p, left) == 0  && !collisionController.checkCollisionWithMap(sprite, left)) {
+                    collision = collisionWithObj(p, left);
+                    if (collision == 0  && !collisionController.checkCollisionWithMap(sprite, left)) {
                         sprite.setLayoutX(sprite.getLayoutX() - movementVariable);
                         System.out.println("a");
+                    }else if(collision == 2){
+                        System.out.println("Player killed");
                     }
                 }
 
                 if (dPressed.get()) {
-                    if (collisionWithObj(p, right) == 0  && !collisionController.checkCollisionWithMap(sprite, right)) {
+                    collision = collisionWithObj(p, right);
+                    if (collision == 0  && !collisionController.checkCollisionWithMap(sprite, right)) {
                         sprite.setLayoutX(sprite.getLayoutX() + movementVariable);
                         System.out.println("d");
+                    }else if(collision == 2){
+                        System.out.println("Player killed");
                     }
                 }
             }
@@ -108,7 +120,7 @@ public class MovementController {
                 test = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
                 if (test) {
                     if(player.getPlayerRole() == PlayerRole.Hunter || mapObject.getClass().equals(player.getPlayerSprite().getClass())){
-                        System.out.println("Player killed");//TODO: Igrac koji je ulovljen treba nestati (return 2), to se treba brojati kao score za huntera
+                        //TODO: Igrac koji je ulovljen treba nestati (return 2), to se treba brojati kao score za huntera
                         //TODO kada je ulovljen igrac restartaju se poz. tada je gotov 1 match. impl. tajmer za match
                         return 2;
                     }

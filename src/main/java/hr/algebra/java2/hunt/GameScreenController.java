@@ -22,18 +22,8 @@ public class GameScreenController implements Initializable {
 
     private double spawnPointX = 100.0;
     private double spawnPointy = 340.0;
-
     @FXML
     private Pane pane;
-
-    //@FXML
-   // private ImageView playerOne;
-
-    //private static List<Player> playersList = new ArrayList<>();
-
-//    public static void setPlayersList(List<Player> playersList) {
-//        GameScreenController.playersList = playersList;
-//    }
 
     private static List<ImageView> playersImageViewList = new ArrayList<>();
     private MovementController movementController;
@@ -41,7 +31,6 @@ public class GameScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         movementController = new MovementController(pane);
-        //fillPlayerImageViewList();
         for (Player player: Game.getPlayersList()) {
             //postavljaju se spriteovi na mapu
             player.getPlayerSprite().relocate(spawnPointX += pane.getWidth()+spawnPointX, spawnPointy+=pane.getHeight());
@@ -53,11 +42,4 @@ public class GameScreenController implements Initializable {
         Game.getPlayersList().forEach(p -> movementController.makeMovable(p, pane));
     }
 
-//    private void fillPlayerImageViewList() {
-//        for (Player p : playersList) {
-//            ImageView iw = new ImageView();
-//            iw.setImage(p.getPlayerImage());
-//            playersImageViewList.add(iw);
-//        }
-//    }
 }
