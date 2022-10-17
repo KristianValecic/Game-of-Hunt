@@ -2,31 +2,44 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.GameScreenController">
+<Pane fx:id="paneRootParent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.GameScreenController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9a9a9a" height="200.0" layoutX="87.0" layoutY="94.0" stroke="#979797" strokeType="INSIDE" width="200.0" />
-      <Label layoutX="14.0" layoutY="14.0" text="Time left: ">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblTimer" layoutX="101.0" layoutY="14.0" text="00:00">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="661.0" layoutY="14.0" text="Match">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblMatchCounter" layoutX="728.0" layoutY="14.0" text="1">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
+      <StackPane prefHeight="562.0" prefWidth="790.0">
+         <children>
+            <Pane fx:id="paneGameMap" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9a9a9a" height="200.0" layoutX="147.0" layoutY="140.0" stroke="#979797" strokeType="INSIDE" width="200.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="lblMatchCounter" layoutX="755.0" layoutY="18.0" text="1">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTimer" layoutX="100.0" layoutY="20.0" text="00:00">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="692.0" layoutY="18.0" text="Match:">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="13.0" prefHeight="40.0" prefWidth="94.0" text="Time left: ">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </StackPane>
    </children>
 </Pane>

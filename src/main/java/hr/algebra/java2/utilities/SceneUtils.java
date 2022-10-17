@@ -8,7 +8,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class SceneUtils {
-    private SceneUtils() {}
+    private SceneUtils() {
+    }
 
     public static void createScene(Stage stage, String fxmlName, String title) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(StartMenuAplication.class.getResource(fxmlName));
@@ -19,3 +20,4 @@ public class SceneUtils {
         stage.show();
     }
 }
+

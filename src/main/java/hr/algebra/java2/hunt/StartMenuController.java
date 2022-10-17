@@ -32,8 +32,13 @@ public class StartMenuController implements Initializable {
     private static final int MIN_MATCHES = 1;
     private static final String MAX_MATCHES_ERROR_MSG = "Maximum amount of matches is "+MAX_MATCHES;
     private static final String MIN_MATCHES_ERROR_MSG = "Minimum amount matches is "+MIN_MATCHES;
+    private static final String MAX_MATCH_TIME_ERROR = "Maximum match time is "+GameTimer.maxMatchTime();
+    private static final String MIN_MATCH_TIME_ERROR = "Minimum match time is "+GameTimer.minMatchTime();
     private static int matchCounter = 1;
     private static int playerCounter = 0;
+    private static int matchMinutes = 0;
+    private static int matchSeconds = 10;
+    private int matchTimeIncrement = 5;
     private static Button btnAddPlayerFromParent;
     private static List<Player> playersList = new ArrayList<>();
     @FXML
@@ -43,11 +48,17 @@ public class StartMenuController implements Initializable {
     @FXML
     private Button btnSubMatch;
     @FXML
+    private Button btnSubMatchTime;
+    @FXML
+    private Button btnAddMatchTime;
+    @FXML
     private Label lblMatchCounter;
     @FXML
     private FlowPane flpnMainMenu;
     @FXML
     private Label lblErrorForm;
+    @FXML
+    private Label lblMatchTime;
     private static FlowPane flpnParentToPlayerCard;
     @FXML
     private Label lblPlayerCounter;
@@ -94,16 +105,17 @@ public class StartMenuController implements Initializable {
         }
 
         for (int i = 0; i < playerCounter; i++) {
+            //int j = i == (MAX_PLAYERS-1) ? i+1 : i;
             String playerName = String.valueOf(
-                    ((TextField) ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i == MAX_PLAYERS-1 ? i : i + 1))
+                    ((TextField) ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i))
                             .getChildren().get(0)) //0 is index of gidpane in window
                             .getChildren().get(1)).getText() // 1 is index of wanted textfield
             );
-            playersList.get(i).setName(playerName);
+            playersList.get(i).setPlayerName(playerName);
         }
 
         //sets time of match
-        GameTimer.setMatchTime(0, 3);
+        GameTimer.setMatchTime(matchMinutes, matchSeconds);
 
         try {
             //GameScreenController.setPlayersList(playersList);
@@ -128,17 +140,67 @@ public class StartMenuController implements Initializable {
     }
 
     @FXML
+    void onClickSubtractMatchTime(ActionEvent event) {
+        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.minMatchTime())) {
+            return;
+        }
+
+        subMatchTime(matchTimeIncrement);
+        lblMatchTime.setText(GameTimer.formatTime(matchMinutes, matchSeconds));
+
+        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.minMatchTime())) {
+            btnSubMatchTime.setOpacity(0.5);
+            lblErrorForm.setText(MIN_MATCH_TIME_ERROR);
+        }else {
+            btnAddMatchTime.setOpacity(1);
+            lblErrorForm.setText("");
+        }
+    }
+    @FXML
+    void onClickAddMatchTime(ActionEvent event) {
+        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.maxMatchTime())) {
+            return;
+        }
+
+        addMatchTime(matchTimeIncrement);
+        lblMatchTime.setText(GameTimer.formatTime(matchMinutes, matchSeconds));
+
+        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.maxMatchTime())) {
+            lblErrorForm.setText(MAX_MATCH_TIME_ERROR);
+            btnAddMatchTime.setOpacity(0.5);
+        }else {
+            btnSubMatchTime.setOpacity(1);
+            lblErrorForm.setText("");
+        }
+    }
+
+    private void addMatchTime(int secondsIncrement) {
+        matchSeconds+=secondsIncrement;
+        if (matchSeconds == 60){
+            matchMinutes++;
+            matchSeconds = 0;
+        }
+    }
+
+    private void subMatchTime(int secondsDecrement) {
+        if (matchSeconds == 0){
+            matchMinutes--;
+            matchSeconds = 60 - secondsDecrement;
+        }
+        matchSeconds-=secondsDecrement;
+    }
+
+    @FXML
     protected void onClickAddMatch() {
         if (matchCounter >= MAX_MATCHES){
             lblErrorForm.setText(MAX_MATCHES_ERROR_MSG);
+            btnAddMatch.setOpacity(0.5);
             return;
-        }
-        matchCounter++;
-        if (matchCounter == MAX_MATCHES) {btnAddMatch.setOpacity(0.5);}
-        else {
+        }else {
             btnSubMatch.setOpacity(1);
             lblErrorForm.setText("");
         }
+        matchCounter++;
 
         lblMatchCounter.setText(Integer.toString(matchCounter));
     }
@@ -147,14 +209,14 @@ public class StartMenuController implements Initializable {
         if (matchCounter <= MIN_MATCHES){
             lblErrorForm.setText(MIN_MATCHES_ERROR_MSG);
             btnSubMatch.setOpacity(0.5);
+            btnSubMatch.setOpacity(0.5);
             return;
-        }
-        matchCounter--;
-        if (matchCounter == MIN_MATCHES) {btnSubMatch.setOpacity(0.5);}
-        else {
+        } else {
             btnAddMatch.setOpacity(1);
             lblErrorForm.setText("");
+            lblErrorForm.setText("");
         }
+        matchCounter--;
 
         lblMatchCounter.setText(Integer.toString(matchCounter));
     }
@@ -177,6 +239,7 @@ public class StartMenuController implements Initializable {
 
             lblMatchCounter.setText(Integer.toString(matchCounter));
             lblPlayerCounter.setText(playerCounter + DELIMTER + MAX_PLAYERS);
+            lblMatchTime.setText(GameTimer.formatTime(matchMinutes, matchSeconds));
 
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
@@ -185,7 +248,7 @@ public class StartMenuController implements Initializable {
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() > 1) {
             lblPlayerRole.setText(PlayerRole.Survivor.toString());
             imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/"+PlayerRole.Survivor.toString().toLowerCase()+"Sprite.png"));
-            playersList.add(new Player(PlayerRole.Survivor, imgCharacter.getImage()));
+            playersList.add(new SruvivorPlayer(PlayerRole.Survivor, imgCharacter.getImage()));
         }
     }
 }

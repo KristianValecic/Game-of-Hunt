@@ -4,55 +4,35 @@ public class GameTimer {
 
     private static int hour = 0;
     private static int minute = 0;
+    private static int startMinute = 0;
     private static int second = 0;
+    private static int startSecond = 0;
+    private static int matchMinutesMax = 2;
+    //private static int matchSecondsMax = 0;
+    private static int matchMinutesMin = 0;
+    private static int matchSecondsMin = 5;
 
     private GameTimer(){}
-
-//    public GameTimer(int minutes, int seconds) {
-//        minute = minutes;
-//        second = minutes;
-//    }
-//    public GameTimer(int hour, int minute, int second) {
-//        this.hour = hour;
-//        this.minute = minute;
-//        this.second = second;
-//    }
 
     public static void setMatchTime(int minutes, int seconds) {
         GameTimer.minute = minutes;
         GameTimer.second = seconds;
+        startMinute = minutes;
+        startSecond = seconds;
     }
 
-//    public GameTimer(String currentTime) {
-//        String[] time = currentTime.split(":");
-//        hour = Integer.parseInt(time[0]);
-//        minute = Integer.parseInt(time[1]);
-//        second = Integer.parseInt(time[2]);
-//    }
 
-    public static String getCurrentTime(){
+    public static String getCurrentTimeHours(){
         return hour + ":" + minute + ":" + second;
+    }
+    public static String getCurrentTime(){
+        return minute + ":" + second;
     }
 
     public static String matchOver() {
-        return "0:0:1";
+        return "0:0";
     }
 
-    public static void oneSecondPassed(){
-        second++;
-        if(second == 60){
-            minute++;
-            second = 0;
-            if(minute == 60){
-                hour++;
-                minute = 0;
-                if(hour == 24){
-                    hour = 0;
-                    System.out.println("Next day");
-                }
-            }
-        }
-    }
     public static void countDownSecondPassed(){
         second--;
         if(second == -1){
@@ -67,5 +47,21 @@ public class GameTimer {
                 }
             }
         }
+    }
+
+    public static void resetTimer() {
+        minute = startMinute;
+        second = startSecond;
+    }
+
+    public static String formatTime(int matchMinutes, int matchSconds) {
+        return matchMinutes+":"+matchSconds;
+    }
+
+    public static String maxMatchTime() {
+        return matchMinutesMax+":"+matchSecondsMin;
+    }
+    public static String minMatchTime() {
+        return matchMinutesMin+":"+matchSecondsMin;
     }
 }

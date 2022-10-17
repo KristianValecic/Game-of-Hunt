@@ -6,4 +6,6 @@ module hr.algebra.java2.hunt {
 
     opens hr.algebra.java2.hunt to javafx.fxml;
     exports hr.algebra.java2.hunt;
+    exports hr.algebra.java2.model;
+    opens hr.algebra.java2.model to javafx.fxml;
 }

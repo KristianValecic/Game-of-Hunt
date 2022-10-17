@@ -1,5 +1,6 @@
 package hr.algebra.java2.hunt;
 
+import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.HunterPlayer;
 import hr.algebra.java2.model.Player;
 import hr.algebra.java2.model.PlayerRole;
@@ -33,6 +34,8 @@ public class MovementController {
 
     private Pane gameMapPane;
 
+    private Pane scene;
+
     private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed);
 
     private double movementVariable = 1.2;
@@ -40,16 +43,22 @@ public class MovementController {
     //@FXML
     private List<Player> players = new ArrayList<>();
 
-    //@FXML
-    private Pane scene;
 
     public MovementController(Pane pane) {
         this.gameMapPane = pane;
         collisionController = new CollisionController(gameMapPane);
     }
 
-    public void makeMovable(Player player, Pane scene) {
-        this.players.add(player);
+//    public void stopMovement() {
+//        timer.stop();
+//    }
+//
+//    public void resumeMovement() {
+//        timer.start();
+//    }
+
+    public void makeMovable(/*Player player,*/ Pane scene) {
+        //this.players.add(player);
         this.scene = scene;
 
         movementSetup();
@@ -68,7 +77,7 @@ public class MovementController {
     AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long timestamp) {
-            for (Player p : players) {
+            for (Player p : Game.getAlivePlayersList()) {//players
                 ImageView sprite = p.getPlayerSprite();
                 int collision = 0;
 
@@ -121,16 +130,15 @@ public class MovementController {
     };
 
     private void killPlayer(ImageView victimPlayerSprite) {
-        for (Player p:players) {
+        for (Player p:Game.getPlayersList()) {
             if (p.getPlayerSprite().equals(victimPlayerSprite)) {
                 gameMapPane.getChildren().remove(p.getPlayerSprite());
-                players.remove(p);
+                //players.remove(p);
+                //Game.getPlayersList().remove(p);
+                Game.playerKilled(p);
             }
         }
     }
-
-    //TODO: Igrac koji je ulovljen treba nestati (return 2), to se treba brojati kao score za huntera
-    //TODO kada je ulovljen igrac restartaju se poz. tada je gotov 1 match. impl. tajmer za match
 
     private int collisionWithObj(Player player, String moveDirection) {
         boolean test = false;
@@ -186,6 +194,7 @@ public class MovementController {
             }
         });
     }
+
 
 
 }
