@@ -4,11 +4,22 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
     private String playerName;
     private PlayerRole playerRole;
+    private List<String> moves = new ArrayList<>();
+    private Integer gamesWon = 0;
 
-    private int gamesWon = 0;
+//    public void setGamesWon(Integer gamesWon) {
+//        this.gamesWon = gamesWon;
+//    }
+
+    public void gameWon() {
+        gamesWon++;
+    }
 
     private ImageView playerSprite = new ImageView();
 
@@ -38,6 +49,13 @@ public class Player {
 
     public void setGamesWon(int gamesWon) {
         this.gamesWon = gamesWon;
+    }
+
+    public void addMove(String moveDesc) {
+        moves.add(moveDesc);
+    }
+    public List<String> getMoves() {
+        return moves;
     }
 
     public Player(PlayerRole playerRole, Image playerImage) {

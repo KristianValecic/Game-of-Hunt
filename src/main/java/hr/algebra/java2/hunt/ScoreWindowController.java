@@ -17,13 +17,13 @@ import java.util.ResourceBundle;
 
 public class ScoreWindowController implements Initializable {
     //private ObservableList<Player> players = FXCollections.observableArrayList(Game.getPlayersList());
-    private ObservableList<Player> players = FXCollections.observableList(Game.getVanillaPlayersList());
+    private ObservableList<Player> players = FXCollections.observableList(Game.getPlayersList());
     @FXML
     private TableColumn<Player, String> playerNameColumn;
     @FXML
     private TableColumn<Player, String> playerRoleColumn;
     @FXML
-    private TableColumn<Player, Integer> playerScoreColumn;
+    private TableColumn<Player, Integer> playerWinScoreColumn;
     @FXML
     private TableView<Player> scoreTable;
 
@@ -31,8 +31,7 @@ public class ScoreWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         playerNameColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("playerName"));
         playerRoleColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("playerRole"));
-        //playerScoreColumn.setCellValueFactory(new PropertyValueFactory<Player, Integer>("score"));
-
+        playerWinScoreColumn.setCellValueFactory(new PropertyValueFactory<Player, Integer>("gamesWon"));
 
         scoreTable.setItems(players);
     }

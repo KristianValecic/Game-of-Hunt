@@ -121,7 +121,7 @@ public class StartMenuController implements Initializable {
             //GameScreenController.setPlayersList(playersList);
             Game.setPlayersList(playersList);
             Game.setMatchesCount(matchCounter);
-            SceneUtils.createScene(StartMenuAplication.getMainStage(), "playingField.fxml", "Game of Hunt");
+            SceneUtils.createScene(StartMenuAplication.getMainStage(), "playingField.fxml", Game.getWindowTitle());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

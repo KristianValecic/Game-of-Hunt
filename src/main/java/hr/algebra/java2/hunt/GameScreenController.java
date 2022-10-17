@@ -68,13 +68,13 @@ public class GameScreenController implements Initializable {
         timerStop();
         cleanup();
         try {
-            SceneUtils.createScene(StartMenuAplication.getMainStage(), "scoresWindow.fxml", "Game of Hunt");
+            SceneUtils.createScene(StartMenuAplication.getMainStage(), "scoresWindow.fxml", Game.getWindowTitle());
             Stage secondStage = new Stage();
 
             FXMLLoader fxmlLoader = new FXMLLoader(StartMenuAplication.class.getResource("movesWindow.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             scene.getRoot().requestFocus();
-            secondStage.setTitle("Game of Hunt");
+            secondStage.setTitle(Game.getWindowTitle());
             secondStage.setScene(scene);
             secondStage.show();
         } catch (IOException e) {
@@ -91,8 +91,9 @@ public class GameScreenController implements Initializable {
     private void timerStop() {
         timeline.stop();
         //timeline.setDelay(new Duration(2000));
+        //TODO Napravi tko pobjedi da gamesWon++
         //TODO doradi validaciju za start game (validacija imena)
-        //TODO dodati delay za ekran game over i match end itd
+        //TODO dodati delay za ekran game over i match end itd..
     }
 
     private void newMatch() {

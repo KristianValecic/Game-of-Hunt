@@ -88,7 +88,7 @@ public class MovementController {
                         System.out.println("w");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
-                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
+                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
                 }
 
@@ -99,7 +99,7 @@ public class MovementController {
                         System.out.println("s");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
-                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
+                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
                 }
 
@@ -111,7 +111,7 @@ public class MovementController {
                     } else if (collision == 2) { // znaci da je nekog ubio, dotako
                         System.out.println("Player killed");
                         //((HunterPlayer)p).setVictimPlayer();
-                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
+                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
                 }
 
@@ -122,16 +122,20 @@ public class MovementController {
                         System.out.println("d");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
-                        killPlayer(((HunterPlayer)p).getVictimPlayerSprite());
+                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
                 }
             }
-            }
+        }
     };
 
     private void killPlayer(ImageView victimPlayerSprite) {
-        for (Player p:Game.getPlayersList()) {
+        for (Player p : Game.getPlayersList()) {
+            if (p.getClass().equals(HunterPlayer.class)) {
+                Game.addMove(p, "killed a player"); //TODO dodaj kojeg igraca
+            }
             if (p.getPlayerSprite().equals(victimPlayerSprite)) {
+                Game.addMove(p, "Player killed");
                 gameMapPane.getChildren().remove(p.getPlayerSprite());
                 //players.remove(p);
                 //Game.getPlayersList().remove(p);
@@ -147,7 +151,7 @@ public class MovementController {
                 test = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
                 if (test) {
                     if (player.getClass().equals(HunterPlayer.class) && mapObject.getClass().equals(player.getPlayerSprite().getClass())) {
-                        ((HunterPlayer)player).setVictimPlayer((ImageView) mapObject);
+                        ((HunterPlayer) player).setVictimPlayerSprite((ImageView) mapObject);
                         return 2;
                     }
                     return 1;
@@ -194,7 +198,6 @@ public class MovementController {
             }
         });
     }
-
 
 
 }

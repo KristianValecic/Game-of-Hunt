@@ -1,16 +1,22 @@
 package hr.algebra.java2.model;
 
+import javafx.util.Pair;
+
 import java.awt.font.LineBreakMeasurer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Game {
     private static List<Player> playersList = new ArrayList<>();
     private static List<Player> alivePlayersList = new ArrayList<>();
+    //private static HashMap<Player, String> moves = new HashMap<>();
+    private static List<Move> moves = new ArrayList<>();
     private static int allMatchesCount;
     //private static int playersCount = playersList.stream().count();
     private static int matchCounter = 1;
     private static boolean gameOver=false;
+    private static String WindowTitle = "Game of Hunt";
 
     public static int getAllMatchesCount() {
         return matchCounter;
@@ -76,8 +82,14 @@ public class Game {
 
     private static void gameEnd(String winnerPlayerClass) {
         gameOver=true;
-        System.out.println(winnerPlayerClass);
+        System.out.println(winnerPlayerClass.getClass().toString());
+        playersList.forEach(p -> {
+            if (p.getClass().toString().equals(winnerPlayerClass)) {
+                p.gameWon();
+            }
+        });
     }
+
     private static void setNewGame() {
         gameOver=false;
         System.out.println("New game started");
@@ -87,11 +99,14 @@ public class Game {
         return gameOver;
     }
 
-    public static List<Player> getVanillaPlayersList() {
-        List<Player> players=new ArrayList<>();
-        for (Player p:playersList) {
-            players.add(new Player(p.getPlayerRole(), p.getPlayerName()));
-        }
-        return players;
+    public static void addMove(Player player, String move){
+        moves.add(new Move(player, move));
+    }
+    public static List<Move> getMoves(){
+        return moves;
+    }
+
+    public static String getWindowTitle() {
+        return WindowTitle;
     }
 }
