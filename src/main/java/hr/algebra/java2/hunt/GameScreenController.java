@@ -3,6 +3,7 @@ package hr.algebra.java2.hunt;
 import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.GameTimer;
 import hr.algebra.java2.model.Player;
+import hr.algebra.java2.model.SruvivorPlayer;
 import hr.algebra.java2.utilities.SceneUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -52,6 +53,7 @@ public class GameScreenController implements Initializable {
                         } else if (GameTimer.getCurrentTime().equals(GameTimer.matchOver())) {
                             System.out.println("Timer runout!");
                             Game.matchEndByTimerRunout();
+                            SetMoves();
                             //timerStop();
                             if (!Game.isGameOver()) {
                                 newMatch();
@@ -63,6 +65,14 @@ public class GameScreenController implements Initializable {
                             lblTimer.setText(GameTimer.getCurrentTime());
                         }
                     }));
+
+    private void SetMoves() {
+        for (Player p:Game.getPlayersList()) {
+            if (p.getClass().equals(SruvivorPlayer.class)){
+                Game.addMove(p, "Sruvived");
+            }
+        }
+    }
 
     private void EndOfGame() {
         timerStop();
