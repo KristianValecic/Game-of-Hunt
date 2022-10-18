@@ -73,9 +73,11 @@ public class Game {
             gameEnd(SruvivorPlayer.class.toString());
         }
         matchEnd();
-        playersList.forEach(p -> {
+        alivePlayersList.forEach(p -> {
             if (p.getClass().equals(SruvivorPlayer.class)) {
                 ((SruvivorPlayer)p).SurvivedMatch();
+                addMove(p, "Sruvived");
+
             }
         });
     }

@@ -53,7 +53,7 @@ public class GameScreenController implements Initializable {
                         } else if (GameTimer.getCurrentTime().equals(GameTimer.matchOver())) {
                             System.out.println("Timer runout!");
                             Game.matchEndByTimerRunout();
-                            SetMoves();
+                            //SetMoves();
                             //timerStop();
                             if (!Game.isGameOver()) {
                                 newMatch();
@@ -66,13 +66,13 @@ public class GameScreenController implements Initializable {
                         }
                     }));
 
-    private void SetMoves() {
-        for (Player p:Game.getPlayersList()) {
-            if (p.getClass().equals(SruvivorPlayer.class)){
-                Game.addMove(p, "Sruvived");
-            }
-        }
-    }
+//    private void SetMoves() {
+//        for (Player p:Game.getPlayersList()) {
+//            if (p.getClass().equals(SruvivorPlayer.class)){
+//                Game.addMove(p, "Sruvived");
+//            }
+//        }
+//    }
 
     private void EndOfGame() {
         timerStop();

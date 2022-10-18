@@ -43,7 +43,6 @@ public class MovementController {
     //@FXML
     private List<Player> players = new ArrayList<>();
 
-
     public MovementController(Pane pane) {
         this.gameMapPane = pane;
         collisionController = new CollisionController(gameMapPane);

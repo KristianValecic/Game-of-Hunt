@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 public class StartMenuController implements Initializable {
     private static final String DELIMTER = "/";
     private static final int MIN_PLAYERS = 2;
-    private static final int MAX_PLAYERS = 2;
+    private static final int MAX_PLAYERS = 5;
     private static final int MAX_MATCHES = 7;
     private static final int MIN_MATCHES = 1;
     private static final String MAX_MATCHES_ERROR_MSG = "Maximum amount of matches is "+MAX_MATCHES;

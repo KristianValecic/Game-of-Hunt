@@ -10,5 +10,6 @@ public class SruvivorPlayer extends Player {
 
     public void SurvivedMatch() {
         matchesSurvivedCounter++;
+
     }
 }

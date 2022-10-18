@@ -35,5 +35,4 @@ public class ScoreWindowController implements Initializable {
 
         scoreTable.setItems(players);
     }
-
 }
