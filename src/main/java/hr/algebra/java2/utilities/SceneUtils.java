@@ -21,21 +21,7 @@ public class SceneUtils {
         scene.getRoot().requestFocus();
         stage.setTitle(title);
         stage.setScene(scene);
-//        AtomicInteger refreshRate = new AtomicInteger();
-//        stage.addEventHandler(WindowEvent.WINDOW_SHOWN, e -> {
-//            Screen screen = Screen.getScreensForRectangle(
-//                    stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight()
-//            ).get(0);
-//            if (screen == null)
-//                return;
-//            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//            GraphicsDevice d = ge.getScreenDevices()[Screen.getScreens().indexOf(screen)];
-//            refreshRate.set(d.getDisplayMode().getRefreshRate()); // /!\ r is an int whereas screen refresh rate is often not an integer
-//            //myAnimation.setRefreshRate(r);
-//            //TODO: re-assess when window is moved to other screen
-//        });
         stage.show();
-        //return refreshRate.get();
     }
 }
 

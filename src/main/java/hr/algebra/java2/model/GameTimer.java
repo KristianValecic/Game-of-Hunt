@@ -21,12 +21,14 @@ public class GameTimer {
         startSecond = seconds;
     }
 
-
-    public static String getCurrentTimeHours(){
-        return hour + ":" + minute + ":" + second;
-    }
+//    public static String getCurrentTimeHours(){
+//        return hour + ":" + minute + ":" + second;
+//    }
     public static String getCurrentTime(){
         return minute + ":" + second;
+    }
+    public static String getMatchStartTime(){
+        return startMinute + ":" + startSecond;
     }
 
     public static String matchOver() {

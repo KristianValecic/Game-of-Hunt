@@ -111,4 +111,12 @@ public class Game {
     public static String getWindowTitle() {
         return WindowTitle;
     }
+
+    public static void Rematch() {
+        gameOver=false;
+        matchCounter=1;
+        alivePlayersList.clear();
+        alivePlayersList.addAll(playersList);
+        System.out.println("Rematch started");
+    }
 }

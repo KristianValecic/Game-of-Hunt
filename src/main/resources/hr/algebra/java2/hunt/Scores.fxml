@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.ScoreWindowController">
+<Pane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.GameOverWindowController">
    <children>
       <GridPane alignment="CENTER" layoutX="-1.0" layoutY="-1.0" prefHeight="562.0" prefWidth="790.0">
         <columnConstraints>
@@ -28,13 +26,6 @@
                   <Font size="54.0" />
                </font>
             </Label>
-            <TableView fx:id="scoreTable" prefHeight="352.0" prefWidth="631.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-              <columns>
-                <TableColumn fx:id="playerNameColumn" prefWidth="248.0" text="Player name" />
-                <TableColumn fx:id="playerRoleColumn" prefWidth="201.0" text="Role" />
-                  <TableColumn fx:id="playerWinScoreColumn" prefWidth="181.0" text="Wins" />
-              </columns>
-            </TableView>
          </children>
       </GridPane>
    </children>

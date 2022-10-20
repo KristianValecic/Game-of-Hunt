@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="739.0" prefWidth="1011.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.GameOverWindowController">
+   <children>
+      <GridPane alignment="TOP_CENTER" layoutX="-1.0" layoutY="-1.0" prefHeight="739.0" prefWidth="1011.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="0.0" prefWidth="0.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="943.0" minWidth="10.0" prefWidth="943.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="176.0" minWidth="0.0" prefWidth="0.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="183.0" minHeight="0.0" prefHeight="96.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="668.0" minHeight="10.0" prefHeight="511.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="228.0" minHeight="4.0" prefHeight="130.0" valignment="TOP" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <FlowPane alignment="CENTER" hgap="40.0" orientation="VERTICAL" prefHeight="553.0" prefWidth="943.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TableView fx:id="scoreTable" prefHeight="452.0" prefWidth="311.0">
+                     <columns>
+                        <TableColumn fx:id="playerNameColumn" prefWidth="120.0" text="Player name" />
+                        <TableColumn fx:id="playerRoleColumn" minWidth="0.0" prefWidth="113.0" text="Role" />
+                        <TableColumn fx:id="playerWinScoreColumn" prefWidth="77.0" text="Wins" />
+                     </columns>
+                  </TableView>
+                  <TableView fx:id="moveTable" prefHeight="455.0" prefWidth="340.0">
+                     <columns>
+                        <TableColumn fx:id="playerNameForMoveColumn" prefWidth="87.0" text="Player name" />
+                        <TableColumn fx:id="playerRoleForMoveColumn" minWidth="0.0" prefWidth="51.0" text="Role" />
+                        <TableColumn fx:id="playerMovesColumn" prefWidth="201.0" text="move" />
+                     </columns>
+                  </TableView>
+               </children>
+            </FlowPane>
+            <Label text="Game over" GridPane.columnIndex="1">
+               <font>
+                  <Font size="54.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#onPlayAgain" text="Play again" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Arial Bold" size="21.0" />
+               </font>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </Button>
+         </children>
+      </GridPane>
+   </children>
+</Pane>

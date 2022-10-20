@@ -3,27 +3,15 @@ package hr.algebra.java2.hunt;
 import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.GameTimer;
 import hr.algebra.java2.model.Player;
-import hr.algebra.java2.model.SruvivorPlayer;
 import hr.algebra.java2.utilities.SceneUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,7 +42,7 @@ public class GameScreenController implements Initializable {
                         if (Game.isGameOver()) {
                             //movementController.stopMovement();
                             EndOfGame();
-                        } else if (GameTimer.getCurrentTime().equals(GameTimer.matchOver())) {
+                        } else if (GameTimer.getCurrentTime().equals(GameTimer.matchOver())/* && Game.getMatchesCount() == Game.getAllMatchesCount()*/) {
                             System.out.println("Timer runout!");
                             Game.matchEndByTimerRunout();
                             //SetMoves();
@@ -83,15 +71,7 @@ public class GameScreenController implements Initializable {
         movementController.stopMovement();
         cleanup();
         try {
-            SceneUtils.createScene(StartMenuAplication.getMainStage(), "scoresWindow.fxml", Game.getWindowTitle());
-            Stage secondStage = new Stage();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(StartMenuAplication.class.getResource("movesWindow.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            scene.getRoot().requestFocus();
-            secondStage.setTitle(Game.getWindowTitle());
-            secondStage.setScene(scene);
-            secondStage.show();
+            SceneUtils.createScene(StartMenuAplication.getMainStage(), "gameOverWindow.fxml", Game.getWindowTitle());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -106,7 +86,6 @@ public class GameScreenController implements Initializable {
     private void timerStop() {
         timeline.stop();
         //timeline.setDelay(new Duration(2000));
-        //TODO Napravi tko pobjedi da gamesWon++
         //TODO doradi validaciju za start game (validacija imena)
         //TODO dodati delay za ekran game over i match end itd..
     }
@@ -133,6 +112,7 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        GameTimer.resetTimer();
         //Set players
         movementController = new MovementController(paneGameMap);
         for (Player player : Game.getPlayersList()) {
@@ -142,15 +122,14 @@ public class GameScreenController implements Initializable {
             player.getPlayerSprite().setPreserveRatio(true);
             player.getPlayerSprite().setSmooth(true);
             paneGameMap.getChildren().add(player.getPlayerSprite());
-            movementController.makeMovable(/*player,*/ paneRootParent);
         }
-
-        lblMatchCounter.setText(Integer.toString(Game.getMatchesCount()));
-
+        movementController.makeMovable(/*player,*/ paneRootParent);
         //Set timer
-        lblTimer.setText(GameTimer.getCurrentTime());
+        lblTimer.setText(GameTimer.getMatchStartTime());
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        lblMatchCounter.setText(Integer.toString(Game.getMatchesCount()));
 
         MovementController.lblFPS = lblFpsCount;
     }
