@@ -37,6 +37,16 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
+                  <Label fx:id="lblFpsCount" layoutX="378.0" layoutY="15.0" text="00">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="334.0" layoutY="15.0" text="FPS:">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
          </children>

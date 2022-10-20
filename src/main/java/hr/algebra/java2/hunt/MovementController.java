@@ -9,11 +9,15 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +42,10 @@ public class MovementController {
 
     private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed);
 
-    private double movementVariable = 1.2;
+    private double movementVariable = 180;
+
+    //private static int screenRefreshRate = 60;
+    public static Label lblFPS;
 
     //@FXML
     private List<Player> players = new ArrayList<>();
@@ -48,13 +55,13 @@ public class MovementController {
         collisionController = new CollisionController(gameMapPane);
     }
 
-//    public void stopMovement() {
-//        timer.stop();
-//    }
-//
-//    public void resumeMovement() {
-//        timer.start();
-//    }
+    public void stopMovement() {
+        timer.stop();
+    }
+
+    public void resumeMovement() {
+        timer.start();
+    }
 
     public void makeMovable(/*Player player,*/ Pane scene) {
         //this.players.add(player);
@@ -74,16 +81,32 @@ public class MovementController {
     }
 
     AnimationTimer timer = new AnimationTimer() {
+        private long lastRun = 0;
+
+        @Override
+        public void start() {
+            lastRun = System.nanoTime();
+            super.start();
+        }
+
         @Override
         public void handle(long timestamp) {
-            for (Player p : Game.getAlivePlayersList()) {//players
-                ImageView sprite = p.getPlayerSprite();
-                int collision = 0;
+//          For FPS
+            long delta = timestamp - lastRun;
+            lblFPS.setText(Double.toString(Math.round(getFPS(delta))));
 
+            long elapsedNanoSeconds = timestamp - lastRun;
+
+            // 1 second = 1,000,000,000 (1 billion) nanoseconds
+            double elapsedSeconds = elapsedNanoSeconds / 1_000_000_000.0;
+
+            for (Player p : Game.getAlivePlayersList()) {//players+
+                ImageView sprite = p.getPlayerSprite();
+                int collision;
                 if (wPressed.get()) {
                     collision = collisionWithObj(p, up);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, up)) {
-                        sprite.setLayoutY(sprite.getLayoutY() - movementVariable);
+                        sprite.setLayoutY(sprite.getLayoutY() - (movementVariable*elapsedSeconds));
                         System.out.println("w");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
@@ -94,7 +117,7 @@ public class MovementController {
                 if (sPressed.get()) {
                     collision = collisionWithObj(p, down);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, down)) {
-                        sprite.setLayoutY(sprite.getLayoutY() + movementVariable);
+                        sprite.setLayoutY(sprite.getLayoutY() + (movementVariable*elapsedSeconds));
                         System.out.println("s");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
@@ -105,9 +128,9 @@ public class MovementController {
                 if (aPressed.get()) {
                     collision = collisionWithObj(p, left);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, left)) {
-                        sprite.setLayoutX(sprite.getLayoutX() - movementVariable);
+                        sprite.setLayoutX(sprite.getLayoutX() - (movementVariable*elapsedSeconds));
                         System.out.println("a");
-                    } else if (collision == 2) { // znaci da je nekog ubio, dotako
+                    } else if (collision == 2) {
                         System.out.println("Player killed");
                         //((HunterPlayer)p).setVictimPlayer();
                         killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
@@ -117,7 +140,7 @@ public class MovementController {
                 if (dPressed.get()) {
                     collision = collisionWithObj(p, right);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, right)) {
-                        sprite.setLayoutX(sprite.getLayoutX() + movementVariable);
+                        sprite.setLayoutX(sprite.getLayoutX() + (movementVariable*elapsedSeconds));
                         System.out.println("d");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
@@ -125,8 +148,14 @@ public class MovementController {
                     }
                 }
             }
+            lastRun = timestamp;
         }
     };
+
+    private double getFPS(long delta) {
+        double frameRate = 1d / delta;
+        return frameRate * 1e9;
+    }
 
     private void killPlayer(ImageView victimPlayerSprite) {
         for (Player p : Game.getPlayersList()) {

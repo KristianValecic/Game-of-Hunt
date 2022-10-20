@@ -106,12 +106,14 @@ public class StartMenuController implements Initializable {
 
         for (int i = 0; i < playerCounter; i++) {
             //int j = i == (MAX_PLAYERS-1) ? i+1 : i;
-            String playerName = String.valueOf(
-                    ((TextField) ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i))
-                            .getChildren().get(0)) //0 is index of gidpane in window
-                            .getChildren().get(1)).getText() // 1 is index of wanted textfield
-            );
-            playersList.get(i).setPlayerName(playerName);
+            if (flpnParentToPlayerCard.getClass().equals(Pane.class)){
+                String playerName = String.valueOf(
+                        ((TextField) ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i))
+                                .getChildren().get(0)) //0 is index of gidpane in window
+                                .getChildren().get(1)).getText() // 1 is index of wanted textfield
+                );
+                playersList.get(i).setPlayerName(playerName);
+            }
         }
 
         //sets time of match

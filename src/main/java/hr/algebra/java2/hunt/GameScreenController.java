@@ -16,16 +16,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 public class GameScreenController implements Initializable {
     private double spawnPointX = 400.0;
@@ -44,6 +47,7 @@ public class GameScreenController implements Initializable {
     @FXML
     private Label lblMatchCounter;
     Timer timer;
+
     private Timeline timeline = new Timeline(
             new KeyFrame(Duration.seconds(1),
                     e -> {
@@ -76,6 +80,7 @@ public class GameScreenController implements Initializable {
 
     private void EndOfGame() {
         timerStop();
+        movementController.stopMovement();
         cleanup();
         try {
             SceneUtils.createScene(StartMenuAplication.getMainStage(), "scoresWindow.fxml", Game.getWindowTitle());
@@ -123,6 +128,9 @@ public class GameScreenController implements Initializable {
         }
     }
 
+    @FXML
+    private Label lblFpsCount;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Set players
@@ -135,7 +143,6 @@ public class GameScreenController implements Initializable {
             player.getPlayerSprite().setSmooth(true);
             paneGameMap.getChildren().add(player.getPlayerSprite());
             movementController.makeMovable(/*player,*/ paneRootParent);
-
         }
 
         lblMatchCounter.setText(Integer.toString(Game.getMatchesCount()));
@@ -144,6 +151,8 @@ public class GameScreenController implements Initializable {
         lblTimer.setText(GameTimer.getCurrentTime());
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        MovementController.lblFPS = lblFpsCount;
     }
 
 

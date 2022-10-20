@@ -1,5 +1,7 @@
 package hr.algebra.java2.hunt;
 
+import hr.algebra.java2.model.HunterPlayer;
+import hr.algebra.java2.model.Player;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -78,7 +80,7 @@ public class CollisionController {
         //2. compare with map bounds
         switch (keyPressed) {
             case "up":
-                if (objectBounds.intersects(playerMapPosition.getMinX()+2, playerMapPosition.getMinY(), playerMapPosition.getWidth()-4, 0.0))
+                if (objectBounds.intersects(playerMapPosition.getMinX()+5, playerMapPosition.getMinY(), playerMapPosition.getWidth()-9, 0.0))
                 {
                     System.out.println("top object hit");
                     return true;
@@ -87,7 +89,7 @@ public class CollisionController {
                 }
 
             case "down":
-                if (objectBounds.intersects(playerMapPosition.getMinX()+2, playerMapPosition.getMaxY(), playerMapPosition.getWidth()-4, 0.0)) {
+                if (objectBounds.intersects(playerMapPosition.getMinX()+5, playerMapPosition.getMaxY(), playerMapPosition.getWidth()-9, 0.0)) {
                     System.out.println("Down object hit");
                     return true;
                 } else {
@@ -95,7 +97,7 @@ public class CollisionController {
                 }
 
             case "left":
-                if (objectBounds.intersects(playerMapPosition.getMinX(), playerMapPosition.getMinY()+1, 0.0, playerMapPosition.getHeight()-2)) {
+                if (objectBounds.intersects(playerMapPosition.getMinX(), playerMapPosition.getMinY()+5, 0.0, playerMapPosition.getHeight()-9)) {
                     System.out.println("left object hit");
                     return true;
                 } else {
@@ -103,7 +105,7 @@ public class CollisionController {
                 }
 
             case "right":
-                if (objectBounds.intersects(playerMapPosition.getMaxX(), playerMapPosition.getMinY()+1, 0.0, playerMapPosition.getHeight()-2)) {
+                if (objectBounds.intersects(playerMapPosition.getMaxX(), playerMapPosition.getMinY()+5, 0.0, playerMapPosition.getHeight()-9)) {
                     System.out.println("right object hit");
                     return true;
                 } else {
@@ -112,4 +114,6 @@ public class CollisionController {
         }
         return false;
     }
+
+
 }
