@@ -143,6 +143,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void onLoadGame(ActionEvent event) throws IOException, ClassNotFoundException {
+        //TODO zamijeni pStateList sa gameState.get...
         try (ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream("saveGame.ser"))) {
             List<PlayerState> pStateList = (List<PlayerState>) deserializator.readObject();
             cleanup();
@@ -155,7 +156,7 @@ public class GameScreenController implements Initializable {
                 player.getPlayerSprite().setSmooth(true);
                 paneGameMap.getChildren().add(player.getPlayerSprite());
             }
-            movementController.makeMovable(paneRootParent);
+            //movementController.makeMovable(paneRootParent);
         }
     }
 
