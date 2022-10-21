@@ -245,11 +245,11 @@ public class StartMenuController implements Initializable {
 
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
-            imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/hunterSprite.png"));
+            imgCharacter.setImage(new Image(Game.getHunterImagePath()));
             playersList.add(new HunterPlayer(PlayerRole.Hunter, imgCharacter.getImage()));
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() > 1) {
             lblPlayerRole.setText(PlayerRole.Survivor.toString());
-            imgCharacter.setImage(new Image("file:src/main/resources/hr/algebra/java2/hunt/"+PlayerRole.Survivor.toString().toLowerCase()+"Sprite.png"));
+            imgCharacter.setImage(new Image(Game.getSurvivorImagePath()));
             playersList.add(new SruvivorPlayer(PlayerRole.Survivor, imgCharacter.getImage()));
         }
     }

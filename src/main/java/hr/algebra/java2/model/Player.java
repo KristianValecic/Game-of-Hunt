@@ -13,10 +13,6 @@ public class Player {
     private List<String> moves = new ArrayList<>();
     private Integer gamesWon = 0;
 
-//    public void setGamesWon(Integer gamesWon) {
-//        this.gamesWon = gamesWon;
-//    }
-
     public void gameWon() {
         gamesWon++;
     }
@@ -58,6 +54,10 @@ public class Player {
         return moves;
     }
 
+    public void setPlayerSprite(Image image) {
+        this.playerSprite.setImage(image);
+    }
+
     public Player(PlayerRole playerRole, Image playerImage) {
         this.playerRole = playerRole;
         playerSprite.setImage(playerImage);
@@ -67,4 +67,6 @@ public class Player {
         this.playerRole = playerRole;
         setPlayerName(playerName);
     }
+
+    public Player() {}
 }

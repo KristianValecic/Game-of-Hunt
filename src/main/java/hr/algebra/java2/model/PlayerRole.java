@@ -1,6 +1,8 @@
 package hr.algebra.java2.model;
 
-public enum PlayerRole {
+import java.io.Serializable;
+
+public enum PlayerRole implements Serializable {
     Hunter,
     Survivor
 }

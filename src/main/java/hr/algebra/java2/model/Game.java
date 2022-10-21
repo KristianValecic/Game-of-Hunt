@@ -9,18 +9,19 @@ import java.util.List;
 
 public class Game {
     private static List<Player> playersList = new ArrayList<>();
+
+    private static final String hunterImagePath = "file:src/main/resources/hr/algebra/java2/hunt/hunterSprite.png";
+    private static final String survivorImagePath = "file:src/main/resources/hr/algebra/java2/hunt/survivorSprite.png";
     private static List<Player> alivePlayersList = new ArrayList<>();
-    //private static HashMap<Player, String> moves = new HashMap<>();
     private static List<Move> moves = new ArrayList<>();
     private static int allMatchesCount;
-    //private static int playersCount = playersList.stream().count();
     private static int matchCounter = 1;
     private static boolean gameOver=false;
     private static String WindowTitle = "Game of Hunt";
 
-    public static int getAllMatchesCount() {
-        return matchCounter;
-    }
+    //public static int getAllMatchesCount() {
+//        return matchCounter;
+//    }
     public static int getMatchesCount() {
         return matchCounter;
     }
@@ -33,6 +34,12 @@ public class Game {
     }
     public static List<Player> getAlivePlayersList() {
         return alivePlayersList;
+    }
+    public static String getHunterImagePath() {
+        return hunterImagePath;
+    }
+    public static String getSurvivorImagePath() {
+        return survivorImagePath;
     }
 
     public static void setPlayersList(List<Player> gamePlayersList) {
