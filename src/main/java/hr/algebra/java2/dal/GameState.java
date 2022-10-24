@@ -57,7 +57,6 @@ public class GameState implements Serializable {
     public void setTimerState(int minutes, int seconds) {
         secondsState = seconds;
         minutesState = minutes;
-
     }
 
     public Map<Player, Coordinate> getAlivePlayersList() {

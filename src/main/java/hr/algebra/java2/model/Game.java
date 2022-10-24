@@ -42,12 +42,6 @@ public class Game {
     public static void setInitialPlayersList(List<Player> gamePlayersList) {
         playersList.addAll(gamePlayersList);
         alivePlayersList.addAll(gamePlayersList);
-//        playersList.forEach(p ->
-//        {
-//            if (p.getClass().equals(SruvivorPlayer.class)) {
-//                alivePlayersList.add(p);
-//            }
-//        });
     }
 
     public static void setMatchesCount(int gameMatchesCount) {
@@ -129,14 +123,11 @@ public class Game {
     }
 
     public static void loadPlayersList(List<Player> playersList) {
+        Game.playersList.clear();
         Game.playersList.addAll(playersList);
     }
 
     public static void setCurrentMatch(int matchState) {
         matchCounter = matchState;
     }
-
-//    public static void loadAlivePlayers(Map<Player, Coordinate> alivePlayersList) {
-//        alivePlayersList.forEach((player, position) -> Game.alivePlayersList.add(player));
-//    }
 }

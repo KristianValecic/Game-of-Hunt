@@ -147,6 +147,7 @@ public class GameScreenController implements Initializable {
             cleanup();
             //1. satavit igracena stare pozicije
             Game.loadPlayersList(gameState.getPlayersList());
+            Game.getAlivePlayersList().clear();
             gameState.getAlivePlayersList().forEach((player, position) -> {
                 Game.addAlivePlayer(player);
                 //postavljaju se spriteovi na mapu

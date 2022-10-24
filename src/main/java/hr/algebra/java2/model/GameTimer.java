@@ -23,9 +23,6 @@ public class GameTimer {
         startSecond = seconds;
     }
 
-//    public static String getCurrentTimeHours(){
-//        return hour + ":" + minute + ":" + second;
-//    }
     public static String getCurrentTime(){
         return minute + ":" + second;
     }
