@@ -126,30 +126,15 @@ public class StartMenuController implements Initializable {
                 }else {
                     playersList.add(new SurvivorPlayer(playerName, PlayerRole.Survivor, new Image(Game.getSurvivorImagePath())));
                 }
-                //playersList.get(j).setPlayerName(playerName);
             }
         }
-
-//        for (int i = 0; i <= playerCounter; i++) {
-//            int j = playerCounter == MAX_PLAYERS ? i : i-1;
-//            if (flpnParentToPlayerCard.getChildren().get(i).getClass().equals(Pane.class)){
-//                GridPane playerCard= ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i))
-//                        .getChildren().get(0));//0 is index of gidpane in window
-//
-//                String playerName = String.valueOf(((TextField)playerCard.getChildren().get(1)).getText()); // 1 is index of wanted textfield
-//                String playerRole = String.valueOf(((Label)((FlowPane)playerCard.getChildren().get(0)).getChildren().get(1)).getText());
-//
-//                playersList.add(new HunterPlayer(PlayerRole.Hunter, imgCharacter.getImage()));
-//                playersList.get(j).setPlayerName(playerName);
-//            }
-//        }
 
         //sets time of match
         GameTimer.setMatchTime(matchMinutes, matchSeconds);
 
         try {
             //GameScreenController.setPlayersList(playersList);
-            Game.setPlayersList(playersList);
+            Game.setInitialPlayersList(playersList);
             Game.setMatchesCount(matchCounter);
             SceneUtils.createScene(StartMenuAplication.getMainStage(), "playingField.fxml", Game.getWindowTitle());
         } catch (IOException e) {

@@ -130,7 +130,7 @@ public class GameScreenController implements Initializable {
 
         //3. set game stanje timer, match
         gameState.setMatchState(Game.getCurrentMatch());
-        gameState.setTimerState(GameTimer.getCurrentTime());
+        gameState.setTimerState(GameTimer.getCurrentMinues(), GameTimer.getCurrentSeconds());
 
         //4. serijaliziraj
         try (ObjectOutputStream serializator = new ObjectOutputStream(new FileOutputStream("saveGame.ser")
@@ -141,22 +141,33 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void onLoadGame(ActionEvent event) throws IOException, ClassNotFoundException {
-
         try (ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream("saveGame.ser"))) {
             GameState gameState = (GameState) deserializator.readObject();
 
             cleanup();
+            //1. satavit igracena stare pozicije
+            Game.loadPlayersList(gameState.getPlayersList());
             gameState.getAlivePlayersList().forEach((player, position) -> {
+                Game.addAlivePlayer(player);
                 //postavljaju se spriteovi na mapu
                 setPlayerSprite(player);
                 player.getPlayerSprite().relocate(position.getX(), position.getY());
-                player.getPlayerSprite().setFitWidth(characterWidth);
-                player.getPlayerSprite().setPreserveRatio(true);
-                player.getPlayerSprite().setSmooth(true);
+                setCharacterSpriteSettings(player);
                 paneGameMap.getChildren().add(player.getPlayerSprite());
             });
-            //movementController.makeMovable(paneRootParent);
+            //2. zadat match
+            Game.setCurrentMatch(gameState.getMatchState());
+            lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
+            //3. namjestit tajmer
+            GameTimer.setMatchTime(gameState.getMinutesState(), gameState.getSecondsState());
+            //refreshView();
         }
+    }
+
+    private void setCharacterSpriteSettings(Player player) {
+        player.getPlayerSprite().setFitWidth(characterWidth);
+        player.getPlayerSprite().setPreserveRatio(true);
+        player.getPlayerSprite().setSmooth(true);
     }
 
     private void setPlayerSprite(Player player) {
@@ -175,9 +186,7 @@ public class GameScreenController implements Initializable {
         for (Player player : Game.getPlayersList()) {
             //postavljaju se spriteovi na mapu
             player.getPlayerSprite().relocate(spawnPointX += spawnPointDistance, spawnPointY += spawnPointDistance); // ovo se moze zamijenit s newMath(),
-            player.getPlayerSprite().setFitWidth(characterWidth);                                                   // ali kada shvatis kako ce spawnanje radit
-            player.getPlayerSprite().setPreserveRatio(true);
-            player.getPlayerSprite().setSmooth(true);
+            setCharacterSpriteSettings(player);
             paneGameMap.getChildren().add(player.getPlayerSprite());
         }
         movementController.makeMovable(paneRootParent);

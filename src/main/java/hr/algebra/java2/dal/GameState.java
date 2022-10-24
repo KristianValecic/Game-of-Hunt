@@ -1,6 +1,7 @@
 package hr.algebra.java2.dal;
 
 import hr.algebra.java2.model.Coordinate;
+import hr.algebra.java2.model.GameTimer;
 import hr.algebra.java2.model.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
@@ -14,11 +15,17 @@ import java.util.List;
 import java.util.Map;
 
 public class GameState implements Serializable {
-    private String timerState;
+    //private String timerState;
+    private int minutesState;
+    private int secondsState;
     private int match;
     private int scoreState;
     private List<Player> playersList = new ArrayList<>();
     private Map<Player, Coordinate> alivePlayersPositionsList = new HashMap<>();
+
+    public  List<Player> getPlayersList() {
+        return playersList;
+    }
 
     public void addPlayer(Player player) {
         this.playersList.add(player);
@@ -47,11 +54,23 @@ public class GameState implements Serializable {
         match = currentMatch;
     }
 
-    public void setTimerState(String currentTime) {
-        timerState = currentTime;
+    public void setTimerState(int minutes, int seconds) {
+        secondsState = seconds;
+        minutesState = minutes;
+
     }
 
     public Map<Player, Coordinate> getAlivePlayersList() {
         return alivePlayersPositionsList;
+    }
+
+    public int getMatchState() {
+        return match;
+    }
+    public int getSecondsState() {
+        return secondsState;
+    }
+    public int getMinutesState() {
+        return minutesState;
     }
 }

@@ -1,5 +1,7 @@
 package hr.algebra.java2.model;
 
+import java.io.Serializable;
+
 public class GameTimer {
 
     private static int hour = 0;
@@ -65,5 +67,14 @@ public class GameTimer {
     }
     public static String minMatchTime() {
         return matchMinutesMin+":"+matchSecondsMin;
+    }
+    
+
+    public static int getCurrentMinues() {
+        return minute;
+    }
+
+    public static int getCurrentSeconds() {
+        return second;
     }
 }

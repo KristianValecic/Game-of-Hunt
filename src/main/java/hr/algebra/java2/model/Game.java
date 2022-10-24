@@ -2,6 +2,7 @@ package hr.algebra.java2.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Game {
     private static List<Player> playersList = new ArrayList<>();
@@ -38,7 +39,7 @@ public class Game {
         return survivorImagePath;
     }
 
-    public static void setPlayersList(List<Player> gamePlayersList) {
+    public static void setInitialPlayersList(List<Player> gamePlayersList) {
         playersList.addAll(gamePlayersList);
         alivePlayersList.addAll(gamePlayersList);
 //        playersList.forEach(p ->
@@ -122,4 +123,20 @@ public class Game {
         alivePlayersList.addAll(playersList);
         System.out.println("Rematch started");
     }
+
+    public static void addAlivePlayer(Player player) {
+        alivePlayersList.add(player);
+    }
+
+    public static void loadPlayersList(List<Player> playersList) {
+        Game.playersList.addAll(playersList);
+    }
+
+    public static void setCurrentMatch(int matchState) {
+        matchCounter = matchState;
+    }
+
+//    public static void loadAlivePlayers(Map<Player, Coordinate> alivePlayersList) {
+//        alivePlayersList.forEach((player, position) -> Game.alivePlayersList.add(player));
+//    }
 }
