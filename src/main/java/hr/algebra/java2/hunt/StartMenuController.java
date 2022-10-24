@@ -18,6 +18,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+import javax.sound.midi.MidiFileFormat;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -104,17 +105,44 @@ public class StartMenuController implements Initializable {
             return;
         }
 
-        for (int i = 0; i < playerCounter; i++) {
-            //int j = i == (MAX_PLAYERS-1) ? i+1 : i;
-            if (flpnParentToPlayerCard.getClass().equals(Pane.class)){
-                String playerName = String.valueOf(
-                        ((TextField) ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i))
-                                .getChildren().get(0)) //0 is index of gidpane in window
-                                .getChildren().get(1)).getText() // 1 is index of wanted textfield
-                );
-                playersList.get(i).setPlayerName(playerName);
+        for (Node node:flpnParentToPlayerCard.getChildren()) {
+            if (node.getClass().equals(Pane.class)){
+                GridPane playerCard= ((GridPane) ((Pane) node)
+                        .getChildren().get(0));//0 is index of gidpane in window
+
+                String playerName = String.valueOf(((TextField)playerCard.getChildren().get(1)).getText()); // 1 is index of wanted textfield
+                String playerRole = "";
+                for (Node n:playerCard.getChildren()) {
+                    if (n.getClass().equals(FlowPane.class)){
+                        for (Node lbl:((FlowPane) n).getChildren()) {
+                            if (lbl.getClass().equals(Label.class)){
+                                playerRole = ((Label) lbl).getText();
+                            }
+                        }
+                    }
+                }
+                if (playerRole.equals(PlayerRole.Hunter.toString())){
+                    playersList.add(new HunterPlayer(playerName, PlayerRole.Hunter, new Image(Game.getHunterImagePath())));
+                }else {
+                    playersList.add(new SurvivorPlayer(playerName, PlayerRole.Survivor, new Image(Game.getSurvivorImagePath())));
+                }
+                //playersList.get(j).setPlayerName(playerName);
             }
         }
+
+//        for (int i = 0; i <= playerCounter; i++) {
+//            int j = playerCounter == MAX_PLAYERS ? i : i-1;
+//            if (flpnParentToPlayerCard.getChildren().get(i).getClass().equals(Pane.class)){
+//                GridPane playerCard= ((GridPane) ((Pane) flpnParentToPlayerCard.getChildren().get(i))
+//                        .getChildren().get(0));//0 is index of gidpane in window
+//
+//                String playerName = String.valueOf(((TextField)playerCard.getChildren().get(1)).getText()); // 1 is index of wanted textfield
+//                String playerRole = String.valueOf(((Label)((FlowPane)playerCard.getChildren().get(0)).getChildren().get(1)).getText());
+//
+//                playersList.add(new HunterPlayer(PlayerRole.Hunter, imgCharacter.getImage()));
+//                playersList.get(j).setPlayerName(playerName);
+//            }
+//        }
 
         //sets time of match
         GameTimer.setMatchTime(matchMinutes, matchSeconds);
@@ -246,11 +274,11 @@ public class StartMenuController implements Initializable {
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
             imgCharacter.setImage(new Image(Game.getHunterImagePath()));
-            playersList.add(new HunterPlayer(PlayerRole.Hunter, imgCharacter.getImage()));
+            //playersList.add(new HunterPlayer(PlayerRole.Hunter, imgCharacter.getImage()));
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() > 1) {
             lblPlayerRole.setText(PlayerRole.Survivor.toString());
             imgCharacter.setImage(new Image(Game.getSurvivorImagePath()));
-            playersList.add(new SruvivorPlayer(PlayerRole.Survivor, imgCharacter.getImage()));
+            //playersList.add(new SruvivorPlayer(PlayerRole.Survivor, imgCharacter.getImage()));
         }
     }
 }

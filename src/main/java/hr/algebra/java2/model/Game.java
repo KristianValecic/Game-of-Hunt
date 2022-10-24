@@ -1,10 +1,6 @@
 package hr.algebra.java2.model;
 
-import javafx.util.Pair;
-
-import java.awt.font.LineBreakMeasurer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Game {
@@ -22,7 +18,7 @@ public class Game {
     //public static int getAllMatchesCount() {
 //        return matchCounter;
 //    }
-    public static int getMatchesCount() {
+    public static int getCurrentMatch() {
         return matchCounter;
     }
 
@@ -77,12 +73,12 @@ public class Game {
     public static void matchEndByTimerRunout() {
         if (matchCounter >= allMatchesCount){
             gameOver=true;
-            gameEnd(SruvivorPlayer.class.toString());
+            gameEnd(SurvivorPlayer.class.toString());
         }
         matchEnd();
         alivePlayersList.forEach(p -> {
-            if (p.getClass().equals(SruvivorPlayer.class)) {
-                ((SruvivorPlayer)p).SurvivedMatch();
+            if (p.getClass().equals(SurvivorPlayer.class)) {
+                ((SurvivorPlayer)p).SurvivedMatch();
                 addMove(p, "Sruvived");
 
             }

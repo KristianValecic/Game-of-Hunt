@@ -9,16 +9,21 @@ import java.util.List;
 public class HunterPlayer extends Player{
     private int scoreOfKilledPlayers = 0;
     private List<Player> lsitOfVictims = new ArrayList<>();
+    private ImageView victimPlayerSprite;
     public HunterPlayer(PlayerRole playerRole, Image playerImage) {
         super(playerRole, playerImage);
     }
-    private ImageView victimPlayerSprite;
+    public HunterPlayer(String playerName, PlayerRole playerRole, Image playerImage) {
+        super(playerName, playerRole, playerImage);
+    }
     public ImageView getVictimPlayerSprite() {
         return victimPlayerSprite;
     }
     public void setVictimPlayerSprite(ImageView victimPlayerSprite) {
         this.victimPlayerSprite = victimPlayerSprite;
     }
+
+
     public void killedPlayer(Player player){
         lsitOfVictims.add(player);
         scoreOfKilledPlayers++;

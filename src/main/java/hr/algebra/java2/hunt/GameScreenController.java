@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 import java.io.*;
 import java.net.URL;
@@ -30,7 +31,6 @@ public class GameScreenController implements Initializable {
     private double spawnPointDistance = 140.0;
 
     private static List<ImageView> playersImageViewList = new ArrayList<>();
-    //private static GameState gameState = new GameState();
     private MovementController movementController;
     private double characterWidth = 40;
     //private int matchCounter = 1;
@@ -52,7 +52,7 @@ public class GameScreenController implements Initializable {
                         if (Game.isGameOver()) {
                             //movementController.stopMovement();
                             EndOfGame();
-                        } else if (GameTimer.getCurrentTime().equals(GameTimer.matchOver())/* && Game.getMatchesCount() == Game.getAllMatchesCount()*/) {
+                        } else if (GameTimer.getCurrentTime().equals(GameTimer.matchOver())/* && Game.getCurrentMatch() == Game.getAllMatchesCount()*/) {
                             System.out.println("Timer runout!");
                             Game.matchEndByTimerRunout();
                             //SetMoves();
@@ -105,9 +105,9 @@ public class GameScreenController implements Initializable {
         timerStop();
         for (Player player : Game.getAlivePlayersList()) {
             player.getPlayerSprite().relocate(spawnPointX -= spawnPointDistance, spawnPointY -= spawnPointDistance);
-            lblMatchCounter.setText(Integer.toString(Game.getMatchesCount()));
+            lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
 
-            lblMatchCounter.setText(Integer.toString(Game.getMatchesCount()));
+            lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
             lblTimer.setText(GameTimer.getCurrentTime());
 
             GameTimer.resetTimer();
@@ -120,42 +120,41 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void onSaveGame(ActionEvent event) throws IOException {
-        //gameState.setPlayerStateList(Game.getPlayersList());
-        List<PlayerState> pStateList = new ArrayList<>();
-        for (Player p : Game.getPlayersList()) {
-            pStateList.add(new PlayerState(p.getPlayerRole(), p.getPlayerName(), p.getPlayerSprite().getImage()));
-        }
-        for (Node node : paneGameMap.getChildren()) {
-            if (node.getClass().equals(ImageView.class)) {
-                pStateList.forEach(p -> {
-                    if (p.getPlayerSprite().getImage().equals(((ImageView) node).getImage())) {
-                        p.setPlayerPosOnMap(node.getBoundsInParent());
-                    }
-                });
-            }
-        }
+        //List<PlayerState> pStateList = new ArrayList<>();
+        GameState gameState = new GameState();
+        //1. set player listu sa score-om
+        gameState.setPlayersList(Game.getPlayersList());
 
+        //2. set alive player listu s koordinatama
+        gameState.setAlivePlayers(/*Game.getAlivePlayersList(),*/ paneGameMap.getChildren());
+
+        //3. set game stanje timer, match
+        gameState.setMatchState(Game.getCurrentMatch());
+        gameState.setTimerState(GameTimer.getCurrentTime());
+
+        //4. serijaliziraj
         try (ObjectOutputStream serializator = new ObjectOutputStream(new FileOutputStream("saveGame.ser")
         )) {
-            serializator.writeObject(pStateList);
+            serializator.writeObject(gameState);
         }
     }
 
     @FXML
     void onLoadGame(ActionEvent event) throws IOException, ClassNotFoundException {
-        //TODO zamijeni pStateList sa gameState.get...
+
         try (ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream("saveGame.ser"))) {
-            List<PlayerState> pStateList = (List<PlayerState>) deserializator.readObject();
+            GameState gameState = (GameState) deserializator.readObject();
+
             cleanup();
-            for (PlayerState player : pStateList) {
+            gameState.getAlivePlayersList().forEach((player, position) -> {
                 //postavljaju se spriteovi na mapu
                 setPlayerSprite(player);
-                player.getPlayerSprite().relocate(player.getminX(), player.getminY());
+                player.getPlayerSprite().relocate(position.getX(), position.getY());
                 player.getPlayerSprite().setFitWidth(characterWidth);
                 player.getPlayerSprite().setPreserveRatio(true);
                 player.getPlayerSprite().setSmooth(true);
                 paneGameMap.getChildren().add(player.getPlayerSprite());
-            }
+            });
             //movementController.makeMovable(paneRootParent);
         }
     }
@@ -187,7 +186,7 @@ public class GameScreenController implements Initializable {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
-        lblMatchCounter.setText(Integer.toString(Game.getMatchesCount()));
+        lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
 
         MovementController.lblFPS = lblFpsCount;
     }
