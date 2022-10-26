@@ -70,6 +70,10 @@ public class Player implements Serializable {
     public void setPlayerSprite(Image image) {
         playerSprite = new ImageView();
         this.playerSprite.setImage(image);
+        this.playerSprite.setFitWidth(Game.getPlayerWidth());
+        //this.playerSprite.setFitHeight(Game.getPlayerHeight());
+        this.playerSprite.setPreserveRatio(true);
+        this.playerSprite.setSmooth(true);
         //this.imgPath = image.getUrl();
     }
 

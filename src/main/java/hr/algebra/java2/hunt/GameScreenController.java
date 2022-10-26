@@ -1,24 +1,19 @@
 package hr.algebra.java2.hunt;
 
 import hr.algebra.java2.dal.GameState;
-import hr.algebra.java2.dal.PlayerState;
-import hr.algebra.java2.model.Game;
-import hr.algebra.java2.model.GameTimer;
-import hr.algebra.java2.model.Player;
-import hr.algebra.java2.model.PlayerRole;
+import hr.algebra.java2.model.*;
 import hr.algebra.java2.utilities.SceneUtils;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
-import javafx.util.Pair;
 
 import java.io.*;
 import java.net.URL;
@@ -30,12 +25,15 @@ public class GameScreenController implements Initializable {
     private double spawnPointY = 200.0;
     private double spawnPointDistance = 140.0;
 
+    private double marginLightSource = 20;
+
     private static List<ImageView> playersImageViewList = new ArrayList<>();
     private MovementController movementController;
-    private double characterWidth = 40;
     //private int matchCounter = 1;
     @FXML
     private Pane paneGameMap;
+    @FXML
+    private ImageView imgGameMap;
     @FXML
     private Pane paneRootParent;
     @FXML
@@ -45,7 +43,7 @@ public class GameScreenController implements Initializable {
     @FXML
     private Label lblFpsCount;
 
-
+    //todo refaktoriraj timeline
     private Timeline timeline = new Timeline(
             new KeyFrame(Duration.seconds(1),
                     e -> {
@@ -69,18 +67,10 @@ public class GameScreenController implements Initializable {
                     }));
 
 
-//    private void SetMoves() {
-//        for (Player p:Game.getPlayersList()) {
-//            if (p.getClass().equals(SruvivorPlayer.class)){
-//                Game.addMove(p, "Sruvived");
-//            }
-//        }
-//    }
-
     private void EndOfGame() {
         timerStop();
         movementController.stopMovement();
-        cleanup();
+        cleanupMap();
         try {
             SceneUtils.createScene(StartMenuAplication.getMainStage(), "gameOverWindow.fxml", Game.getWindowTitle());
         } catch (IOException e) {
@@ -88,7 +78,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    private void cleanup() {
+    private void cleanupMap() {
         for (Player player : Game.getAlivePlayersList()) {
             paneGameMap.getChildren().remove(player.getPlayerSprite());
         }
@@ -126,7 +116,7 @@ public class GameScreenController implements Initializable {
         gameState.setPlayersList(Game.getPlayersList());
 
         //2. set alive player listu s koordinatama
-        gameState.setAlivePlayers(/*Game.getAlivePlayersList(),*/ paneGameMap.getChildren());
+        gameState.setAlivePlayers( paneGameMap.getChildren());
 
         //3. set game stanje timer, match
         gameState.setMatchState(Game.getCurrentMatch());
@@ -144,7 +134,8 @@ public class GameScreenController implements Initializable {
         try (ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream("saveGame.ser"))) {
             GameState gameState = (GameState) deserializator.readObject();
 
-            cleanup();
+            cleanupMap();
+            // Ocistit trenutnuo stanje gejma i zadat ovo
             //1. satavit igracena stare pozicije
             Game.loadPlayersList(gameState.getPlayersList());
             Game.getAlivePlayersList().clear();
@@ -153,7 +144,7 @@ public class GameScreenController implements Initializable {
                 //postavljaju se spriteovi na mapu
                 setPlayerSprite(player);
                 player.getPlayerSprite().relocate(position.getX(), position.getY());
-                setCharacterSpriteSettings(player);
+                //setCharacterSpriteSettings(player);
                 paneGameMap.getChildren().add(player.getPlayerSprite());
             });
             //2. zadat match
@@ -166,9 +157,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void setCharacterSpriteSettings(Player player) {
-        player.getPlayerSprite().setFitWidth(characterWidth);
-        player.getPlayerSprite().setPreserveRatio(true);
-        player.getPlayerSprite().setSmooth(true);
+
     }
 
     private void setPlayerSprite(Player player) {
@@ -182,12 +171,21 @@ public class GameScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         GameTimer.resetTimer();
-        //Set players
         movementController = new MovementController(paneGameMap);
+        Game.setSpawnPoints(paneGameMap.getMaxWidth(), paneGameMap.getMaxHeight());
+        //Set players
         for (Player player : Game.getPlayersList()) {
             //postavljaju se spriteovi na mapu
-            player.getPlayerSprite().relocate(spawnPointX += spawnPointDistance, spawnPointY += spawnPointDistance); // ovo se moze zamijenit s newMath(),
-            setCharacterSpriteSettings(player);
+            if (player.getPlayerRole() == PlayerRole.Survivor){
+                Coordinate spawnPoint = Game.getRandomSawnPoint();
+                paneGameMap.getChildren().add(setPlayerLightSource(player, spawnPoint));
+                player.getPlayerSprite().relocate(spawnPoint.getX(), spawnPoint.getY());
+            }else{
+                Coordinate hunterSpawnPoint = new Coordinate(paneGameMap.getMaxWidth()/2, paneGameMap.getMaxHeight()/2);
+                paneGameMap.getChildren().add(setPlayerLightSource(player, hunterSpawnPoint));
+                player.getPlayerSprite().relocate(hunterSpawnPoint.getX(), hunterSpawnPoint.getY());
+            }
+            //setCharacterSpriteSettings(player);
             paneGameMap.getChildren().add(player.getPlayerSprite());
         }
         movementController.makeMovable(paneRootParent);
@@ -199,5 +197,29 @@ public class GameScreenController implements Initializable {
         lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
 
         MovementController.lblFPS = lblFpsCount;
+
+    }
+
+    private ImageView setPlayerLightSource(Player player, Coordinate spawnPoint) {
+        //kriran background image za lightsource
+        Image playerImg = player.getPlayerSprite().getImage();
+        ImageView lightSource = new ImageView(Game.getGameMapImagePath());
+        double spawnX = spawnPoint.getX()-marginLightSource;
+        double spawnY = spawnPoint.getY()-marginLightSource;
+
+        //postavke image-a
+        lightSource.setSmooth(true);
+        lightSource.setPreserveRatio(true);
+
+        //set viewport
+        lightSource.setViewport(// provjeri brojeve
+                new Rectangle2D
+                (spawnX,
+                spawnY,
+                Game.getPlayerWidth()+(marginLightSource*2),// *2 has to compensate for the subtraction of margin
+                Game.getPlayerHeight()+(marginLightSource*2))
+                );
+        lightSource.relocate(spawnX, spawnY);
+        return lightSource;
     }
 }

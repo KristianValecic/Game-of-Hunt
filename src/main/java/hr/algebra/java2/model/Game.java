@@ -1,19 +1,34 @@
 package hr.algebra.java2.model;
 
+import javafx.geometry.Bounds;
+import javafx.scene.image.Image;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class Game {
     private static List<Player> playersList = new ArrayList<>();
-
-    private static final String hunterImagePath = "file:src/main/resources/hr/algebra/java2/hunt/hunterSprite.png";
-    private static final String survivorImagePath = "file:src/main/resources/hr/algebra/java2/hunt/survivorSprite.png";
+    public static final double playerWidth = 40;
+    public static final double playerHeight = 70;
+    public static final double spawnMargin = 20;
+    public static boolean spawnFlagLeftTop = true;
+    public static boolean spawnFlagLeftBottom = true;
+    public static boolean spawnFlagRightTop = true;
+    public static boolean spawnFlagRightBottom = true;
+    private static Coordinate playerSpawnLeftTop;
+    private static Coordinate playerSpawnLeftBottom;
+    private static Coordinate playerSpawnRightBottom;
+    private static Coordinate playerSpawnRightTop;
+    private static final String gameMapImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/GameMap.png";
+    private static final String hunterImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/hunterSprite.png";
+    private static final String survivorImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/survivorSprite.png";
     private static List<Player> alivePlayersList = new ArrayList<>();
     private static List<Move> moves = new ArrayList<>();
     private static int allMatchesCount;
     private static int matchCounter = 1;
-    private static boolean gameOver=false;
+    private static boolean gameOver = false;
     private static String WindowTitle = "Game of Hunt";
 
     //public static int getAllMatchesCount() {
@@ -29,12 +44,15 @@ public class Game {
     public static List<Player> getPlayersList() {
         return playersList;
     }
+
     public static List<Player> getAlivePlayersList() {
         return alivePlayersList;
     }
+
     public static String getHunterImagePath() {
         return hunterImagePath;
     }
+
     public static String getSurvivorImagePath() {
         return survivorImagePath;
     }
@@ -56,24 +74,24 @@ public class Game {
         alivePlayersList.remove(player);
         alivePlayersList.forEach(p -> {
             if (p.getClass().equals(HunterPlayer.class)) {
-                ((HunterPlayer)p).killedPlayer(player);
+                ((HunterPlayer) p).killedPlayer(player);
                 //alivePlayersList.remove(player);
             }
         });
-        if (alivePlayersList.stream().count()==1 /*alivePlayersList.isEmpty()*/){
+        if (alivePlayersList.stream().count() == 1 /*alivePlayersList.isEmpty()*/) {
             gameEnd(HunterPlayer.class.toString());
         }
     }
 
     public static void matchEndByTimerRunout() {
-        if (matchCounter >= allMatchesCount){
-            gameOver=true;
+        if (matchCounter >= allMatchesCount) {
+            gameOver = true;
             gameEnd(SurvivorPlayer.class.toString());
         }
         matchEnd();
         alivePlayersList.forEach(p -> {
             if (p.getClass().equals(SurvivorPlayer.class)) {
-                ((SurvivorPlayer)p).SurvivedMatch();
+                ((SurvivorPlayer) p).SurvivedMatch();
                 addMove(p, "Sruvived");
 
             }
@@ -81,7 +99,7 @@ public class Game {
     }
 
     private static void gameEnd(String winnerPlayerClass) {
-        gameOver=true;
+        gameOver = true;
         System.out.println(winnerPlayerClass.getClass().toString());
         playersList.forEach(p -> {
             if (p.getClass().toString().equals(winnerPlayerClass)) {
@@ -91,7 +109,7 @@ public class Game {
     }
 
     private static void setNewGame() {
-        gameOver=false;
+        gameOver = false;
         System.out.println("New game started");
     }
 
@@ -99,10 +117,11 @@ public class Game {
         return gameOver;
     }
 
-    public static void addMove(Player player, String move){
+    public static void addMove(Player player, String move) {
         moves.add(new Move(player, move));
     }
-    public static List<Move> getMoves(){
+
+    public static List<Move> getMoves() {
         return moves;
     }
 
@@ -111,8 +130,8 @@ public class Game {
     }
 
     public static void Rematch() {
-        gameOver=false;
-        matchCounter=1;
+        gameOver = false;
+        matchCounter = 1;
         alivePlayersList.clear();
         alivePlayersList.addAll(playersList);
         System.out.println("Rematch started");
@@ -129,5 +148,52 @@ public class Game {
 
     public static void setCurrentMatch(int matchState) {
         matchCounter = matchState;
+    }
+
+    public static void setSpawnPoints(double width, double height) {
+        playerSpawnLeftTop = new Coordinate(spawnMargin, spawnMargin);
+        playerSpawnLeftBottom = new Coordinate(spawnMargin, height - 70);
+        playerSpawnRightBottom = new Coordinate(width - playerWidth - spawnMargin, height - 70 - spawnMargin);
+        playerSpawnRightTop = new Coordinate(width - playerWidth - spawnMargin, spawnMargin);
+    }
+
+    public static Coordinate getRandomSawnPoint() {
+        Random r = new Random();
+        Coordinate spawn = new Coordinate(0,0);
+        int result;
+        boolean isSet=false;
+        while (!isSet){
+            result = r.nextInt(4);
+            if (result == 0 && spawnFlagLeftTop) {
+                spawnFlagLeftTop = false;
+                isSet=true;
+                spawn = playerSpawnLeftTop;
+            } else if (result == 1 && spawnFlagLeftBottom) {
+                spawnFlagLeftBottom = false;
+                isSet=true;
+                spawn = playerSpawnLeftBottom;
+            } else if (result == 2 && spawnFlagRightTop) {
+                spawnFlagRightTop = false;
+                isSet=true;
+                spawn = playerSpawnRightTop;
+            } else if (result == 3 && spawnFlagRightBottom)  {
+                spawnFlagRightBottom = false;
+                isSet=true;
+                spawn = playerSpawnRightBottom;
+            }
+        }
+        return spawn;
+    }
+
+    public static String getGameMapImagePath(){
+        return gameMapImagePath;
+    }
+
+
+    public static double getPlayerWidth() {
+        return playerWidth;
+    }
+    public static double getPlayerHeight() {
+        return playerHeight;
     }
 }

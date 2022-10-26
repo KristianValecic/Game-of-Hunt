@@ -19,6 +19,7 @@ public class SceneUtils {
         FXMLLoader fxmlLoader = new FXMLLoader(StartMenuAplication.class.getResource(fxmlName));
         Scene scene = new Scene(fxmlLoader.load());
         scene.getRoot().requestFocus();
+        stage.setResizable(false);
         stage.setTitle(title);
         stage.setScene(scene);
         stage.show();
