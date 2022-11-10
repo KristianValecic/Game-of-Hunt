@@ -41,6 +41,8 @@ public class GameScreenController implements Initializable {
     @FXML
     private Label lblFpsCount;
     @FXML
+    private Label lblMatchOver;
+    @FXML
     private Pane paneLightSource;
 
     //todo refaktoriraj timeline
@@ -62,8 +64,29 @@ public class GameScreenController implements Initializable {
                             GameTimer.countDownSecondPassed();
                             lblTimer.setText(GameTimer.getTime());
                         }
+                    })
+    );
+
+    private Timeline pauseInBetweenMatches = new Timeline(
+            new KeyFrame(Duration.seconds(1),
+                    e -> {
+                        if (GameTimer.isPauseOver()) {
+                            lblMatchOver.setVisible(false);
+                            GameTimer.resetTimer();
+                            cleanupMap();
+                            Game.newMatch();
+                            spawnPlayers();
+                            lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
+                            pauseStop();
+                            timeline.play();
+                        } else {
+                            GameTimer.countDownPauseSecondPassed();
+                        }
                     }));
 
+    private void pauseStop() {
+        pauseInBetweenMatches.stop();
+    }
 
     private void EndOfGame() {
         timerStop();
@@ -88,11 +111,11 @@ public class GameScreenController implements Initializable {
     }
 
     private void newMatch() {
-        GameTimer.resetTimer();
-        cleanupMap();
-        Game.newMatch();
-        spawnPlayers();
-        lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
+        timeline.stop();
+        lblMatchOver.setVisible(true);
+        pauseInBetweenMatches.setCycleCount(Timeline.INDEFINITE);
+        pauseInBetweenMatches.play();
+        //timeline.pause();
     }
 
     @FXML
@@ -151,6 +174,7 @@ public class GameScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         GameTimer.resetTimer();
         movementController = new MovementController(paneGameMap);
+        lblMatchOver.setVisible(false);
 
         spawnPlayers();
 
@@ -168,15 +192,15 @@ public class GameScreenController implements Initializable {
     private void spawnPlayers() {
         Game.setSpawnPointsOnMap(paneGameMap.getMaxWidth(), paneGameMap.getMaxHeight());
         for (Player player : Game.getAlivePlayersList()) {
-            if (player.getPlayerRole() == PlayerRole.Survivor){
+            if (player.getPlayerRole() == PlayerRole.Survivor) {
                 Coordinate spawnPoint = Game.getRandomSawnPoint();
                 ImageView playerLightSource = player.setPlayerLightSourceInitial(spawnPoint);
                 paneGameMap.getChildren().add(playerLightSource);
                 playerLightSource.toBack();
                 player.setLightSource(playerLightSource);
                 player.getPlayerSprite().relocate(spawnPoint.getX(), spawnPoint.getY());
-            }else{
-                Coordinate hunterSpawnPoint = new Coordinate(paneGameMap.getMaxWidth()/2, paneGameMap.getMaxHeight()/2);
+            } else {
+                Coordinate hunterSpawnPoint = new Coordinate(paneGameMap.getMaxWidth() / 2, paneGameMap.getMaxHeight() / 2);
                 ImageView playerLightSource = player.setPlayerLightSourceInitial(hunterSpawnPoint);
                 paneGameMap.getChildren().add(playerLightSource);
                 player.setLightSource(playerLightSource);

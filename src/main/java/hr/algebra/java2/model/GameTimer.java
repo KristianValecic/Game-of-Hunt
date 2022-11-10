@@ -7,16 +7,16 @@ public class GameTimer {
     private static int hour = 0;
     private static int minute;
     private static int second;
+    private static int pauseMinute;
+    private static int pauseSecond ;
+    private static int puaseSecondDuration = 2;
     private static int startMinute = 0;
     private static int startSecond = 10;
     private static int matchMinutesMax = 3;
     private static int matchSecondsMax = 0;
     private static int matchMinutesMin = 0;
     private static int matchSecondsMin = 5;
-    //private static int defaultStartTimeSeconds = 10;
 
-    //    private static int matchMinutes = 0;
-//    private static int matchSeconds = 10;
     private static final int matchTimeIncrement = 5;
 
     private GameTimer(){}
@@ -31,9 +31,6 @@ public class GameTimer {
     public static String getCurrentTime(){
         return formatTime(minute, second);
     }
-//    public static String getMatchTime(){
-//        return formatTime(minute, second);
-//    }
 
     public static String matchOver() {
         return "0:0";
@@ -55,7 +52,21 @@ public class GameTimer {
         }
     }
 
+    public static void countDownPauseSecondPassed(){
+        pauseSecond--;
+        if(pauseSecond == -1){
+            pauseMinute--;
+            pauseSecond = 59;
+            if(pauseMinute == -1){
+                pauseMinute = 59;
+                    System.out.println("Pause Over");
+            }
+        }
+    }
+
     public static void resetTimer() {
+        pauseSecond = puaseSecondDuration;
+
         minute = startMinute;
         second = startSecond;
     }
@@ -122,4 +133,11 @@ public class GameTimer {
         return formatTime(startMinute, startSecond);
     }
 
+    public static boolean isPauseOver() {
+        if (pauseSecond == 0)
+        {
+            return true;
+        }
+        return false;
+    }
 }
