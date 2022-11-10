@@ -7,10 +7,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="722.0" prefWidth="971.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.StartMenuController">
+<GridPane fx:id="paneMainMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="722.0" prefWidth="971.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.StartMenuController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.0" minWidth="10.0" prefWidth="59.0" />
     <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="857.0" minWidth="10.0" prefWidth="851.0" />
@@ -19,13 +20,13 @@
   <rowConstraints>
     <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="92.0" valignment="TOP" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="413.0" minHeight="10.0" prefHeight="408.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="182.0" minHeight="0.0" prefHeight="127.0" valignment="CENTER" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="85.0" valignment="TOP" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="182.0" minHeight="0.0" prefHeight="118.0" valignment="CENTER" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="98.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <FlowPane fx:id="flpnMainMenu" alignment="CENTER" columnHalignment="CENTER" hgap="20.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="402.0" prefWidth="659.0" vgap="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Button fx:id="btnAddPlayer" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onClickAddPlayer" prefHeight="180.0" prefWidth="125.0" text="+" textFill="#00000090">
+            <Button fx:id="btnAddPlayer" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onClickAddPlayer" prefHeight="180.0" prefWidth="125.0" stylesheets="@Style.css" text="+" textFill="#ffffff8f">
                <font>
                   <Font size="60.0" />
                </font>
@@ -34,12 +35,26 @@
                </FlowPane.margin>
             </Button>
          </children></FlowPane>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="86.0" prefWidth="659.0" style="-fx-background-color: none;" text="Game of hunt" GridPane.columnIndex="1">
-         <font>
-            <Font name="Bookman Old Style" size="72.0" />
-         </font>
-      </Label>
-      <GridPane alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: none;" GridPane.columnIndex="1">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="198.0" layoutY="21.0" style="-fx-background-color: none;" text="Game" textFill="WHITE">
+               <font>
+                  <Font name="Century" size="72.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="372.0" layoutY="-9.0" style="-fx-background-color: none;" text="of " textFill="WHITE">
+               <font>
+                  <Font name="Century" size="72.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="427.0" layoutY="36.0" style="-fx-background-color: none;" text="hunt" textFill="WHITE">
+               <font>
+                  <Font name="Century" size="72.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <GridPane alignment="CENTER" style="-fx-background-color: black; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="274.0" minWidth="10.0" prefWidth="237.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="558.0" minWidth="10.0" prefWidth="377.0" />
@@ -51,24 +66,24 @@
          <children>
             <FlowPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="114.0" prefWidth="238.0">
                <children>
-                  <Label text="Matches :">
+                  <Label text="Matches :" textFill="WHITE">
                      <font>
                         <Font size="21.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblMatchCounter" text="1">
+                  <Label fx:id="lblMatchCounter" text="1" textFill="WHITE">
                      <font>
                         <Font size="21.0" />
                      </font>
                   </Label>
                   <FlowPane alignment="CENTER" prefHeight="65.0" prefWidth="51.0" vgap="10.0">
                      <children>
-                        <Button fx:id="btnAddMatch" mnemonicParsing="false" onAction="#onClickAddMatch" text="/\">
+                        <Button fx:id="btnAddMatch" mnemonicParsing="false" onAction="#onClickAddMatch" style="-fx-background-color: black;" text="/\" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Button>
-                        <Button fx:id="btnSubMatch" mnemonicParsing="false" onAction="#onClickSubtractMatch" text="\\/">
+                        <Button fx:id="btnSubMatch" mnemonicParsing="false" onAction="#onClickSubtractMatch" style="-fx-background-color: black;" text="\\/" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
@@ -79,12 +94,12 @@
             </FlowPane>
             <FlowPane alignment="CENTER" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                <children>
-                  <Label prefHeight="40.0" text="Players:" textFill="#000000d0">
+                  <Label prefHeight="40.0" text="Players:" textFill="#ffffffd1">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblPlayerCounter" prefHeight="40.0" text="0/5" textFill="#000000d0">
+                  <Label fx:id="lblPlayerCounter" prefHeight="40.0" text="0/5" textFill="#ffffffd1">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -95,24 +110,24 @@
                <center>
                   <FlowPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="378.0" BorderPane.alignment="BOTTOM_CENTER">
                      <children>
-                        <Label text="Match time: ">
+                        <Label text="Match time: " textFill="WHITE">
                            <font>
                               <Font size="21.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblMatchTime" text="0:0">
+                        <Label fx:id="lblMatchTime" text="0:0" textFill="WHITE">
                            <font>
                               <Font size="21.0" />
                            </font>
                         </Label>
                         <FlowPane alignment="CENTER" prefHeight="65.0" prefWidth="51.0" vgap="10.0">
                            <children>
-                              <Button fx:id="btnAddMatchTime" mnemonicParsing="false" onAction="#onClickAddMatchTime" text="/\">
+                              <Button fx:id="btnAddMatchTime" mnemonicParsing="false" onAction="#onClickAddMatchTime" style="-fx-background-color: black;" text="/\" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="btnSubMatchTime" mnemonicParsing="false" onAction="#onClickSubtractMatchTime" text="\\/">
+                              <Button fx:id="btnSubMatchTime" mnemonicParsing="false" onAction="#onClickSubtractMatchTime" style="-fx-background-color: black;" text="\\/" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -129,12 +144,21 @@
          <top>
             <Label fx:id="lblErrorForm" alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" textFill="RED" BorderPane.alignment="CENTER">
                <font>
-                  <Font size="15.0" />
+                  <Font size="21.0" />
                </font>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
             </Label>
          </top>
          <center>
-            <Button fx:id="btnStartGame" alignment="CENTER" mnemonicParsing="false" onAction="#startGame" prefHeight="35.0" prefWidth="256.0" text="Start Game" BorderPane.alignment="CENTER" />
+            <Button fx:id="btnStartGame" alignment="CENTER" mnemonicParsing="false" onAction="#startGame" prefHeight="35.0" prefWidth="256.0" stylesheets="@Style.css" text="Start Game" textAlignment="CENTER" textFill="WHITE" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font></Button>
          </center>
       </BorderPane>
    </children>

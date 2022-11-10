@@ -1,0 +1,23 @@
+html{
+    font-family: sans-serif;
+}
+
+span{
+    white-space: pre-line;
+}
+h1{
+    width: fit-content;
+    padding: 10px;
+    border-bottom: 2px solid black;
+    padding-bottom: 5px;
+}
+h1, h2{
+    margin-left: 1em;
+}
+p{
+    margin-left: 5em;
+}
+hr{
+    margin-left: 1em;
+    width: 50%;
+}

@@ -10,8 +10,10 @@ import java.util.Random;
 
 public class Game {
     private static List<Player> playersList = new ArrayList<>();
-    public static final double playerWidth = 40;
-    public static final double playerHeight = 70;
+    public static final int MIN_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 5;
+    public static final int MAX_MATCHES = 7;
+    public static final int MIN_MATCHES = 1;
     public static final double spawnMargin = 20;
     public static boolean spawnFlagLeftTop = true;
     public static boolean spawnFlagLeftBottom = true;
@@ -24,12 +26,14 @@ public class Game {
     private static final String gameMapImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/GameMap.png";
     private static final String hunterImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/hunterSprite.png";
     private static final String survivorImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/survivorSprite.png";
+    public static final String SER_FILE = "saveGame.ser";
     private static List<Player> alivePlayersList = new ArrayList<>();
     private static List<Move> moves = new ArrayList<>();
     private static int allMatchesCount;
     private static int matchCounter = 1;
     private static boolean gameOver = false;
     private static String WindowTitle = "Game of Hunt";
+
 
     //public static int getAllMatchesCount() {
 //        return matchCounter;
@@ -70,12 +74,12 @@ public class Game {
         matchCounter++;
     }
 
-    public static void playerKilled(Player player) {
+    public static void playerKilled(SurvivorPlayer player) {
+        player.setDead(true);
         alivePlayersList.remove(player);
         alivePlayersList.forEach(p -> {
             if (p.getClass().equals(HunterPlayer.class)) {
                 ((HunterPlayer) p).killedPlayer(player);
-                //alivePlayersList.remove(player);
             }
         });
         if (alivePlayersList.stream().count() == 1 /*alivePlayersList.isEmpty()*/) {
@@ -150,50 +154,58 @@ public class Game {
         matchCounter = matchState;
     }
 
-    public static void setSpawnPoints(double width, double height) {
+    public static void setSpawnPointsOnMap(double width, double height) {
         playerSpawnLeftTop = new Coordinate(spawnMargin, spawnMargin);
         playerSpawnLeftBottom = new Coordinate(spawnMargin, height - 70);
-        playerSpawnRightBottom = new Coordinate(width - playerWidth - spawnMargin, height - 70 - spawnMargin);
-        playerSpawnRightTop = new Coordinate(width - playerWidth - spawnMargin, spawnMargin);
+        playerSpawnRightBottom = new Coordinate(width - Player.getPlayerWidth() - spawnMargin, height - 70 - spawnMargin);
+        playerSpawnRightTop = new Coordinate(width - Player.getPlayerWidth() - spawnMargin, spawnMargin);
     }
 
     public static Coordinate getRandomSawnPoint() {
         Random r = new Random();
-        Coordinate spawn = new Coordinate(0,0);
+        Coordinate spawn = new Coordinate(0, 0);
         int result;
-        boolean isSet=false;
-        while (!isSet){
+        boolean isSet = false;
+        while (!isSet) {
             result = r.nextInt(4);
             if (result == 0 && spawnFlagLeftTop) {
                 spawnFlagLeftTop = false;
-                isSet=true;
+                isSet = true;
                 spawn = playerSpawnLeftTop;
             } else if (result == 1 && spawnFlagLeftBottom) {
                 spawnFlagLeftBottom = false;
-                isSet=true;
+                isSet = true;
                 spawn = playerSpawnLeftBottom;
             } else if (result == 2 && spawnFlagRightTop) {
                 spawnFlagRightTop = false;
-                isSet=true;
+                isSet = true;
                 spawn = playerSpawnRightTop;
-            } else if (result == 3 && spawnFlagRightBottom)  {
+            } else if (result == 3 && spawnFlagRightBottom) {
                 spawnFlagRightBottom = false;
-                isSet=true;
+                isSet = true;
                 spawn = playerSpawnRightBottom;
             }
+        }
+
+        if (!spawnFlagRightBottom && !spawnFlagRightTop && !spawnFlagLeftTop && !spawnFlagLeftBottom){
+            spawnFlagRightBottom = true;
+            spawnFlagRightTop = true;
+            spawnFlagLeftTop = true;
+            spawnFlagLeftBottom = true;
         }
         return spawn;
     }
 
-    public static String getGameMapImagePath(){
+    public static String getGameMapImagePath() {
         return gameMapImagePath;
     }
 
-
-    public static double getPlayerWidth() {
-        return playerWidth;
-    }
-    public static double getPlayerHeight() {
-        return playerHeight;
+    public static void newMatch() {
+        ///matchCounter++;
+        getPlayersList().forEach(p -> {
+            if (HunterPlayer.class.equals(p.getClass())   /*PlayerRole.Hunter.equals(p.getPlayerRole())*/) {
+                ((HunterPlayer)p).setVictimPlayerSprite(null);
+            }
+        });
     }
 }

@@ -3,21 +3,19 @@ package hr.algebra.java2.hunt;
 import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.HunterPlayer;
 import hr.algebra.java2.model.Player;
-import hr.algebra.java2.model.PlayerRole;
+import hr.algebra.java2.model.SurvivorPlayer;
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Bounds;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
-import java.awt.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +25,13 @@ public class MovementController {
     private static final String down = "down";
     private static final String left = "left";
     private static final String right = "right";
+    private static final String space = "space";
 
     private BooleanProperty wPressed = new SimpleBooleanProperty();
-
     private BooleanProperty aPressed = new SimpleBooleanProperty();
     private BooleanProperty sPressed = new SimpleBooleanProperty();
     private BooleanProperty dPressed = new SimpleBooleanProperty();
+    private BooleanProperty spacePressed = new SimpleBooleanProperty();
 
     private CollisionController collisionController;
 
@@ -41,8 +40,6 @@ public class MovementController {
     private Pane scene;
 
     private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed);
-
-    private double movementVariable = 180;
 
     //private static int screenRefreshRate = 60;
     public static Label lblFPS;
@@ -63,8 +60,7 @@ public class MovementController {
         timer.start();
     }
 
-    public void makeMovable(/*Player player,*/ Pane scene) {
-        //this.players.add(player);
+    public void makeMovable(Pane scene) {
         this.scene = scene;
 
         movementSetup();
@@ -102,11 +98,19 @@ public class MovementController {
 
             for (Player p : Game.getAlivePlayersList()) {//players+
                 ImageView sprite = p.getPlayerSprite();
+                ImageView lightSource = p.getLightSource();
+                Bounds lightSourceBounds = lightSource.getBoundsInParent();
                 int collision;
                 if (wPressed.get()) {
                     collision = collisionWithObj(p, up);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, up)) {
-                        sprite.setLayoutY(sprite.getLayoutY() - (movementVariable*elapsedSeconds));
+                        lightSource.setLayoutY(lightSource.getLayoutY() - (p.getPlayerSpeed() * elapsedSeconds));
+                        lightSource.setViewport(new Rectangle2D(
+                                lightSourceBounds.getMinX(),
+                                lightSourceBounds.getMinY() - (p.getPlayerSpeed() * elapsedSeconds),
+                                Player.getLightSourceWidth(),
+                                Player.getLightSourceHeight()));
+                        sprite.setLayoutY(sprite.getLayoutY() - (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("w");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
@@ -117,7 +121,13 @@ public class MovementController {
                 if (sPressed.get()) {
                     collision = collisionWithObj(p, down);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, down)) {
-                        sprite.setLayoutY(sprite.getLayoutY() + (movementVariable*elapsedSeconds));
+                        lightSource.setLayoutY(lightSource.getLayoutY() + (p.getPlayerSpeed() * elapsedSeconds));
+                        lightSource.setViewport(new Rectangle2D(
+                                lightSourceBounds.getMinX(),
+                                lightSourceBounds.getMinY() + (p.getPlayerSpeed() * elapsedSeconds),
+                                Player.getLightSourceWidth(),
+                                Player.getLightSourceHeight()));
+                        sprite.setLayoutY(sprite.getLayoutY() + (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("s");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
@@ -128,7 +138,13 @@ public class MovementController {
                 if (aPressed.get()) {
                     collision = collisionWithObj(p, left);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, left)) {
-                        sprite.setLayoutX(sprite.getLayoutX() - (movementVariable*elapsedSeconds));
+                        lightSource.setLayoutX(lightSource.getLayoutX() - (p.getPlayerSpeed() * elapsedSeconds));
+                        lightSource.setViewport(new Rectangle2D(
+                                lightSourceBounds.getMinX() - (p.getPlayerSpeed() * elapsedSeconds),
+                                lightSourceBounds.getMinY(),
+                                Player.getLightSourceWidth(),
+                                Player.getLightSourceHeight()));
+                        sprite.setLayoutX(sprite.getLayoutX() - (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("a");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
@@ -140,7 +156,13 @@ public class MovementController {
                 if (dPressed.get()) {
                     collision = collisionWithObj(p, right);
                     if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, right)) {
-                        sprite.setLayoutX(sprite.getLayoutX() + (movementVariable*elapsedSeconds));
+                        lightSource.setLayoutX(lightSource.getLayoutX() + (p.getPlayerSpeed() * elapsedSeconds));
+                        lightSource.setViewport(new Rectangle2D(
+                                lightSourceBounds.getMinX() + (p.getPlayerSpeed() * elapsedSeconds),
+                                lightSourceBounds.getMinY(),
+                                Player.getLightSourceWidth(),
+                                Player.getLightSourceHeight()));
+                        sprite.setLayoutX(sprite.getLayoutX() + (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("d");
                     } else if (collision == 2) {
                         System.out.println("Player killed");
@@ -158,16 +180,14 @@ public class MovementController {
     }
 
     private void killPlayer(ImageView victimPlayerSprite) {
-        for (Player p : Game.getPlayersList()) {
-            if (p.getClass().equals(HunterPlayer.class)) {
-                Game.addMove(p, "killed a player"); //TODO dodaj kojeg igraca
-            }
-            if (p.getPlayerSprite().equals(victimPlayerSprite)) {
+        for (Player p : Game.getAlivePlayersList()) {
+            if (p.getPlayerSprite().equals(victimPlayerSprite)
+                    && p.getClass().equals(SurvivorPlayer.class)
+                   /* && !((SurvivorPlayer) p).isDead()*/) {
                 Game.addMove(p, "Player killed");
                 gameMapPane.getChildren().remove(p.getPlayerSprite());
-                //players.remove(p);
-                //Game.getPlayersList().remove(p);
-                Game.playerKilled(p);
+                gameMapPane.getChildren().remove(p.getLightSource());
+                Game.playerKilled((SurvivorPlayer) p);
             }
         }
     }
@@ -175,11 +195,16 @@ public class MovementController {
     private int collisionWithObj(Player player, String moveDirection) {
         boolean test = false;
         for (Node mapObject : gameMapPane.getChildren()) {
-            if (!mapObject.equals(player.getPlayerSprite())) {
+            boolean isLight = checkLight(mapObject);
+            if (!mapObject.equals(player.getPlayerSprite())
+                    && !isLight) {
+
                 test = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
+
                 if (test) {
                     if (player.getClass().equals(HunterPlayer.class) && mapObject.getClass().equals(player.getPlayerSprite().getClass())) {
                         ((HunterPlayer) player).setVictimPlayerSprite((ImageView) mapObject);
+                        Game.addMove(player, "killed a player");
                         return 2;
                     }
                     return 1;
@@ -188,6 +213,16 @@ public class MovementController {
         }
         return 0;
     }
+
+    private boolean checkLight(Node mapObject) {
+        for (Player p : Game.getAlivePlayersList()) {
+            if (mapObject.equals(p.getLightSource())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void movementSetup() {
         scene.setOnKeyPressed(e -> {

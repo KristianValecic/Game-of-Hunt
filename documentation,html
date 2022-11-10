@@ -1,0 +1,781 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>Project documentation</title>
+</head>
+<body>
+package hr.algebra.java2.dal
+
+public hr.algebra.java2.dal.GameState
+extends java.lang.Object
+implements Serializable
+
+private int hr.algebra.java2.dal.GameState.minutesState
+private int hr.algebra.java2.dal.GameState.secondsState
+private int hr.algebra.java2.dal.GameState.match
+private int hr.algebra.java2.dal.GameState.scoreState
+private java.util.List hr.algebra.java2.dal.GameState.playersList
+private java.util.Map hr.algebra.java2.dal.GameState.alivePlayersPositionsList
+private java.util.Map hr.algebra.java2.dal.GameState.alivePlayersLightSourcePositionsList
+
+
+private void lambda$setAlivePlayersPositions$1(javafx.scene.Node arg0)
+
+
+private void lambda$setAlivePlayersPositions$0(javafx.scene.Node arg0, hr.algebra.java2.model.Player arg1)
+
+
+public void addPlayer(hr.algebra.java2.model.Player arg0)
+
+
+public interface java.util.Map getAlivePlayersList()
+
+
+public void setAlivePlayersPositions(javafx.collections.ObservableList<javafx.scene.Node> arg0)
+
+
+public interface java.util.Map getAlivePlayersLightSourceList()
+
+
+public int getMatchState()
+
+
+public int getSecondsState()
+
+
+public void setTimerState(int arg0, int arg1)
+
+
+public void setPlayersList(java.util.List<hr.algebra.java2.model.Player> arg0)
+
+
+public void setMatchState(int arg0)
+
+
+public int getMinutesState()
+
+
+public interface java.util.List getPlayersList()
+
+
+public hr.algebra.java2.dal.GameState()package hr.algebra.java2.dal
+
+public hr.algebra.java2.dal.PlayerState
+extends hr.algebra.java2.model.Player java.lang.Object
+implements Serializable
+
+private double hr.algebra.java2.dal.PlayerState.playerPositionMinX
+private double hr.algebra.java2.dal.PlayerState.playerPositionMinY
+private double hr.algebra.java2.dal.PlayerState.playerPositionMaxX
+private double hr.algebra.java2.dal.PlayerState.playerPositionMaxY
+private java.lang.String hr.algebra.java2.dal.PlayerState.playerName
+private hr.algebra.java2.model.PlayerRole hr.algebra.java2.dal.PlayerState.playerRole
+
+
+public double getminY()
+
+
+public void setPlayerPosOnMap(javafx.geometry.Bounds arg0)
+
+
+public double getminX()
+
+
+public class java.lang.String getPlayerName()
+
+
+public class hr.algebra.java2.model.PlayerRole getPlayerRole()
+
+
+public hr.algebra.java2.dal.PlayerState(hr.algebra.java2.model.PlayerRole arg0, java.lang.String arg1, javafx.scene.image.Image arg2)
+
+
+public hr.algebra.java2.dal.PlayerState(hr.algebra.java2.model.PlayerRole arg0, java.lang.String arg1, double arg2, double arg3, double arg4, double arg5)package hr.algebra.java2.hunt
+
+public hr.algebra.java2.hunt.CollisionController
+extends java.lang.Object
+
+private final javafx.scene.layout.Pane hr.algebra.java2.hunt.CollisionController.mainMap
+public boolean hr.algebra.java2.hunt.CollisionController.collision
+hr.algebra.java2.hunt.MovementController hr.algebra.java2.hunt.CollisionController.movementController
+
+
+public boolean checkCollisionWithObject(javafx.scene.image.ImageView arg0, javafx.scene.Node arg1, java.lang.String arg2)
+
+
+public boolean checkCollisionWithMap(javafx.scene.image.ImageView arg0, java.lang.String arg1)
+
+
+public void setMovementController(hr.algebra.java2.hunt.MovementController arg0)
+
+
+public boolean isCollision()
+
+
+public void setCollision(boolean arg0)
+
+
+public hr.algebra.java2.hunt.CollisionController(javafx.scene.layout.Pane arg0)package hr.algebra.java2.hunt
+
+public hr.algebra.java2.hunt.GameOverWindowController
+extends java.lang.Object
+implements Initializable
+
+private javafx.collections.ObservableList hr.algebra.java2.hunt.GameOverWindowController.players
+private javafx.scene.control.TableColumn hr.algebra.java2.hunt.GameOverWindowController.playerNameColumn
+private javafx.scene.control.TableColumn hr.algebra.java2.hunt.GameOverWindowController.playerRoleColumn
+private javafx.scene.control.TableColumn hr.algebra.java2.hunt.GameOverWindowController.playerWinScoreColumn
+private javafx.scene.control.TableView hr.algebra.java2.hunt.GameOverWindowController.scoreTable
+private javafx.collections.ObservableList hr.algebra.java2.hunt.GameOverWindowController.moveList
+private javafx.scene.control.TableView hr.algebra.java2.hunt.GameOverWindowController.moveTable
+private javafx.scene.control.TableColumn hr.algebra.java2.hunt.GameOverWindowController.playerMovesColumn
+private javafx.scene.control.TableColumn hr.algebra.java2.hunt.GameOverWindowController.playerNameForMoveColumn
+private javafx.scene.control.TableColumn hr.algebra.java2.hunt.GameOverWindowController.playerRoleForMoveColumn
+
+
+public void initialize(java.net.URL arg0, java.util.ResourceBundle arg1)
+
+
+private static boolean lambda$onCreateDocumentation$0(java.nio.file.Path arg0)
+
+@javafx.fxml.FXML()
+ void onCreateDocumentation(javafx.event.ActionEvent arg0)
+
+@javafx.fxml.FXML()
+ void onPlayAgain(javafx.event.ActionEvent arg0)
+
+
+public hr.algebra.java2.hunt.GameOverWindowController()package hr.algebra.java2.hunt
+
+public hr.algebra.java2.hunt.GameScreenController
+extends java.lang.Object
+implements Initializable
+
+private double hr.algebra.java2.hunt.GameScreenController.spawnPointX
+private double hr.algebra.java2.hunt.GameScreenController.spawnPointY
+private double hr.algebra.java2.hunt.GameScreenController.spawnPointDistance
+private static java.util.List hr.algebra.java2.hunt.GameScreenController.playersLightSourceList
+private hr.algebra.java2.hunt.MovementController hr.algebra.java2.hunt.GameScreenController.movementController
+private javafx.scene.layout.Pane hr.algebra.java2.hunt.GameScreenController.paneGameMap
+private javafx.scene.image.ImageView hr.algebra.java2.hunt.GameScreenController.imgGameMap
+private javafx.scene.layout.Pane hr.algebra.java2.hunt.GameScreenController.paneRootParent
+private javafx.scene.control.Label hr.algebra.java2.hunt.GameScreenController.lblTimer
+private javafx.scene.control.Label hr.algebra.java2.hunt.GameScreenController.lblMatchCounter
+private javafx.scene.control.Label hr.algebra.java2.hunt.GameScreenController.lblFpsCount
+private javafx.animation.Timeline hr.algebra.java2.hunt.GameScreenController.timeline
+
+
+public void initialize(java.net.URL arg0, java.util.ResourceBundle arg1)
+
+
+private void lambda$new$0(javafx.event.ActionEvent arg0)
+
+
+private void lambda$onLoadGame$2(hr.algebra.java2.model.Player arg0, hr.algebra.java2.model.Coordinate arg1)
+
+
+private void lambda$onLoadGame$1(hr.algebra.java2.model.Player arg0, hr.algebra.java2.model.Coordinate arg1)
+
+
+private void timerStop()
+
+
+private void newMatch()
+
+
+private void cleanupMap()
+
+
+private void EndOfGame()
+
+@javafx.fxml.FXML()
+ void onSaveGame(javafx.event.ActionEvent arg0) throws java.io.IOException
+
+@javafx.fxml.FXML()
+ void onLoadGame(javafx.event.ActionEvent arg0) throws java.io.IOException java.lang.ClassNotFoundException
+
+
+public hr.algebra.java2.hunt.GameScreenController()package hr.algebra.java2.hunt
+
+ hr.algebra.java2.hunt.MovementController$1
+extends javafx.animation.AnimationTimer java.lang.Object
+
+private long hr.algebra.java2.hunt.MovementController$1.lastRun
+final hr.algebra.java2.hunt.MovementController hr.algebra.java2.hunt.MovementController$1.this$0
+
+
+public void start()
+
+
+public void handle(long arg0)
+
+
+ hr.algebra.java2.hunt.MovementController$1(hr.algebra.java2.hunt.MovementController arg0)package hr.algebra.java2.hunt
+
+public hr.algebra.java2.hunt.MovementController
+extends java.lang.Object
+
+private static final java.lang.String hr.algebra.java2.hunt.MovementController.up
+private static final java.lang.String hr.algebra.java2.hunt.MovementController.down
+private static final java.lang.String hr.algebra.java2.hunt.MovementController.left
+private static final java.lang.String hr.algebra.java2.hunt.MovementController.right
+private javafx.beans.property.BooleanProperty hr.algebra.java2.hunt.MovementController.wPressed
+private javafx.beans.property.BooleanProperty hr.algebra.java2.hunt.MovementController.aPressed
+private javafx.beans.property.BooleanProperty hr.algebra.java2.hunt.MovementController.sPressed
+private javafx.beans.property.BooleanProperty hr.algebra.java2.hunt.MovementController.dPressed
+private hr.algebra.java2.hunt.CollisionController hr.algebra.java2.hunt.MovementController.collisionController
+private javafx.scene.layout.Pane hr.algebra.java2.hunt.MovementController.gameMapPane
+private javafx.scene.layout.Pane hr.algebra.java2.hunt.MovementController.scene
+private javafx.beans.binding.BooleanBinding hr.algebra.java2.hunt.MovementController.keyPressed
+public static javafx.scene.control.Label hr.algebra.java2.hunt.MovementController.lblFPS
+private java.util.List hr.algebra.java2.hunt.MovementController.players
+javafx.animation.AnimationTimer hr.algebra.java2.hunt.MovementController.timer
+
+
+private void lambda$movementSetup$2(javafx.scene.input.KeyEvent arg0)
+
+
+private void lambda$movementSetup$1(javafx.scene.input.KeyEvent arg0)
+
+
+private void lambda$makeMovable$0(javafx.beans.value.ObservableValue arg0, java.lang.Boolean arg1, java.lang.Boolean arg2)
+
+
+public void stopMovement()
+
+
+public void makeMovable(javafx.scene.layout.Pane arg0)
+
+
+private boolean checkLight(javafx.scene.Node arg0)
+
+
+private void movementSetup()
+
+
+public void resumeMovement()
+
+
+private int collisionWithObj(hr.algebra.java2.model.Player arg0, java.lang.String arg1)
+
+
+private void killPlayer(javafx.scene.image.ImageView arg0)
+
+
+private double getFPS(long arg0)
+
+
+public hr.algebra.java2.hunt.MovementController(javafx.scene.layout.Pane arg0)package hr.algebra.java2.hunt
+
+public hr.algebra.java2.hunt.StartMenuAplication
+extends javafx.application.Application java.lang.Object
+
+private static javafx.stage.Stage hr.algebra.java2.hunt.StartMenuAplication.mainStage
+
+
+public static void main(java.lang.String[] arg0)
+
+
+public void start(javafx.stage.Stage arg0) throws java.io.IOException
+
+
+public static class javafx.stage.Stage getMainStage()
+
+
+public hr.algebra.java2.hunt.StartMenuAplication()package hr.algebra.java2.hunt
+
+public hr.algebra.java2.hunt.StartMenuController
+extends java.lang.Object
+implements Initializable
+
+private static final java.lang.String hr.algebra.java2.hunt.StartMenuController.DELIMTER
+private static final java.lang.String hr.algebra.java2.hunt.StartMenuController.MIN_PLAYER_ERROR_MSG
+private static final java.lang.String hr.algebra.java2.hunt.StartMenuController.MAX_MATCHES_ERROR_MSG
+private static final java.lang.String hr.algebra.java2.hunt.StartMenuController.MIN_MATCHES_ERROR_MSG
+private static final java.lang.String hr.algebra.java2.hunt.StartMenuController.MAX_MATCH_TIME_ERROR
+private static final java.lang.String hr.algebra.java2.hunt.StartMenuController.MIN_MATCH_TIME_ERROR
+private static int hr.algebra.java2.hunt.StartMenuController.matchCounter
+private static int hr.algebra.java2.hunt.StartMenuController.playerCounter
+private static javafx.scene.control.Button hr.algebra.java2.hunt.StartMenuController.btnAddPlayerFromParent
+private static java.util.List hr.algebra.java2.hunt.StartMenuController.playersList
+private javafx.scene.control.Button hr.algebra.java2.hunt.StartMenuController.btnAddPlayer
+private javafx.scene.control.Button hr.algebra.java2.hunt.StartMenuController.btnAddMatch
+private javafx.scene.control.Button hr.algebra.java2.hunt.StartMenuController.btnSubMatch
+private javafx.scene.control.Button hr.algebra.java2.hunt.StartMenuController.btnSubMatchTime
+private javafx.scene.control.Button hr.algebra.java2.hunt.StartMenuController.btnAddMatchTime
+private javafx.scene.control.Label hr.algebra.java2.hunt.StartMenuController.lblMatchCounter
+private javafx.scene.layout.FlowPane hr.algebra.java2.hunt.StartMenuController.flpnMainMenu
+private javafx.scene.control.Label hr.algebra.java2.hunt.StartMenuController.lblErrorForm
+private javafx.scene.control.Label hr.algebra.java2.hunt.StartMenuController.lblMatchTime
+private static javafx.scene.layout.FlowPane hr.algebra.java2.hunt.StartMenuController.flpnParentToPlayerCard
+private javafx.scene.control.Label hr.algebra.java2.hunt.StartMenuController.lblPlayerCounter
+private static javafx.scene.control.Label hr.algebra.java2.hunt.StartMenuController.lblPlayerCounterFormParent
+private javafx.scene.control.TextField hr.algebra.java2.hunt.StartMenuController.tfPlayerName
+private javafx.scene.control.Label hr.algebra.java2.hunt.StartMenuController.lblPlayerRole
+private javafx.scene.image.ImageView hr.algebra.java2.hunt.StartMenuController.imgCharacter
+
+
+public void initialize(java.net.URL arg0, java.util.ResourceBundle arg1)
+
+@javafx.fxml.FXML()
+protected void onClickRemovePlayer()
+
+@javafx.fxml.FXML()
+protected void onClickSubtractMatch()
+
+@javafx.fxml.FXML()
+ void onClickSubtractMatchTime(javafx.event.ActionEvent arg0)
+
+@javafx.fxml.FXML()
+ void onClickAddMatchTime(javafx.event.ActionEvent arg0)
+
+
+private boolean playersValid()
+
+@javafx.fxml.FXML()
+protected void onClickAddMatch()
+
+@javafx.fxml.FXML()
+protected void onClickAddPlayer()
+
+
+public void startGame()
+
+
+private void createPLayerCard()
+
+
+public hr.algebra.java2.hunt.StartMenuController()package hr.algebra.java2.model
+
+public hr.algebra.java2.model.Coordinate
+extends java.lang.Object
+implements Serializable
+
+private double hr.algebra.java2.model.Coordinate.x
+private double hr.algebra.java2.model.Coordinate.y
+
+
+public double getY()
+
+
+public double getX()
+
+
+public void setY(double arg0)
+
+
+public void setX(double arg0)
+
+
+public hr.algebra.java2.model.Coordinate(double arg0, double arg1)package hr.algebra.java2.model
+
+public hr.algebra.java2.model.Game
+extends java.lang.Object
+
+private static java.util.List hr.algebra.java2.model.Game.playersList
+public static final int hr.algebra.java2.model.Game.MIN_PLAYERS
+public static final int hr.algebra.java2.model.Game.MAX_PLAYERS
+public static final int hr.algebra.java2.model.Game.MAX_MATCHES
+public static final int hr.algebra.java2.model.Game.MIN_MATCHES
+public static final double hr.algebra.java2.model.Game.spawnMargin
+public static boolean hr.algebra.java2.model.Game.spawnFlagLeftTop
+public static boolean hr.algebra.java2.model.Game.spawnFlagLeftBottom
+public static boolean hr.algebra.java2.model.Game.spawnFlagRightTop
+public static boolean hr.algebra.java2.model.Game.spawnFlagRightBottom
+private static hr.algebra.java2.model.Coordinate hr.algebra.java2.model.Game.playerSpawnLeftTop
+private static hr.algebra.java2.model.Coordinate hr.algebra.java2.model.Game.playerSpawnLeftBottom
+private static hr.algebra.java2.model.Coordinate hr.algebra.java2.model.Game.playerSpawnRightBottom
+private static hr.algebra.java2.model.Coordinate hr.algebra.java2.model.Game.playerSpawnRightTop
+private static final java.lang.String hr.algebra.java2.model.Game.gameMapImagePath
+private static final java.lang.String hr.algebra.java2.model.Game.hunterImagePath
+private static final java.lang.String hr.algebra.java2.model.Game.survivorImagePath
+private static java.util.List hr.algebra.java2.model.Game.alivePlayersList
+private static java.util.List hr.algebra.java2.model.Game.moves
+private static int hr.algebra.java2.model.Game.allMatchesCount
+private static int hr.algebra.java2.model.Game.matchCounter
+private static boolean hr.algebra.java2.model.Game.gameOver
+private static java.lang.String hr.algebra.java2.model.Game.WindowTitle
+
+
+public static void setInitialPlayersList(java.util.List<hr.algebra.java2.model.Player> arg0)
+
+
+public static class java.lang.String getSurvivorImagePath()
+
+
+public static class java.lang.String getHunterImagePath()
+
+
+public static void setMatchesCount(int arg0)
+
+
+public static class java.lang.String getWindowTitle()
+
+
+private static void lambda$playerKilled$0(hr.algebra.java2.model.SurvivorPlayer arg0, hr.algebra.java2.model.Player arg1)
+
+
+public static class java.lang.String getGameMapImagePath()
+
+
+public static void matchEndByTimerRunout()
+
+
+private static void lambda$matchEndByTimerRunout$1(hr.algebra.java2.model.Player arg0)
+
+
+public static interface java.util.List getAlivePlayersList()
+
+
+public static void addMove(hr.algebra.java2.model.Player arg0, java.lang.String arg1)
+
+
+private static void matchEnd()
+
+
+private static void gameEnd(java.lang.String arg0)
+
+
+public static void playerKilled(hr.algebra.java2.model.SurvivorPlayer arg0)
+
+
+public static boolean isGameOver()
+
+
+public static void Rematch()
+
+
+public static void loadPlayersList(java.util.List<hr.algebra.java2.model.Player> arg0)
+
+
+public static int getCurrentMatch()
+
+
+public static interface java.util.List getPlayersList()
+
+
+public static interface java.util.List getMoves()
+
+
+public static void setSpawnPoints(double arg0, double arg1)
+
+
+public static void addAlivePlayer(hr.algebra.java2.model.Player arg0)
+
+
+private static void setNewGame()
+
+
+private static void lambda$gameEnd$2(java.lang.String arg0, hr.algebra.java2.model.Player arg1)
+
+
+public static class hr.algebra.java2.model.Coordinate getRandomSawnPoint()
+
+
+public static void setCurrentMatch(int arg0)
+
+
+private hr.algebra.java2.model.Game()package hr.algebra.java2.model
+
+public hr.algebra.java2.model.GameTimer
+extends java.lang.Object
+
+private static int hr.algebra.java2.model.GameTimer.hour
+private static int hr.algebra.java2.model.GameTimer.minute
+private static int hr.algebra.java2.model.GameTimer.second
+private static int hr.algebra.java2.model.GameTimer.startMinute
+private static int hr.algebra.java2.model.GameTimer.startSecond
+private static int hr.algebra.java2.model.GameTimer.matchMinutesMax
+private static int hr.algebra.java2.model.GameTimer.matchSecondsMax
+private static int hr.algebra.java2.model.GameTimer.matchMinutesMin
+private static int hr.algebra.java2.model.GameTimer.matchSecondsMin
+private static final int hr.algebra.java2.model.GameTimer.matchTimeIncrement
+
+
+public static class java.lang.String getTime()
+
+
+public static void countDownSecondPassed()
+
+
+public static void addMatchTime()
+
+
+public static void subMatchTime()
+
+
+public static boolean validateMinTime()
+
+
+public static class java.lang.String getMatchStartTime()
+
+
+public static boolean validateMaxTime()
+
+
+public static class java.lang.String minMatchTime()
+
+
+public static class java.lang.String maxMatchTime()
+
+
+public static class java.lang.String matchOver()
+
+
+public static void resetTimer()
+
+
+public static void setMatchTime(int arg0, int arg1)
+
+
+public static class java.lang.String formatTime(int arg0, int arg1)
+
+
+public static int getCurrentMinues()
+
+
+public static int getCurrentSeconds()
+
+
+public static class java.lang.String getCurrentTime()
+
+
+private hr.algebra.java2.model.GameTimer()package hr.algebra.java2.model
+
+public hr.algebra.java2.model.HunterPlayer
+extends hr.algebra.java2.model.Player java.lang.Object
+
+private int hr.algebra.java2.model.HunterPlayer.scoreOfKilledPlayers
+private java.util.List hr.algebra.java2.model.HunterPlayer.lsitOfVictims
+private transient javafx.scene.image.ImageView hr.algebra.java2.model.HunterPlayer.victimPlayerSprite
+
+
+public class javafx.scene.image.ImageView getVictimPlayerSprite()
+
+
+public void setVictimPlayerSprite(javafx.scene.image.ImageView arg0)
+
+
+public void killedPlayer(hr.algebra.java2.model.Player arg0)
+
+
+public hr.algebra.java2.model.HunterPlayer(hr.algebra.java2.model.PlayerRole arg0, javafx.scene.image.Image arg1)
+
+
+public hr.algebra.java2.model.HunterPlayer(java.lang.String arg0, hr.algebra.java2.model.PlayerRole arg1, javafx.scene.image.Image arg2)package hr.algebra.java2.model
+
+public hr.algebra.java2.model.Move
+extends java.lang.Object
+
+private java.lang.String hr.algebra.java2.model.Move.playerName
+private java.lang.String hr.algebra.java2.model.Move.playerRole
+private java.lang.String hr.algebra.java2.model.Move.move
+
+
+public void setMove(java.lang.String arg0)
+
+
+public class java.lang.String getMove()
+
+
+public void setPlayerName(hr.algebra.java2.model.Player arg0)
+
+
+public class java.lang.String getPlayerName()
+
+
+public void setPlayerRole(hr.algebra.java2.model.Player arg0)
+
+
+public class java.lang.String getPlayerRole()
+
+
+public hr.algebra.java2.model.Move(hr.algebra.java2.model.Player arg0, java.lang.String arg1)package hr.algebra.java2.model
+
+public hr.algebra.java2.model.Player
+extends java.lang.Object
+implements Serializable
+
+private java.lang.String hr.algebra.java2.model.Player.playerName
+private hr.algebra.java2.model.PlayerRole hr.algebra.java2.model.Player.playerRole
+public static final double hr.algebra.java2.model.Player.playerWidth
+public static final double hr.algebra.java2.model.Player.playerHeight
+private static double hr.algebra.java2.model.Player.marginLightSource
+private double hr.algebra.java2.model.Player.playerSpeed
+private double hr.algebra.java2.model.Player.playerHunterSpeed
+private java.util.List hr.algebra.java2.model.Player.moves
+private java.lang.Integer hr.algebra.java2.model.Player.gamesWon
+private transient javafx.scene.image.ImageView hr.algebra.java2.model.Player.playerSprite
+private transient javafx.scene.image.ImageView hr.algebra.java2.model.Player.lightSource
+
+
+public static double getLightSourceHeight()
+
+
+public void loadPlayerLightSource(hr.algebra.java2.model.Coordinate arg0)
+
+
+public class javafx.scene.image.ImageView setPlayerLightSourceInitial(hr.algebra.java2.model.Coordinate arg0)
+
+
+public static double getLightSourceWidth()
+
+
+public static double getMarginLightSource()
+
+
+public void addMove(java.lang.String arg0)
+
+
+public void gameWon()
+
+
+public static double getPlayerWidth()
+
+
+public interface java.util.List getMoves()
+
+
+public void loadPlayerSprite(hr.algebra.java2.model.Coordinate arg0)
+
+
+public void setPlayerName(java.lang.String arg0)
+
+
+public class java.lang.String getPlayerName()
+
+
+public void setPlayerRole(hr.algebra.java2.model.PlayerRole arg0)
+
+
+public int getGamesWon()
+
+
+public void setGamesWon(int arg0)
+
+
+public class javafx.scene.image.ImageView getLightSource()
+
+
+public void setLightSource(javafx.scene.image.ImageView arg0)
+
+
+public void setPlayerSprite(javafx.scene.image.Image arg0)
+
+
+public class javafx.scene.image.ImageView getPlayerSprite()
+
+
+public double getPlayerSpeed()
+
+
+public static double getPlayerHeight()
+
+
+public class hr.algebra.java2.model.PlayerRole getPlayerRole()
+
+
+public hr.algebra.java2.model.Player(java.lang.String arg0, hr.algebra.java2.model.PlayerRole arg1, javafx.scene.image.Image arg2)
+
+
+public hr.algebra.java2.model.Player(hr.algebra.java2.model.PlayerRole arg0, javafx.scene.image.Image arg1)
+
+
+public hr.algebra.java2.model.Player()package hr.algebra.java2.model
+
+public final hr.algebra.java2.model.PlayerRole
+extends java.lang.Enum java.lang.Object
+implements Serializable
+
+public static final hr.algebra.java2.model.PlayerRole hr.algebra.java2.model.PlayerRole.Hunter
+public static final hr.algebra.java2.model.PlayerRole hr.algebra.java2.model.PlayerRole.Survivor
+private static final hr.algebra.java2.model.PlayerRole[] hr.algebra.java2.model.PlayerRole.$VALUES
+
+
+public static class [Lhr.algebra.java2.model.PlayerRole; values()
+
+
+public static class hr.algebra.java2.model.PlayerRole valueOf(java.lang.String arg0)
+
+
+private static class [Lhr.algebra.java2.model.PlayerRole; $values()
+
+
+private hr.algebra.java2.model.PlayerRole(java.lang.String arg0, int arg1)package hr.algebra.java2.model
+
+public hr.algebra.java2.model.SurvivorPlayer
+extends hr.algebra.java2.model.Player java.lang.Object
+
+private int hr.algebra.java2.model.SurvivorPlayer.matchesSurvivedCounter
+private boolean hr.algebra.java2.model.SurvivorPlayer.dead
+
+
+public void setDead(boolean arg0)
+
+
+public void SurvivedMatch()
+
+
+public boolean isDead()
+
+
+public hr.algebra.java2.model.SurvivorPlayer(hr.algebra.java2.model.PlayerRole arg0, javafx.scene.image.Image arg1)
+
+
+public hr.algebra.java2.model.SurvivorPlayer(java.lang.String arg0, hr.algebra.java2.model.PlayerRole arg1, javafx.scene.image.Image arg2)package hr.algebra.java2.utilities
+
+public hr.algebra.java2.utilities.ReflectionUtils
+extends java.lang.Object
+
+
+
+
+public static void readClassAndMembersInfo(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendPackage(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendModifiers(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendParent(java.lang.Class<?> arg0, java.lang.StringBuilder arg1, boolean arg2)
+
+
+private static void appendInterfaces(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendConstructors(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendAnnotations(java.lang.reflect.Executable arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendMethods(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendParameters(java.lang.reflect.Executable arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendFields(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private static void appendExceptions(java.lang.reflect.Executable arg0, java.lang.StringBuilder arg1)
+
+
+public static void readClassInfo(java.lang.Class<?> arg0, java.lang.StringBuilder arg1)
+
+
+private hr.algebra.java2.utilities.ReflectionUtils()package hr.algebra.java2.utilities
+
+public hr.algebra.java2.utilities.SceneUtils
+extends java.lang.Object
+
+
+
+
+public static void createScene(javafx.stage.Stage arg0, java.lang.String arg1, java.lang.String arg2) throws java.io.IOException
+
+
+private hr.algebra.java2.utilities.SceneUtils()</body>
+</html> 

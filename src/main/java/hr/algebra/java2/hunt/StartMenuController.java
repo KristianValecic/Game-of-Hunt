@@ -27,19 +27,15 @@ import java.util.ResourceBundle;
 
 public class StartMenuController implements Initializable {
     private static final String DELIMTER = "/";
-    private static final int MIN_PLAYERS = 2;
-    private static final int MAX_PLAYERS = 5;
-    private static final int MAX_MATCHES = 7;
-    private static final int MIN_MATCHES = 1;
-    private static final String MAX_MATCHES_ERROR_MSG = "Maximum amount of matches is "+MAX_MATCHES;
-    private static final String MIN_MATCHES_ERROR_MSG = "Minimum amount matches is "+MIN_MATCHES;
+
+    private static final String MIN_PLAYER_ERROR_MSG = "Minimum amount of players is "+Game.MIN_PLAYERS;
+    private static final String MAX_MATCHES_ERROR_MSG = "Maximum amount of matches is "+Game.MAX_MATCHES;
+    private static final String MIN_MATCHES_ERROR_MSG = "Minimum amount matches is "+Game.MIN_MATCHES;
     private static final String MAX_MATCH_TIME_ERROR = "Maximum match time is "+GameTimer.maxMatchTime();
     private static final String MIN_MATCH_TIME_ERROR = "Minimum match time is "+GameTimer.minMatchTime();
     private static int matchCounter = 1;
     private static int playerCounter = 0;
-    private static int matchMinutes = 0;
-    private static int matchSeconds = 10;
-    private int matchTimeIncrement = 5;
+
     private static Button btnAddPlayerFromParent;
     private static List<Player> playersList = new ArrayList<>();
     @FXML
@@ -76,17 +72,17 @@ public class StartMenuController implements Initializable {
 
     @FXML
     protected void onClickAddPlayer() {
-        if (playerCounter == MAX_PLAYERS) {
+        if (playerCounter == Game.MAX_PLAYERS) {
             return;
         }
 
         createPLayerCard();
 
         playerCounter++;
-        if (playerCounter == MAX_PLAYERS) {
+        if (playerCounter == Game.MAX_PLAYERS) {
             flpnMainMenu.getChildren().remove(btnAddPlayer);
         }
-        lblPlayerCounter.setText(playerCounter + DELIMTER + MAX_PLAYERS);
+        lblPlayerCounter.setText(playerCounter + DELIMTER + Game.MAX_PLAYERS);
     }
 
     private void createPLayerCard() {
@@ -100,8 +96,8 @@ public class StartMenuController implements Initializable {
     }
 
     public void startGame() {
-        if (!validInputs()){
-            lblErrorForm.setText("Invalid inputs");
+        //provjerava je li playerCount i je li su sva imena unesena
+        if (!playersValid()){
             return;
         }
 
@@ -127,10 +123,12 @@ public class StartMenuController implements Initializable {
                     playersList.add(new SurvivorPlayer(playerName, PlayerRole.Survivor, new Image(Game.getSurvivorImagePath())));
                 }
             }
+            GameTimer.getTime();
+            GameTimer.getCurrentTime();
         }
 
         //sets time of match
-        GameTimer.setMatchTime(matchMinutes, matchSeconds);
+
 
         try {
             //GameScreenController.setPlayersList(playersList);
@@ -144,26 +142,26 @@ public class StartMenuController implements Initializable {
 
     @FXML
     protected void onClickRemovePlayer() {
-        flpnParentToPlayerCard.getChildren().remove(playerCounter == MAX_PLAYERS ? playerCounter - 1 : playerCounter);
-        playersList.remove(playerCounter - 1);
+        flpnParentToPlayerCard.getChildren().remove(playerCounter == Game.MAX_PLAYERS ? playerCounter - 1 : playerCounter);
+        //playersList.remove(playerCounter - 1);
 
-        if (playerCounter == MAX_PLAYERS) {
+        if (playerCounter == Game.MAX_PLAYERS) {
             flpnParentToPlayerCard.getChildren().add(0, btnAddPlayerFromParent);
         }
         playerCounter--;
-        lblPlayerCounterFormParent.setText(playerCounter + DELIMTER + MAX_PLAYERS);
+        lblPlayerCounterFormParent.setText(playerCounter + DELIMTER + Game.MAX_PLAYERS);
     }
 
     @FXML
     void onClickSubtractMatchTime(ActionEvent event) {
-        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.minMatchTime())) {
+        if (GameTimer.validateMinTime()) { /*GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.minMatchTime())*/
             return;
         }
 
-        subMatchTime(matchTimeIncrement);
-        lblMatchTime.setText(GameTimer.formatTime(matchMinutes, matchSeconds));
+        GameTimer.subMatchTime();
+        lblMatchTime.setText(GameTimer.getTime());/*GameTimer.formatTime(matchMinutes, matchSeconds)*/
 
-        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.minMatchTime())) {
+        if (GameTimer.validateMinTime()) {
             btnSubMatchTime.setOpacity(0.5);
             lblErrorForm.setText(MIN_MATCH_TIME_ERROR);
         }else {
@@ -173,41 +171,25 @@ public class StartMenuController implements Initializable {
     }
     @FXML
     void onClickAddMatchTime(ActionEvent event) {
-        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.maxMatchTime())) {
+        if (GameTimer.validateMaxTime()) {/*GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.maxMatchTime())*/
             return;
         }
 
-        addMatchTime(matchTimeIncrement);
-        lblMatchTime.setText(GameTimer.formatTime(matchMinutes, matchSeconds));
+        GameTimer.addMatchTime();
+        lblMatchTime.setText(GameTimer.getTime());/*formatTime(matchMinutes, matchSeconds)*/
 
-        if (GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.maxMatchTime())) {
+        if (GameTimer.validateMaxTime()) {
             lblErrorForm.setText(MAX_MATCH_TIME_ERROR);
             btnAddMatchTime.setOpacity(0.5);
         }else {
-            btnSubMatchTime.setOpacity(1);
             lblErrorForm.setText("");
+            btnSubMatchTime.setOpacity(1);
         }
-    }
-
-    private void addMatchTime(int secondsIncrement) {
-        matchSeconds+=secondsIncrement;
-        if (matchSeconds == 60){
-            matchMinutes++;
-            matchSeconds = 0;
-        }
-    }
-
-    private void subMatchTime(int secondsDecrement) {
-        if (matchSeconds == 0){
-            matchMinutes--;
-            matchSeconds = 60 - secondsDecrement;
-        }
-        matchSeconds-=secondsDecrement;
     }
 
     @FXML
     protected void onClickAddMatch() {
-        if (matchCounter >= MAX_MATCHES){
+        if (matchCounter >= Game.MAX_MATCHES){
             lblErrorForm.setText(MAX_MATCHES_ERROR_MSG);
             btnAddMatch.setOpacity(0.5);
             return;
@@ -221,7 +203,7 @@ public class StartMenuController implements Initializable {
     }
     @FXML
     protected void onClickSubtractMatch() {
-        if (matchCounter <= MIN_MATCHES){
+        if (matchCounter <= Game.MIN_MATCHES){
             lblErrorForm.setText(MIN_MATCHES_ERROR_MSG);
             btnSubMatch.setOpacity(0.5);
             btnSubMatch.setOpacity(0.5);
@@ -236,10 +218,11 @@ public class StartMenuController implements Initializable {
         lblMatchCounter.setText(Integer.toString(matchCounter));
     }
 
-    private boolean validInputs() {
+    private boolean playersValid() {
         //provjerava jesu sva imena unesena
-        if (playerCounter < MIN_PLAYERS)
+        if (playerCounter < Game.MIN_PLAYERS)
         {
+            lblErrorForm.setText(MIN_PLAYER_ERROR_MSG);
             return false;
         }
         return true;
@@ -253,8 +236,8 @@ public class StartMenuController implements Initializable {
             btnAddPlayerFromParent = btnAddPlayer;
 
             lblMatchCounter.setText(Integer.toString(matchCounter));
-            lblPlayerCounter.setText(playerCounter + DELIMTER + MAX_PLAYERS);
-            lblMatchTime.setText(GameTimer.formatTime(matchMinutes, matchSeconds));
+            lblPlayerCounter.setText(playerCounter + DELIMTER + Game.MAX_PLAYERS);
+            lblMatchTime.setText(GameTimer.getDefaultMatchStartTime());/*formatTime(matchMinutes, matchSeconds)*/
 
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());

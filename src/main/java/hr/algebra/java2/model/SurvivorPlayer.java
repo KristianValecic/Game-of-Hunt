@@ -4,6 +4,16 @@ import javafx.scene.image.Image;
 
 public class SurvivorPlayer extends Player {
     private int matchesSurvivedCounter = 0;
+    private boolean dead = false;
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
     public SurvivorPlayer(PlayerRole playerRole, Image playerImage) {
         super(playerRole, playerImage);
     }

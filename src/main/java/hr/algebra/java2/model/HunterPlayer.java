@@ -9,7 +9,7 @@ import java.util.List;
 public class HunterPlayer extends Player{
     private int scoreOfKilledPlayers = 0;
     private List<Player> lsitOfVictims = new ArrayList<>();
-    private ImageView victimPlayerSprite;
+    private transient ImageView victimPlayerSprite;
     public HunterPlayer(PlayerRole playerRole, Image playerImage) {
         super(playerRole, playerImage);
     }
@@ -25,7 +25,7 @@ public class HunterPlayer extends Player{
 
 
     public void killedPlayer(Player player){
-        lsitOfVictims.add(player);
+        //lsitOfVictims.add(player);
         scoreOfKilledPlayers++;
     }
 }

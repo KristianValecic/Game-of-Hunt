@@ -4,6 +4,7 @@ import hr.algebra.java2.model.Coordinate;
 import hr.algebra.java2.model.GameTimer;
 import hr.algebra.java2.model.Player;
 import javafx.collections.ObservableList;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.util.Pair;
@@ -22,6 +23,7 @@ public class GameState implements Serializable {
     private int scoreState;
     private List<Player> playersList = new ArrayList<>();
     private Map<Player, Coordinate> alivePlayersPositionsList = new HashMap<>();
+    private Map<Player, Coordinate> alivePlayersLightSourcePositionsList = new HashMap<>();
 
     public  List<Player> getPlayersList() {
         return playersList;
@@ -35,19 +37,26 @@ public class GameState implements Serializable {
         this.playersList.addAll(playersList);
     }
 
-    public void setAlivePlayers(/*List<Player> alivePlayers, */ObservableList<Node> positions) {
-        positions.forEach(playerSpritePos -> {
+    public void setAlivePlayersPositions(ObservableList<Node> children) {
+        children.forEach(child -> {
             playersList.forEach(player -> {
-                if (player.getPlayerSprite().equals(playerSpritePos)) {
-                    Bounds playerSpriteBounds = playerSpritePos.getBoundsInParent();
-                    alivePlayersPositionsList.put(player, new Coordinate(playerSpriteBounds.getMinX(), playerSpriteBounds.getMinY()));
+
+                if (player.getPlayerSprite().equals(child)) {
+                    alivePlayersPositionsList.put(player,
+                            new Coordinate(
+                                    child.getBoundsInParent().getMinX(),
+                                    child.getBoundsInParent().getMinY())
+                    );
+                }
+                if (player.getLightSource().equals(child)) {
+                    alivePlayersLightSourcePositionsList.put(player,
+                            new Coordinate(
+                                    child.getBoundsInParent().getMinX(),
+                                    child.getBoundsInParent().getMinY())
+                    );
                 }
             });
         });
-    }
-
-    public void setPlayerPosition(Player player, Bounds bounds) {
-
     }
 
     public void setMatchState(int currentMatch) {
@@ -62,7 +71,6 @@ public class GameState implements Serializable {
     public Map<Player, Coordinate> getAlivePlayersList() {
         return alivePlayersPositionsList;
     }
-
     public int getMatchState() {
         return match;
     }
@@ -71,5 +79,8 @@ public class GameState implements Serializable {
     }
     public int getMinutesState() {
         return minutesState;
+    }
+    public Map<Player, Coordinate> getAlivePlayersLightSourceList() {
+        return alivePlayersLightSourcePositionsList;
     }
 }

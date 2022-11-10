@@ -12,26 +12,26 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="180.0" prefWidth="125.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.StartMenuController">
+<Pane prefHeight="180.0" prefWidth="125.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.StartMenuController">
    <children>
-      <GridPane layoutX="-2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="127.0" style="-fx-border-radius: 6px; -fx-border-color: black;">
+      <GridPane layoutX="-2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="125.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: black; -fx-border-color: white;" stylesheets="@Style.css">
         <columnConstraints>
           <ColumnConstraints />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints />
           <RowConstraints maxHeight="126.0" minHeight="10.0" prefHeight="126.0" valignment="CENTER" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="39.0" valignment="CENTER" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="61.0" minHeight="4.0" prefHeight="35.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <ImageView fx:id="imgCharacter" fitHeight="110.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="tfPlayerName" alignment="CENTER" prefHeight="25.0" prefWidth="134.0" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <FlowPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField fx:id="tfPlayerName" alignment="CENTER" prefHeight="27.0" prefWidth="125.0" promptText="Name" style="-fx-border-color: white;" stylesheets="@Style.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <FlowPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" stylesheets="@Style.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
-                  <Label fx:id="lblPlayerRole" alignment="CENTER" contentDisplay="CENTER" prefHeight="29.0" prefWidth="74.0" text="Placeholder" />
-                  <Button fx:id="btnRemovePlayer" depthTest="DISABLE" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onClickRemovePlayer" prefHeight="20.0" prefWidth="20.0" style="-fx-border-color: black; -fx-background-color: none; -fx-border-radius: 100%;" text="X" textAlignment="CENTER" textFill="RED">
+                  <Label fx:id="lblPlayerRole" alignment="CENTER" contentDisplay="CENTER" prefHeight="29.0" prefWidth="74.0" stylesheets="@Style.css" text="Placeholder" textFill="WHITE" />
+                  <Button fx:id="btnRemovePlayer" depthTest="DISABLE" graphicTextGap="2.0" mnemonicParsing="false" onAction="#onClickRemovePlayer" prefHeight="20.0" prefWidth="20.0" style="-fx-border-radius: 100%;" stylesheets="@Style.css" text="X" textAlignment="CENTER" textFill="RED">
                      <font>
                         <Font size="9.0" />
                      </font>
