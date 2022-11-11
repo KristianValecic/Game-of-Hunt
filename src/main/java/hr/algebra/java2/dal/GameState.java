@@ -19,6 +19,7 @@ public class GameState implements Serializable {
     //private String timerState;
     private int minutesState;
     private int secondsState;
+    private int matchAllCount;
     private int match;
     private int scoreState;
     private List<Player> playersList = new ArrayList<>();
@@ -67,7 +68,13 @@ public class GameState implements Serializable {
         secondsState = seconds;
         minutesState = minutes;
     }
+    public int getMatchAllCount() {
+        return matchAllCount;
+    }
 
+    public void setMatchAllCount(int matchAllCount) {
+        this.matchAllCount = matchAllCount;
+    }
     public Map<Player, Coordinate> getAlivePlayersList() {
         return alivePlayersPositionsList;
     }

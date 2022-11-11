@@ -8,12 +8,16 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
@@ -52,6 +56,7 @@ public class MovementController {
         collisionController = new CollisionController(gameMapPane);
     }
 
+
     public void stopMovement() {
         timer.stop();
     }
@@ -67,13 +72,17 @@ public class MovementController {
 
         collisionController.setMovementController(this);
 
-        keyPressed.addListener(((observableValue, aBoolean, t1) -> {
+        keyPressed.addListener(timerListener());
+    }
+
+    private ChangeListener<Boolean> timerListener() {
+        return (observableValue, aBoolean, t1) -> {
             if (!aBoolean) {
                 timer.start();
             } else {
                 timer.stop();
             }
-        }));
+        };
     }
 
     AnimationTimer timer = new AnimationTimer() {
@@ -202,7 +211,9 @@ public class MovementController {
                 test = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
 
                 if (test) {
-                    if (player.getClass().equals(HunterPlayer.class) && mapObject.getClass().equals(player.getPlayerSprite().getClass())) {
+                    if (player.getClass().equals(HunterPlayer.class) &&
+                        mapObject.getClass().equals(player.getPlayerSprite().getClass())&&
+                        ((HunterPlayer)player).canKill()) {
                         ((HunterPlayer) player).setVictimPlayerSprite((ImageView) mapObject);
                         Game.addMove(player, "killed a player");
                         return 2;
@@ -222,7 +233,6 @@ public class MovementController {
         }
         return false;
     }
-
 
     private void movementSetup() {
         scene.setOnKeyPressed(e -> {
@@ -261,6 +271,4 @@ public class MovementController {
             }
         });
     }
-
-
 }

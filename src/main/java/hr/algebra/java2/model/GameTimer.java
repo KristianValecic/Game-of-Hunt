@@ -9,7 +9,7 @@ public class GameTimer {
     private static int second;
     private static int pauseMinute;
     private static int pauseSecond ;
-    private static int puaseSecondDuration = 2;
+    private static int puaseSecondDuration = 1;
     private static int startMinute = 0;
     private static int startSecond = 10;
     private static int matchMinutesMax = 3;

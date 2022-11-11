@@ -114,7 +114,7 @@ public class GameOverWindowController implements Initializable {
                 ReflectionUtils.readClassAndMembersInfo(clazz, content);
                 content.append("</span>").append("</p>");
             }
-            System.out.println(content);
+            //System.out.println(content);
 
             content.append("</body>\n" +
                             "</html> ");

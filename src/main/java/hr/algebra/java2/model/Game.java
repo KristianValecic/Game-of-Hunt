@@ -1,5 +1,6 @@
 package hr.algebra.java2.model;
 
+import hr.algebra.java2.dal.GameState;
 import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 
@@ -33,11 +34,12 @@ public class Game {
     private static int matchCounter = 1;
     private static boolean gameOver = false;
     private static String WindowTitle = "Game of Hunt";
+    private static HunterPlayer hunterPlayer;
 
 
-    //public static int getAllMatchesCount() {
-//        return matchCounter;
-//    }
+    public static int getAllMatchesCount() {
+        return allMatchesCount;
+    }
     public static int getCurrentMatch() {
         return matchCounter;
     }
@@ -61,13 +63,16 @@ public class Game {
         return survivorImagePath;
     }
 
-    public static void setInitialPlayersList(List<Player> gamePlayersList) {
-        playersList.addAll(gamePlayersList);
+    public static void setInitialPlayersLists(List<Player> gamePlayersList) {
+        playersList.clear();
+        for (Player player:gamePlayersList) {
+            playersList.add(player);
+            if (HunterPlayer.class.equals(player.getClass())){
+                hunterPlayer = (HunterPlayer) player;
+            }
+        }
+        alivePlayersList.clear();
         alivePlayersList.addAll(gamePlayersList);
-    }
-
-    public static void setMatchesCount(int gameMatchesCount) {
-        allMatchesCount = gameMatchesCount;
     }
 
     private static void matchEnd() {
@@ -145,16 +150,21 @@ public class Game {
         alivePlayersList.add(player);
     }
 
-    public static void loadPlayersList(List<Player> playersList) {
+    private static void loadPlayersList(List<Player> playersList) {
         Game.playersList.clear();
-        Game.playersList.addAll(playersList);
+        for (Player player:playersList) {
+            Game.playersList.add(player);
+            if (HunterPlayer.class.equals(player.getClass())){
+                hunterPlayer = (HunterPlayer) player;
+            }
+        }
     }
 
-    public static void setCurrentMatch(int matchState) {
-        matchCounter = matchState;
-    }
+        public static void setCurrentMatch(int matchState) {
+            matchCounter = matchState;
+        }
 
-    public static void setSpawnPointsOnMap(double width, double height) {
+        public static void setSpawnPointsOnMap(double width, double height) {
         playerSpawnLeftTop = new Coordinate(spawnMargin, spawnMargin);
         playerSpawnLeftBottom = new Coordinate(spawnMargin, height - 70);
         playerSpawnRightBottom = new Coordinate(width - Player.getPlayerWidth() - spawnMargin, height - 70 - spawnMargin);
@@ -210,4 +220,23 @@ public class Game {
     }
 
 
+    public static void pauseKilling() {
+        hunterPlayer.deactivateKillOption();
+    }
+
+    public static void resumeKilling() {
+        hunterPlayer.activateKillOption();
+    }
+
+    public static void loadGame(GameState gameState) {
+        alivePlayersList.clear();
+        loadPlayersList(gameState.getPlayersList());
+        setAllMatchesCount(gameState.getMatchAllCount());
+        setCurrentMatch(gameState.getMatchState());
+        GameTimer.setMatchTime(gameState.getMinutesState(), gameState.getSecondsState());
+    }
+
+    public static void setAllMatchesCount(int matches) {
+        allMatchesCount = matches;
+    }
 }

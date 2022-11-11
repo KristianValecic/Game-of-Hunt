@@ -21,9 +21,12 @@ import java.util.*;
 import java.util.List;
 
 public class GameScreenController implements Initializable {
+    private static final String DELIM_MATCH = "/";
     private double spawnPointX = 400.0;
     private double spawnPointY = 200.0;
     private double spawnPointDistance = 140.0;
+    private boolean timelineRuningFlag;
+    private boolean pauseMatchesRuningFlag;
 
     private static List<ImageView> playersLightSourceList = new ArrayList<>();
     private MovementController movementController;
@@ -49,6 +52,7 @@ public class GameScreenController implements Initializable {
     private Timeline timeline = new Timeline(
             new KeyFrame(Duration.seconds(1),
                     e -> {
+                        timelineRuningFlag = true;
                         if (Game.isGameOver()) {
                             //movementController.stopMovement();
                             EndOfGame();
@@ -61,6 +65,7 @@ public class GameScreenController implements Initializable {
                                 EndOfGame();
                             }
                         } else {
+                            //lblTimer.setText(GameTimer.getTime());
                             GameTimer.countDownSecondPassed();
                             lblTimer.setText(GameTimer.getTime());
                         }
@@ -70,14 +75,18 @@ public class GameScreenController implements Initializable {
     private Timeline pauseInBetweenMatches = new Timeline(
             new KeyFrame(Duration.seconds(1),
                     e -> {
+                pauseMatchesRuningFlag = true;
                         if (GameTimer.isPauseOver()) {
                             lblMatchOver.setVisible(false);
                             GameTimer.resetTimer();
                             cleanupMap();
                             Game.newMatch();
                             spawnPlayers();
-                            lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
+                            setMatchCounterLabel();
                             pauseStop();
+                            movementController.resumeMovement();
+                            //reactivate kill option
+                            Game.resumeKilling();
                             timeline.play();
                         } else {
                             GameTimer.countDownPauseSecondPassed();
@@ -85,7 +94,13 @@ public class GameScreenController implements Initializable {
                     }));
 
     private void pauseStop() {
+        pauseMatchesRuningFlag = false;
         pauseInBetweenMatches.stop();
+    }
+
+    private void timerStop() {
+        timelineRuningFlag = false;
+        timeline.stop();
     }
 
     private void EndOfGame() {
@@ -100,19 +115,18 @@ public class GameScreenController implements Initializable {
     }
 
     private void cleanupMap() {
+        lblMatchOver.setVisible(false);
         for (Player player : Game.getAlivePlayersList()) {
             paneGameMap.getChildren().remove(player.getPlayerSprite());
             paneGameMap.getChildren().remove(player.getLightSource());
         }
     }
 
-    private void timerStop() {
-        timeline.stop();
-    }
-
     private void newMatch() {
         timeline.stop();
         lblMatchOver.setVisible(true);
+        //remove kill option
+        Game.pauseKilling();
         pauseInBetweenMatches.setCycleCount(Timeline.INDEFINITE);
         pauseInBetweenMatches.play();
         //timeline.pause();
@@ -124,7 +138,7 @@ public class GameScreenController implements Initializable {
         GameState gameState = new GameState();
         //1. set player listu sa score-om
         gameState.setPlayersList(Game.getPlayersList());
-
+        gameState.setMatchAllCount(Game.getAllMatchesCount());
         //2. set alive player listu s koordinatama
         gameState.setAlivePlayersPositions(paneGameMap.getChildren());
         //gameState.setAlivePlayersLightSourcePositions(paneGameMap.getChildren());
@@ -146,10 +160,12 @@ public class GameScreenController implements Initializable {
             GameState gameState = (GameState) deserializator.readObject();
 
             cleanupMap();
+            timeline.stop();
+            pauseInBetweenMatches.stop();
             // Ocistit trenutnuo stanje gejma i zadat ovo
             //1. satavit igracena stare pozicije
-            Game.loadPlayersList(gameState.getPlayersList());
-            Game.getAlivePlayersList().clear();
+            Game.loadGame(gameState);
+
             gameState.getAlivePlayersLightSourceList().forEach((player, position) -> {
                 //postavljaju se lightSource na mapu
                 player.loadPlayerLightSource(position);
@@ -162,12 +178,24 @@ public class GameScreenController implements Initializable {
                 paneGameMap.getChildren().add(player.getPlayerSprite());
             });
             //2. zadat match
-            Game.setCurrentMatch(gameState.getMatchState());
-            lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
-            //3. namjestit tajmer
-            GameTimer.setMatchTime(gameState.getMinutesState(), gameState.getSecondsState());
+
+
+            setMatchCounterLabel();
             //refreshView();
+            //3. namjestit tajmer
+            lblTimer.setText(GameTimer.getTime());
+            if (timelineRuningFlag){
+                timeline.play();
+            } else if (pauseMatchesRuningFlag) {
+                pauseInBetweenMatches.play();
+            }
         }
+    }
+
+    private void setMatchCounterLabel() {
+        lblMatchCounter.setText(Game.getCurrentMatch() +
+                DELIM_MATCH +
+                Game.getAllMatchesCount());
     }
 
     @Override
@@ -184,7 +212,7 @@ public class GameScreenController implements Initializable {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
-        lblMatchCounter.setText(Integer.toString(Game.getCurrentMatch()));
+        setMatchCounterLabel();
 
         MovementController.lblFPS = lblFpsCount;
     }

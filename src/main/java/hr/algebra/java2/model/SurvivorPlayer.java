@@ -2,7 +2,9 @@ package hr.algebra.java2.model;
 
 import javafx.scene.image.Image;
 
-public class SurvivorPlayer extends Player {
+import java.io.Serializable;
+
+public class SurvivorPlayer extends Player implements Serializable {
     private int matchesSurvivedCounter = 0;
     private boolean dead = false;
 

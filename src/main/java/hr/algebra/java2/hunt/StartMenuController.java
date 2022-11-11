@@ -132,8 +132,8 @@ public class StartMenuController implements Initializable {
 
         try {
             //GameScreenController.setPlayersList(playersList);
-            Game.setInitialPlayersList(playersList);
-            Game.setMatchesCount(matchCounter);
+            Game.setInitialPlayersLists(playersList);
+            Game.setAllMatchesCount(matchCounter);
             SceneUtils.createScene(StartMenuAplication.getMainStage(), "playingField.fxml", Game.getWindowTitle());
         } catch (IOException e) {
             throw new RuntimeException(e);
