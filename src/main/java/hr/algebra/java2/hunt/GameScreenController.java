@@ -28,6 +28,7 @@ public class GameScreenController implements Initializable {
     private double spawnPointX = 400.0;
     private double spawnPointY = 200.0;
     private double spawnPointDistance = 140.0;
+    private GameTimer gameTimer;
     private boolean timelineRuningFlag;
     private boolean pauseMatchesRuningFlag;
 
@@ -63,7 +64,7 @@ public class GameScreenController implements Initializable {
                         if (Game.isGameOver()) {
                             //movementController.stopMovement();
                             EndOfGame();
-                        } else if (GameTimer.getTime().equals(GameTimer.matchOver())/* && Game.getCurrentMatch() == Game.getAllMatchesCount()*/) {
+                        } else if (gameTimer.getTime().equals(GameTimer.MATCH_OVER)/* && Game.getCurrentMatch() == Game.getAllMatchesCount()*/) {
                             System.out.println("Timer runout!");
                             Game.matchEndByTimerRunout();
                             if (!Game.isGameOver()) {
@@ -73,8 +74,8 @@ public class GameScreenController implements Initializable {
                             }
                         } else {
                             //lblTimer.setText(GameTimer.getTime());
-                            GameTimer.countDownSecondPassed();
-                            lblTimer.setText(GameTimer.getTime());
+                            gameTimer.countDownSecondPassed();
+                            lblTimer.setText(gameTimer.getTime());
                         }
                     })
     );
@@ -83,9 +84,9 @@ public class GameScreenController implements Initializable {
             new KeyFrame(Duration.seconds(1),
                     e -> {
                 pauseMatchesRuningFlag = true;
-                        if (GameTimer.isPauseOver()) {
+                        if (gameTimer.isPauseOver()) {
                             lblMatchOver.setVisible(false);
-                            GameTimer.resetTimer();
+                            gameTimer.resetTimer();
                             cleanupMap();
                             Game.newMatch();
                             spawnPlayers();
@@ -96,7 +97,7 @@ public class GameScreenController implements Initializable {
                             Game.resumeKilling();
                             timeline.play();
                         } else {
-                            GameTimer.countDownPauseSecondPassed();
+                            gameTimer.countDownPauseSecondPassed();
                         }
                     }));
 
@@ -173,7 +174,7 @@ public class GameScreenController implements Initializable {
 
         //3. set game stanje timer, match
         gameState.setMatchState(Game.getCurrentMatch());
-        gameState.setTimerState(GameTimer.getCurrentMinues(), GameTimer.getCurrentSeconds());
+        gameState.setTimerState(GameTimer.getInstance());
 
         //4. serijaliziraj
         paneGameMap.requestFocus();
@@ -216,10 +217,10 @@ public class GameScreenController implements Initializable {
 
             setMatchCounterLabel();
             paneGameMap.requestFocus();
-
             //refreshView();
-            //3. namjestit tajmer
-            lblTimer.setText(GameTimer.getTime());
+            //3. namjestit tajmer todo: popravi da radi gameTimer sam
+            gameTimer=gameState.getGameTimer();
+            lblTimer.setText(gameTimer.getTime());
             if (timelineRuningFlag){
                 timeline.play();
             } else if (pauseMatchesRuningFlag) {
@@ -236,7 +237,7 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        GameTimer.resetTimer();
+        gameTimer = GameTimer.getInstance();
         movementController = new MovementController(paneGameMap);
         lblMatchOver.setVisible(false);
 
@@ -244,7 +245,7 @@ public class GameScreenController implements Initializable {
 
         movementController.makeMovable(paneRootParent);
         //Set timer
-        lblTimer.setText(GameTimer.getTime());
+        lblTimer.setText(gameTimer.getTime());
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 

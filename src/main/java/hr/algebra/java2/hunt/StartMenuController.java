@@ -31,8 +31,8 @@ public class StartMenuController implements Initializable {
     private static final String MIN_PLAYER_ERROR_MSG = "Minimum amount of players is "+Game.MIN_PLAYERS;
     private static final String MAX_MATCHES_ERROR_MSG = "Maximum amount of matches is "+Game.MAX_MATCHES;
     private static final String MIN_MATCHES_ERROR_MSG = "Minimum amount matches is "+Game.MIN_MATCHES;
-    private static final String MAX_MATCH_TIME_ERROR = "Maximum match time is "+GameTimer.maxMatchTime();
-    private static final String MIN_MATCH_TIME_ERROR = "Minimum match time is "+GameTimer.minMatchTime();
+    private static final String MAX_MATCH_TIME_ERROR = "Maximum match time is " + GameTimer.MAX_MATCH_TIME;
+    private static final String MIN_MATCH_TIME_ERROR = "Minimum match time is " + GameTimer.MIN_MATCH_TIME;
     private static int matchCounter = 1;
     private static int playerCounter = 0;
 
@@ -69,6 +69,7 @@ public class StartMenuController implements Initializable {
     private Label lblPlayerRole;
     @FXML
     private ImageView imgCharacter;
+    private GameTimer gameTimer;
 
     @FXML
     protected void onClickAddPlayer() {
@@ -123,8 +124,8 @@ public class StartMenuController implements Initializable {
                     playersList.add(new SurvivorPlayer(playerName, PlayerRole.Survivor, new Image(Game.SURVIVOR_IMAGE_PATH)));
                 }
             }
-            GameTimer.getTime();
-            GameTimer.getCurrentTime();
+//            gameTimer.getTime();
+//            gameTimer.getCurrentTime();
         }
 
         //sets time of match
@@ -154,14 +155,14 @@ public class StartMenuController implements Initializable {
 
     @FXML
     void onClickSubtractMatchTime(ActionEvent event) {
-        if (GameTimer.validateMinTime()) { /*GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.minMatchTime())*/
+        if (gameTimer.validateMinTime()) { /*gameTimer.formatTime(matchMinutes, matchSeconds).equals(gameTimer.minMatchTime())*/
             return;
         }
 
-        GameTimer.subMatchTime();
-        lblMatchTime.setText(GameTimer.getTime());/*GameTimer.formatTime(matchMinutes, matchSeconds)*/
+        gameTimer.subMatchTime();
+        lblMatchTime.setText(gameTimer.getTime());/*gameTimer.formatTime(matchMinutes, matchSeconds)*/
 
-        if (GameTimer.validateMinTime()) {
+        if (gameTimer.validateMinTime()) {
             btnSubMatchTime.setOpacity(0.5);
             lblErrorForm.setText(MIN_MATCH_TIME_ERROR);
         }else {
@@ -171,14 +172,14 @@ public class StartMenuController implements Initializable {
     }
     @FXML
     void onClickAddMatchTime(ActionEvent event) {
-        if (GameTimer.validateMaxTime()) {/*GameTimer.formatTime(matchMinutes, matchSeconds).equals(GameTimer.maxMatchTime())*/
+        if (gameTimer.validateMaxTime()) {/*gameTimer.formatTime(matchMinutes, matchSeconds).equals(gameTimer.maxMatchTime())*/
             return;
         }
 
-        GameTimer.addMatchTime();
-        lblMatchTime.setText(GameTimer.getTime());/*formatTime(matchMinutes, matchSeconds)*/
+        gameTimer.addMatchTime();
+        lblMatchTime.setText(gameTimer.getTime());/*formatTime(matchMinutes, matchSeconds)*/
 
-        if (GameTimer.validateMaxTime()) {
+        if (gameTimer.validateMaxTime()) {
             lblErrorForm.setText(MAX_MATCH_TIME_ERROR);
             btnAddMatchTime.setOpacity(0.5);
         }else {
@@ -237,7 +238,8 @@ public class StartMenuController implements Initializable {
 
             lblMatchCounter.setText(Integer.toString(matchCounter));
             lblPlayerCounter.setText(playerCounter + DELIMTER + Game.MAX_PLAYERS);
-            lblMatchTime.setText(GameTimer.getDefaultMatchStartTime());/*formatTime(matchMinutes, matchSeconds)*/
+
+            lblMatchTime.setText(GameTimer.DEFAULT_MATCH_START_TIME);/*formatTime(matchMinutes, matchSeconds)*/
 
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
@@ -248,5 +250,6 @@ public class StartMenuController implements Initializable {
             imgCharacter.setImage(new Image(Game.SURVIVOR_IMAGE_PATH));
             //playersList.add(new SruvivorPlayer(PlayerRole.Survivor, imgCharacter.getImage()));
         }
+        gameTimer = GameTimer.getInstance();
     }
 }

@@ -22,6 +22,7 @@ public class GameState implements Serializable {
     private int matchAllCount;
     private int match;
     private int scoreState;
+    private GameTimer gameTimer;
     private List<Player> playersList = new ArrayList<>();
     private List<Coordinate> trapsPositionsList = new ArrayList<>();
     private Map<Player, Coordinate> alivePlayersPositionsList = new HashMap<>();
@@ -66,9 +67,10 @@ public class GameState implements Serializable {
         match = currentMatch;
     }
 
-    public void setTimerState(int minutes, int seconds) {
-        secondsState = seconds;
-        minutesState = minutes;
+    public void setTimerState(GameTimer timer) {
+        gameTimer = timer;
+        //secondsState = seconds;
+        //minutesState = minutes;
     }
     public int getMatchAllCount() {
         return matchAllCount;
@@ -106,5 +108,9 @@ public class GameState implements Serializable {
 
     public List<Coordinate> getTrapPositions() {
         return trapsPositionsList;
+    }
+
+    public GameTimer getGameTimer() {
+        return gameTimer;
     }
 }

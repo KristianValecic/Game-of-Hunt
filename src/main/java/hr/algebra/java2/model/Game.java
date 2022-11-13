@@ -38,6 +38,7 @@ public class Game {
     private static boolean gameOver = false;
     private static String WindowTitle = "Game of Hunt";
     private static HunterPlayer hunterPlayer;
+    public static GameTimer gameTimer = GameTimer.getInstance();
 
 
     public static int getAllMatchesCount() {
@@ -237,7 +238,7 @@ public class Game {
         setAllMatchesCount(gameState.getMatchAllCount());
         setCurrentMatch(gameState.getMatchState());
         loadTrapCounter(gameState.getTrapCount());
-        GameTimer.setMatchTime(gameState.getMinutesState(), gameState.getSecondsState());
+        gameTimer = gameState.getGameTimer();
     }
 
     private static void loadTrapCounter(int trapCount) {
