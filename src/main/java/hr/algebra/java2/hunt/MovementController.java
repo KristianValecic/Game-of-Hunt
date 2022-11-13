@@ -1,9 +1,6 @@
 package hr.algebra.java2.hunt;
 
-import hr.algebra.java2.model.Game;
-import hr.algebra.java2.model.HunterPlayer;
-import hr.algebra.java2.model.Player;
-import hr.algebra.java2.model.SurvivorPlayer;
+import hr.algebra.java2.model.*;
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -20,11 +17,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovementController {
-
     private static final String up = "up";
     private static final String down = "down";
     private static final String left = "left";
@@ -37,13 +35,14 @@ public class MovementController {
     private BooleanProperty dPressed = new SimpleBooleanProperty();
     private BooleanProperty spacePressed = new SimpleBooleanProperty();
 
+    private boolean spaceClickFlag = false;
     private CollisionController collisionController;
 
     private Pane gameMapPane;
 
     private Pane scene;
 
-    private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed);
+    private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(spacePressed);
 
     //private static int screenRefreshRate = 60;
     public static Label lblFPS;
@@ -72,20 +71,14 @@ public class MovementController {
 
         collisionController.setMovementController(this);
 
-        keyPressed.addListener(timerListener());
-    }
-
-    private ChangeListener<Boolean> timerListener() {
-        return (observableValue, aBoolean, t1) -> {
+        keyPressed.addListener((observableValue, aBoolean, t1) -> {
             if (!aBoolean) {
-                timer.start();
-            } else {
-                timer.stop();
-            }
-        };
+                 timer.start();
+            } else timer.stop();
+        });
     }
 
-    AnimationTimer timer = new AnimationTimer() {
+    private AnimationTimer timer = new AnimationTimer() {
         private long lastRun = 0;
 
         @Override
@@ -96,6 +89,24 @@ public class MovementController {
 
         @Override
         public void handle(long timestamp) {
+            if (spacePressed.get()){
+                if (Game.getTrapCount() == Game.MIN_TRAPS){
+                    return;
+                }
+                if (!spaceClickFlag){
+                    ImageView trapSprite = new ImageView(Game.TRAP_PATH);
+                    ImageView hunteSprite = Game.getHunterPlayer().getPlayerSprite();
+                    Bounds hunterBounds = hunteSprite.getBoundsInParent();
+                    Coordinate trapSpawnCoordinate = getBottomCenterCoordinates(trapSprite, hunterBounds);
+                    trapSprite.relocate(trapSpawnCoordinate.getX(), trapSpawnCoordinate.getY());
+                    gameMapPane.getChildren().add(trapSprite);
+                    //trapSprite.toBack();
+                    System.out.println("trap set");
+                    Game.trapSet();
+                    spaceClickFlag = true;
+                }
+                return;
+            }
 //          For FPS
             long delta = timestamp - lastRun;
             lblFPS.setText(Double.toString(Math.round(getFPS(delta))));
@@ -183,6 +194,12 @@ public class MovementController {
         }
     };
 
+    private Coordinate getBottomCenterCoordinates(ImageView sprite, Bounds playerSpriteBounds) {
+        double x = (playerSpriteBounds.getMinX()+(playerSpriteBounds.getMaxX()-playerSpriteBounds.getMinX())/2)-(sprite.getBoundsInLocal().getWidth()/2);
+        double y = playerSpriteBounds.getMinY() + playerSpriteBounds.getHeight();
+        return new Coordinate(x, y);
+    }
+
     private double getFPS(long delta) {
         double frameRate = 1d / delta;
         return frameRate * 1e9;
@@ -192,7 +209,7 @@ public class MovementController {
         for (Player p : Game.getAlivePlayersList()) {
             if (p.getPlayerSprite().equals(victimPlayerSprite)
                     && p.getClass().equals(SurvivorPlayer.class)
-                   /* && !((SurvivorPlayer) p).isDead()*/) {
+                /* && !((SurvivorPlayer) p).isDead()*/) {
                 Game.addMove(p, "Player killed");
                 gameMapPane.getChildren().remove(p.getPlayerSprite());
                 gameMapPane.getChildren().remove(p.getLightSource());
@@ -212,8 +229,8 @@ public class MovementController {
 
                 if (test) {
                     if (player.getClass().equals(HunterPlayer.class) &&
-                        mapObject.getClass().equals(player.getPlayerSprite().getClass())&&
-                        ((HunterPlayer)player).canKill()) {
+                            mapObject.getClass().equals(player.getPlayerSprite().getClass()) &&
+                            ((HunterPlayer) player).canKill()) {
                         ((HunterPlayer) player).setVictimPlayerSprite((ImageView) mapObject);
                         Game.addMove(player, "killed a player");
                         return 2;
@@ -239,17 +256,17 @@ public class MovementController {
             if (e.getCode() == KeyCode.W) {
                 wPressed.set(true);
             }
-
             if (e.getCode() == KeyCode.A) {
                 aPressed.set(true);
             }
-
             if (e.getCode() == KeyCode.S) {
                 sPressed.set(true);
             }
-
             if (e.getCode() == KeyCode.D) {
                 dPressed.set(true);
+            }
+            if (e.getCode() == KeyCode.SPACE) {
+                spacePressed.set(true);
             }
         });
 
@@ -257,17 +274,22 @@ public class MovementController {
             if (e.getCode() == KeyCode.W) {
                 wPressed.set(false);
             }
-
             if (e.getCode() == KeyCode.A) {
                 aPressed.set(false);
             }
-
             if (e.getCode() == KeyCode.S) {
                 sPressed.set(false);
             }
 
             if (e.getCode() == KeyCode.D) {
                 dPressed.set(false);
+            }
+            if (e.getCode() == KeyCode.SPACE) {
+                wPressed.set(false);
+            }
+            if (e.getCode() == KeyCode.SPACE) {
+                spaceClickFlag = false;
+                spacePressed.set(false);
             }
         });
     }

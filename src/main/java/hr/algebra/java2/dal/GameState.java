@@ -23,8 +23,10 @@ public class GameState implements Serializable {
     private int match;
     private int scoreState;
     private List<Player> playersList = new ArrayList<>();
+    private List<Coordinate> trapsPositionsList = new ArrayList<>();
     private Map<Player, Coordinate> alivePlayersPositionsList = new HashMap<>();
     private Map<Player, Coordinate> alivePlayersLightSourcePositionsList = new HashMap<>();
+    private int trapCount;
 
     public  List<Player> getPlayersList() {
         return playersList;
@@ -89,5 +91,20 @@ public class GameState implements Serializable {
     }
     public Map<Player, Coordinate> getAlivePlayersLightSourceList() {
         return alivePlayersLightSourcePositionsList;
+    }
+
+    public void setTrapCount(int trapCount) {
+        this.trapCount = trapCount;
+    }
+    public int getTrapCount() {
+        return trapCount;
+    }
+
+    public void addTrapPosition(Coordinate coordinate) {
+        trapsPositionsList.add(coordinate);
+    }
+
+    public List<Coordinate> getTrapPositions() {
+        return trapsPositionsList;
     }
 }

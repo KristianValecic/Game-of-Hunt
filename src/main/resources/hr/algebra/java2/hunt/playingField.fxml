@@ -59,12 +59,12 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <Button layoutX="14.0" layoutY="726.0" mnemonicParsing="false" onAction="#onSaveGame" text="Save Game">
+                  <Button fx:id="btnSaveGame" layoutX="14.0" layoutY="726.0" mnemonicParsing="false" onAction="#onSaveGame" text="Save Game">
                      <font>
                         <Font size="19.0" />
                      </font>
                   </Button>
-                  <Button layoutX="147.0" layoutY="726.0" mnemonicParsing="false" onAction="#onLoadGame" text="Load Game">
+                  <Button fx:id="btnLoadGame" layoutX="147.0" layoutY="726.0" mnemonicParsing="false" onAction="#onLoadGame" text="Load Game">
                      <font>
                         <Font size="19.0" />
                      </font>

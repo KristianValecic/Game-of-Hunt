@@ -118,9 +118,9 @@ public class StartMenuController implements Initializable {
                     }
                 }
                 if (playerRole.equals(PlayerRole.Hunter.toString())){
-                    playersList.add(new HunterPlayer(playerName, PlayerRole.Hunter, new Image(Game.getHunterImagePath())));
+                    playersList.add(new HunterPlayer(playerName, PlayerRole.Hunter, new Image(Game.HUNTER_IMAGE_PATH)));
                 }else {
-                    playersList.add(new SurvivorPlayer(playerName, PlayerRole.Survivor, new Image(Game.getSurvivorImagePath())));
+                    playersList.add(new SurvivorPlayer(playerName, PlayerRole.Survivor, new Image(Game.SURVIVOR_IMAGE_PATH)));
                 }
             }
             GameTimer.getTime();
@@ -241,11 +241,11 @@ public class StartMenuController implements Initializable {
 
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 1) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
-            imgCharacter.setImage(new Image(Game.getHunterImagePath()));
+            imgCharacter.setImage(new Image(Game.HUNTER_IMAGE_PATH));
             //playersList.add(new HunterPlayer(PlayerRole.Hunter, imgCharacter.getImage()));
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() > 1) {
             lblPlayerRole.setText(PlayerRole.Survivor.toString());
-            imgCharacter.setImage(new Image(Game.getSurvivorImagePath()));
+            imgCharacter.setImage(new Image(Game.SURVIVOR_IMAGE_PATH));
             //playersList.add(new SruvivorPlayer(PlayerRole.Survivor, imgCharacter.getImage()));
         }
     }

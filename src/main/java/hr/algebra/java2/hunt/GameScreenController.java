@@ -8,7 +8,10 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,6 +34,10 @@ public class GameScreenController implements Initializable {
     private static List<ImageView> playersLightSourceList = new ArrayList<>();
     private MovementController movementController;
     //private int matchCounter = 1;
+    @FXML
+    private Button btnLoadGame;
+    @FXML
+    private Button btnSaveGame;
     @FXML
     private Pane paneGameMap;
     @FXML
@@ -120,6 +127,17 @@ public class GameScreenController implements Initializable {
             paneGameMap.getChildren().remove(player.getPlayerSprite());
             paneGameMap.getChildren().remove(player.getLightSource());
         }
+        for (int i = 0; i < Game.getTrapCount(); i++)       {
+            paneGameMap.getChildren().removeIf(node -> {
+                if (ImageView.class.equals(node.getClass())){
+                    if (((ImageView) node).getImage().getUrl().equals(Game.TRAP_PATH))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
     }
 
     private void newMatch() {
@@ -139,6 +157,16 @@ public class GameScreenController implements Initializable {
         //1. set player listu sa score-om
         gameState.setPlayersList(Game.getPlayersList());
         gameState.setMatchAllCount(Game.getAllMatchesCount());
+        gameState.setTrapCount(Game.getTrapCount());
+        for (Node node:paneGameMap.getChildren()) {
+            if (ImageView.class.equals(node.getClass())){
+                if (((ImageView) node).getImage().getUrl().equals(Game.TRAP_PATH))
+                {
+                    Bounds trapBounds = node.getBoundsInParent();
+                    gameState.addTrapPosition(new Coordinate(trapBounds.getMinX(), trapBounds.getMaxY()));
+                }
+            }
+        }
         //2. set alive player listu s koordinatama
         gameState.setAlivePlayersPositions(paneGameMap.getChildren());
         //gameState.setAlivePlayersLightSourcePositions(paneGameMap.getChildren());
@@ -148,6 +176,7 @@ public class GameScreenController implements Initializable {
         gameState.setTimerState(GameTimer.getCurrentMinues(), GameTimer.getCurrentSeconds());
 
         //4. serijaliziraj
+        paneGameMap.requestFocus();
         try (ObjectOutputStream serializator = new ObjectOutputStream(new FileOutputStream(Game.SER_FILE)
         )) {
             serializator.writeObject(gameState);
@@ -177,10 +206,17 @@ public class GameScreenController implements Initializable {
                 player.loadPlayerSprite(position);
                 paneGameMap.getChildren().add(player.getPlayerSprite());
             });
+            gameState.getTrapPositions().forEach(position ->{
+                ImageView trap = new ImageView(Game.TRAP_PATH);
+                trap.relocate(position.getX(), position.getY());
+                paneGameMap.getChildren().add(trap);
+            });
             //2. zadat match
 
 
             setMatchCounterLabel();
+            paneGameMap.requestFocus();
+
             //refreshView();
             //3. namjestit tajmer
             lblTimer.setText(GameTimer.getTime());

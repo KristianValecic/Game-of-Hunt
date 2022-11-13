@@ -109,7 +109,7 @@ public class Player implements Serializable {
     public ImageView setPlayerLightSourceInitial(Coordinate spawnPoint) {
         //kriran background image za lightsource
         Image playerImg = getPlayerSprite().getImage();
-        ImageView lightSource = new ImageView(Game.getGameMapImagePath());
+        ImageView lightSource = new ImageView(Game.GAME_MAP_IMAGE_PATH);
         double spawnX = spawnPoint.getX()-Player.getMarginLightSource();
         double spawnY = spawnPoint.getY()-Player.getMarginLightSource();
 
@@ -131,16 +131,15 @@ public class Player implements Serializable {
 
     public void loadPlayerSprite(Coordinate position) {
         if (getPlayerRole().equals(PlayerRole.Hunter)) {
-            setPlayerSprite(new Image(Game.getHunterImagePath()));
+            setPlayerSprite(new Image(Game.HUNTER_IMAGE_PATH));
         } else {
-            setPlayerSprite(new Image(Game.getSurvivorImagePath()));
+            setPlayerSprite(new Image(Game.SURVIVOR_IMAGE_PATH));
         }
         getPlayerSprite().relocate(position.getX(), position.getY());
-
     }
 
     public void loadPlayerLightSource(Coordinate position) {
-        lightSource = new ImageView(Game.getGameMapImagePath());
+        lightSource = new ImageView(Game.GAME_MAP_IMAGE_PATH);
         lightSource.setSmooth(true);
         lightSource.setPreserveRatio(true);
 
@@ -149,7 +148,7 @@ public class Player implements Serializable {
                 new Rectangle2D
                         (position.getX(),
                                 position.getY(),
-                                Player.getLightSourceWidth(),// *2 has to compensate for the subtraction of margin
+                                Player.getLightSourceWidth(),
                                 Player.getLightSourceHeight())
         );
         lightSource.relocate(position.getX(), position.getY());

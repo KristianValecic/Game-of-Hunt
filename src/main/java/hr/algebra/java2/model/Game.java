@@ -10,12 +10,18 @@ import java.util.Map;
 import java.util.Random;
 
 public class Game {
+    public static final String TRAP_PATH = "file:src/main/resources/hr/algebra/java2/hunt/images/Trap.png";
+    public static final String GAME_MAP_IMAGE_PATH = "file:src/main/resources/hr/algebra/java2/hunt/images/GameMap.png";
+    public static final String HUNTER_IMAGE_PATH = "file:src/main/resources/hr/algebra/java2/hunt/images/hunterSprite.png";
+    public static final String SURVIVOR_IMAGE_PATH = "file:src/main/resources/hr/algebra/java2/hunt/images/survivorSprite.png";
     private static List<Player> playersList = new ArrayList<>();
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 5;
     public static final int MAX_MATCHES = 7;
     public static final int MIN_MATCHES = 1;
+    public static final int MIN_TRAPS = 5;
     public static final double spawnMargin = 20;
+    private static int trapCounter = 0;
     public static boolean spawnFlagLeftTop = true;
     public static boolean spawnFlagLeftBottom = true;
     public static boolean spawnFlagRightTop = true;
@@ -24,9 +30,6 @@ public class Game {
     private static Coordinate playerSpawnLeftBottom;
     private static Coordinate playerSpawnRightBottom;
     private static Coordinate playerSpawnRightTop;
-    private static final String gameMapImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/GameMap.png";
-    private static final String hunterImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/hunterSprite.png";
-    private static final String survivorImagePath = "file:src/main/resources/hr/algebra/java2/hunt/images/survivorSprite.png";
     public static final String SER_FILE = "saveGame.ser";
     private static List<Player> alivePlayersList = new ArrayList<>();
     private static List<Move> moves = new ArrayList<>();
@@ -55,14 +58,16 @@ public class Game {
         return alivePlayersList;
     }
 
-    public static String getHunterImagePath() {
-        return hunterImagePath;
-    }
+  //  public static String getHunterImagePath() {
+    //    return hunterImagePath;
+   // }
 
-    public static String getSurvivorImagePath() {
-        return survivorImagePath;
-    }
-
+   // public static String getSurvivorImagePath() {
+   //     return survivorImagePath;
+   // }
+   //   public static String getGameMapImagePath() {
+//        return gameMapImagePath;
+//    }
     public static void setInitialPlayersLists(List<Player> gamePlayersList) {
         playersList.clear();
         for (Player player:gamePlayersList) {
@@ -206,12 +211,10 @@ public class Game {
         return spawn;
     }
 
-    public static String getGameMapImagePath() {
-        return gameMapImagePath;
-    }
 
     public static void newMatch() {
         ///matchCounter++;
+        trapCounter = 0;
         getPlayersList().forEach(p -> {
             if (HunterPlayer.class.equals(p.getClass())   /*PlayerRole.Hunter.equals(p.getPlayerRole())*/) {
                 ((HunterPlayer)p).setVictimPlayerSprite(null);
@@ -233,10 +236,26 @@ public class Game {
         loadPlayersList(gameState.getPlayersList());
         setAllMatchesCount(gameState.getMatchAllCount());
         setCurrentMatch(gameState.getMatchState());
+        loadTrapCounter(gameState.getTrapCount());
         GameTimer.setMatchTime(gameState.getMinutesState(), gameState.getSecondsState());
+    }
+
+    private static void loadTrapCounter(int trapCount) {
+        Game.trapCounter = trapCount;
     }
 
     public static void setAllMatchesCount(int matches) {
         allMatchesCount = matches;
+    }
+
+    public static Player getHunterPlayer() {
+        return hunterPlayer;
+    }
+    public static void trapSet() {
+        trapCounter++;
+    }
+
+    public static int getTrapCount() {
+        return trapCounter;
     }
 }
