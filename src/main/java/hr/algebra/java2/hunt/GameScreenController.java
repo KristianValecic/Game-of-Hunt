@@ -4,6 +4,7 @@ import hr.algebra.java2.dal.GameState;
 import hr.algebra.java2.model.*;
 import hr.algebra.java2.utilities.SceneUtils;
 import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,7 +61,9 @@ public class GameScreenController implements Initializable {
     private Timeline timeline = new Timeline(
             new KeyFrame(Duration.seconds(1),
                     e -> {
+                        pauseMatchesRuningFlag = false;
                         timelineRuningFlag = true;
+                        //lblTimer.setText(gameTimer.getTime());
                         if (Game.isGameOver()) {
                             //movementController.stopMovement();
                             EndOfGame();
@@ -83,7 +86,9 @@ public class GameScreenController implements Initializable {
     private Timeline pauseInBetweenMatches = new Timeline(
             new KeyFrame(Duration.seconds(1),
                     e -> {
+                        timelineRuningFlag = false;
                         pauseMatchesRuningFlag = true;
+                        //lblTimer.setText(gameTimer.getTime());
                         if (gameTimer.isPauseOver()) {
                             lblMatchOver.setVisible(false);
                             gameTimer.resetTimer();
@@ -102,12 +107,12 @@ public class GameScreenController implements Initializable {
                     }));
 
     private void pauseStop() {
-        pauseMatchesRuningFlag = false;
+        //pauseMatchesRuningFlag = false;
         pauseInBetweenMatches.stop();
     }
 
     private void timerStop() {
-        timelineRuningFlag = false;
+        //timelineRuningFlag = false;
         timeline.stop();
     }
 
@@ -141,11 +146,11 @@ public class GameScreenController implements Initializable {
 
     private void newMatch() {
         timeline.stop();
+        pauseInBetweenMatches.setCycleCount(Timeline.INDEFINITE);
+        pauseInBetweenMatches.play();
         lblMatchOver.setVisible(true);
         //remove kill option
         Game.pauseKilling();
-        pauseInBetweenMatches.setCycleCount(Timeline.INDEFINITE);
-        pauseInBetweenMatches.play();
         //timeline.pause();
     }
 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class GameTimer implements Serializable{
 
+    private static final String DELIM = ":";
     private  int hour = 0;
     private  int minute;
     private  int second;
@@ -19,7 +20,7 @@ public class GameTimer implements Serializable{
     private  final int matchTimeIncrement = 5;
     private  boolean gameTimeState;
     private  boolean gamePauseState;
-    public static final String MATCH_OVER = "0:0";
+    public static final String MATCH_OVER = "0"+DELIM+"0";
     public static final String MAX_MATCH_TIME = formatTime(matchMinutesMax, matchSecondsMax);
     public static final String MIN_MATCH_TIME = formatTime(matchMinutesMin, matchSecondsMin);
     public static final String DEFAULT_MATCH_START_TIME = formatTime(startMinute, startSecond);
@@ -37,6 +38,25 @@ public class GameTimer implements Serializable{
             gameTimerInstance = new GameTimer();
 
         return gameTimerInstance;
+    }
+
+    public static int getSecondsFromTime(String time) {
+        String[] split = time.split(DELIM);
+        return Integer.parseInt(split[1]);
+    }
+
+    public static int getMinutesFromTime(String time) {
+        String[] split = time.split(DELIM);
+        return Integer.parseInt(split[0]);
+    }
+
+    public static boolean aEqualsOrMoreThanB(String timeA, String timeB) {
+        int secondsA = getSecondsFromTime(timeA);
+        int secondsB = getSecondsFromTime(timeB);
+        if (secondsA >= secondsB){
+            return true;
+        }
+        return false;
     }
 
     public void setGameTimer(GameTimer gameTimer) {
@@ -96,7 +116,7 @@ public class GameTimer implements Serializable{
     }
 
     public static String formatTime(int matchMinutes, int matchSconds) {
-        return matchMinutes + ":" + matchSconds;
+        return matchMinutes + DELIM + matchSconds;
     }
 
 //    public static int getCurrentMintues() {

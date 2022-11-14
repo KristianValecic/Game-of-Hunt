@@ -5,22 +5,13 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-
-import java.awt.*;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MovementController {
     private static final String up = "up";
@@ -32,6 +23,7 @@ public class MovementController {
     private static final int NO_COLLISION = 0;
     private static final int COLLISION = 1;
     private static final int KILL_PLAYER = 2;
+    private static final int CAUGHT_IN_TRAP = 3;
 
     private BooleanProperty wPressed = new SimpleBooleanProperty();
     private BooleanProperty aPressed = new SimpleBooleanProperty();
@@ -47,12 +39,14 @@ public class MovementController {
     private Pane scene;
 
     private BooleanBinding keyPressed = wPressed.or(aPressed).or(sPressed).or(dPressed).or(spacePressed);
+    private GameTimer gameTimer = GameTimer.getInstance();
+
 
     //private static int screenRefreshRate = 60;
+//    private List<Player> players = new ArrayList<>();
     public static Label lblFPS;
 
     //@FXML
-    private List<Player> players = new ArrayList<>();
 
     public MovementController(Pane pane) {
         this.gameMapPane = pane;
@@ -95,20 +89,20 @@ public class MovementController {
         public void handle(long timestamp) {
 
             //if () {
-                if (spacePressed.get() && !spaceClickFlag && Game.getTrapCount() != Game.MIN_TRAPS) {
-                    ImageView trapSprite = new ImageView(Game.TRAP_PATH);
-                    ImageView hunteSprite = Game.getHunterPlayer().getPlayerSprite();
-                    Bounds hunterBounds = hunteSprite.getBoundsInParent();
-                    Coordinate trapSpawnCoordinate = getBottomCenterCoordinates(trapSprite, hunterBounds);
-                    trapSprite.relocate(trapSpawnCoordinate.getX(), trapSpawnCoordinate.getY());
-                    gameMapPane.getChildren().add(trapSprite);
-                    //trapSprite.toBack();
-                    System.out.println("trap set");
-                    Game.trapSet();
-                    spaceClickFlag = true;
-                }
-                //return;
-           // }
+            if (spacePressed.get() && !spaceClickFlag && Game.getTrapCount() != Game.MIN_TRAPS) {
+                ImageView trapSprite = new ImageView(Game.TRAP_PATH);
+                ImageView hunteSprite = Game.getHunterPlayer().getPlayerSprite();
+                Bounds hunterBounds = hunteSprite.getBoundsInParent();
+                Coordinate trapSpawnCoordinate = getBottomCenterCoordinates(trapSprite, hunterBounds);
+                trapSprite.relocate(trapSpawnCoordinate.getX(), trapSpawnCoordinate.getY());
+                gameMapPane.getChildren().add(trapSprite);
+                //trapSprite.toBack();
+                System.out.println("trap set");
+                Game.trapSet();
+                spaceClickFlag = true;
+            }
+            //return;
+            // }
 //          For FPS
             long delta = timestamp - lastRun;
             lblFPS.setText(Double.toString(Math.round(getFPS(delta))));
@@ -122,6 +116,10 @@ public class MovementController {
                 ImageView sprite = p.getPlayerSprite();
                 ImageView lightSource = p.getLightSource();
                 Bounds lightSourceBounds = lightSource.getBoundsInParent();
+                if (SurvivorPlayer.class.equals(p.getClass()) && ((SurvivorPlayer) p).isCaughtInTrap(gameTimer.getTime())) {
+                    System.out.println(p.getPlayerName() + "still in trap");
+                    //return;
+                }
                 int collision;
                 if (wPressed.get()) {
                     collision = collisionWithObj(p, up);
@@ -136,6 +134,8 @@ public class MovementController {
                         System.out.println("w");
                     } else if (collision == 2) {
                         killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
+                    } else if (collision == 3) {
+                        caugthInTrap(p);
                     }
                 }
 
@@ -188,10 +188,17 @@ public class MovementController {
                     }
                 }
             }
-
             lastRun = timestamp;
         }
     };
+
+    private void caugthInTrap(Player p) {
+        System.out.println(p.getPlayerName() + " caught in trap");
+        //gameTimer.
+        if (SurvivorPlayer.class.equals(p.getClass())) {
+            ((SurvivorPlayer) p).caughtInTrap(gameTimer.getTime());
+        }
+    }
 
     private Coordinate getBottomCenterCoordinates(ImageView sprite, Bounds playerSpriteBounds) {
         double x = (playerSpriteBounds.getMinX() + (playerSpriteBounds.getMaxX() - playerSpriteBounds.getMinX()) / 2) - (sprite.getBoundsInLocal().getWidth() / 2);
@@ -218,20 +225,20 @@ public class MovementController {
     }
 
     private int collisionWithObj(Player player, String moveDirection) {
-        boolean test = false;
+        boolean collision = false;
         for (Node mapObject : gameMapPane.getChildren()) {
             boolean isLight = checkLight(mapObject);
-            if (player.getClass().equals(HunterPlayer.class) &&
-                    ImageView.class.equals(mapObject.getClass()) &&
-                    ((ImageView) mapObject).getImage().getUrl().equals(Game.TRAP_PATH)) {
-                return NO_COLLISION;
-            }
+
             if (!mapObject.equals(player.getPlayerSprite())
                     && !isLight) {
+                if (player.getClass().equals(HunterPlayer.class) &&
+                        ImageView.class.equals(mapObject.getClass()) &&
+                        ((ImageView) mapObject).getImage().getUrl().equals(Game.TRAP_PATH)) {
+                    return NO_COLLISION;
+                }
+                collision = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
 
-                test = collisionController.checkCollisionWithObject(player.getPlayerSprite(), mapObject, moveDirection);
-
-                if (test) {
+                if (collision) {
                     if (player.getClass().equals(HunterPlayer.class) &&
                             mapObject.getClass().equals(player.getPlayerSprite().getClass()) &&
                             ((HunterPlayer) player).canKill()) {
@@ -239,6 +246,10 @@ public class MovementController {
                         Game.addMove(player, "killed a player");
                         System.out.println("Player killed");
                         return KILL_PLAYER;
+                    }
+                    if (ImageView.class.equals(mapObject.getClass()) &&
+                            ((ImageView) mapObject).getImage().getUrl().equals(Game.TRAP_PATH)) {
+                        return CAUGHT_IN_TRAP;
                     }
                     return COLLISION;
                 }
