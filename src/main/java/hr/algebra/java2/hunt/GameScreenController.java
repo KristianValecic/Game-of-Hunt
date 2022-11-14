@@ -83,7 +83,7 @@ public class GameScreenController implements Initializable {
     private Timeline pauseInBetweenMatches = new Timeline(
             new KeyFrame(Duration.seconds(1),
                     e -> {
-                pauseMatchesRuningFlag = true;
+                        pauseMatchesRuningFlag = true;
                         if (gameTimer.isPauseOver()) {
                             lblMatchOver.setVisible(false);
                             gameTimer.resetTimer();
@@ -128,13 +128,11 @@ public class GameScreenController implements Initializable {
             paneGameMap.getChildren().remove(player.getPlayerSprite());
             paneGameMap.getChildren().remove(player.getLightSource());
         }
-        for (int i = 0; i < Game.getTrapCount(); i++)       {
+        for (int i = 0; i < Game.getTrapCount(); i++) {
             paneGameMap.getChildren().removeIf(node -> {
-                if (ImageView.class.equals(node.getClass())){
-                    if (((ImageView) node).getImage().getUrl().equals(Game.TRAP_PATH))
-                    {
-                        return true;
-                    }
+                if (ImageView.class.equals(node.getClass()) &&
+                        ((ImageView) node).getImage().getUrl().equals(Game.TRAP_PATH)) {
+                    return true;
                 }
                 return false;
             });
@@ -159,10 +157,9 @@ public class GameScreenController implements Initializable {
         gameState.setPlayersList(Game.getPlayersList());
         gameState.setMatchAllCount(Game.getAllMatchesCount());
         gameState.setTrapCount(Game.getTrapCount());
-        for (Node node:paneGameMap.getChildren()) {
-            if (ImageView.class.equals(node.getClass())){
-                if (((ImageView) node).getImage().getUrl().equals(Game.TRAP_PATH))
-                {
+        for (Node node : paneGameMap.getChildren()) {
+            if (ImageView.class.equals(node.getClass())) {
+                if (((ImageView) node).getImage().getUrl().equals(Game.TRAP_PATH)) {
                     Bounds trapBounds = node.getBoundsInParent();
                     gameState.addTrapPosition(new Coordinate(trapBounds.getMinX(), trapBounds.getMaxY()));
                 }
@@ -207,7 +204,7 @@ public class GameScreenController implements Initializable {
                 player.loadPlayerSprite(position);
                 paneGameMap.getChildren().add(player.getPlayerSprite());
             });
-            gameState.getTrapPositions().forEach(position ->{
+            gameState.getTrapPositions().forEach(position -> {
                 ImageView trap = new ImageView(Game.TRAP_PATH);
                 trap.relocate(position.getX(), position.getY());
                 paneGameMap.getChildren().add(trap);
@@ -217,11 +214,10 @@ public class GameScreenController implements Initializable {
 
             setMatchCounterLabel();
             paneGameMap.requestFocus();
-            //refreshView();
-            //3. namjestit tajmer todo: popravi da radi gameTimer sam
-            gameTimer=gameState.getGameTimer();
+            //3. namjestit tajmer
+            gameTimer = gameState.getGameTimer();
             lblTimer.setText(gameTimer.getTime());
-            if (timelineRuningFlag){
+            if (timelineRuningFlag) {
                 timeline.play();
             } else if (pauseMatchesRuningFlag) {
                 pauseInBetweenMatches.play();
@@ -238,6 +234,7 @@ public class GameScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gameTimer = GameTimer.getInstance();
+        gameTimer.resetTimer();
         movementController = new MovementController(paneGameMap);
         lblMatchOver.setVisible(false);
 

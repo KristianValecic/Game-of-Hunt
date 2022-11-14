@@ -145,6 +145,7 @@ public class Game {
     }
 
     public static void Rematch() {
+        newMatch();
         gameOver = false;
         matchCounter = 1;
         alivePlayersList.clear();

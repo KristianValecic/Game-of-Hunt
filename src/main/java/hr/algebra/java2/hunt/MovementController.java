@@ -29,6 +29,10 @@ public class MovementController {
     private static final String right = "right";
     private static final String space = "space";
 
+    private static final int NO_COLLISION = 0;
+    private static final int COLLISION = 1;
+    private static final int KILL_PLAYER = 2;
+
     private BooleanProperty wPressed = new SimpleBooleanProperty();
     private BooleanProperty aPressed = new SimpleBooleanProperty();
     private BooleanProperty sPressed = new SimpleBooleanProperty();
@@ -73,7 +77,7 @@ public class MovementController {
 
         keyPressed.addListener((observableValue, aBoolean, t1) -> {
             if (!aBoolean) {
-                 timer.start();
+                timer.start();
             } else timer.stop();
         });
     }
@@ -89,11 +93,9 @@ public class MovementController {
 
         @Override
         public void handle(long timestamp) {
-            if (spacePressed.get()){
-                if (Game.getTrapCount() == Game.MIN_TRAPS){
-                    return;
-                }
-                if (!spaceClickFlag){
+
+            //if () {
+                if (spacePressed.get() && !spaceClickFlag && Game.getTrapCount() != Game.MIN_TRAPS) {
                     ImageView trapSprite = new ImageView(Game.TRAP_PATH);
                     ImageView hunteSprite = Game.getHunterPlayer().getPlayerSprite();
                     Bounds hunterBounds = hunteSprite.getBoundsInParent();
@@ -105,8 +107,8 @@ public class MovementController {
                     Game.trapSet();
                     spaceClickFlag = true;
                 }
-                return;
-            }
+                //return;
+           // }
 //          For FPS
             long delta = timestamp - lastRun;
             lblFPS.setText(Double.toString(Math.round(getFPS(delta))));
@@ -133,7 +135,6 @@ public class MovementController {
                         sprite.setLayoutY(sprite.getLayoutY() - (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("w");
                     } else if (collision == 2) {
-                        System.out.println("Player killed");
                         killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
                 }
@@ -150,7 +151,6 @@ public class MovementController {
                         sprite.setLayoutY(sprite.getLayoutY() + (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("s");
                     } else if (collision == 2) {
-                        System.out.println("Player killed");
                         killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
                 }
@@ -167,7 +167,6 @@ public class MovementController {
                         sprite.setLayoutX(sprite.getLayoutX() - (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("a");
                     } else if (collision == 2) {
-                        System.out.println("Player killed");
                         //((HunterPlayer)p).setVictimPlayer();
                         killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
@@ -185,17 +184,17 @@ public class MovementController {
                         sprite.setLayoutX(sprite.getLayoutX() + (p.getPlayerSpeed() * elapsedSeconds));
                         System.out.println("d");
                     } else if (collision == 2) {
-                        System.out.println("Player killed");
                         killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
                     }
                 }
             }
+
             lastRun = timestamp;
         }
     };
 
     private Coordinate getBottomCenterCoordinates(ImageView sprite, Bounds playerSpriteBounds) {
-        double x = (playerSpriteBounds.getMinX()+(playerSpriteBounds.getMaxX()-playerSpriteBounds.getMinX())/2)-(sprite.getBoundsInLocal().getWidth()/2);
+        double x = (playerSpriteBounds.getMinX() + (playerSpriteBounds.getMaxX() - playerSpriteBounds.getMinX()) / 2) - (sprite.getBoundsInLocal().getWidth() / 2);
         double y = playerSpriteBounds.getMinY() + playerSpriteBounds.getHeight();
         return new Coordinate(x, y);
     }
@@ -222,6 +221,11 @@ public class MovementController {
         boolean test = false;
         for (Node mapObject : gameMapPane.getChildren()) {
             boolean isLight = checkLight(mapObject);
+            if (player.getClass().equals(HunterPlayer.class) &&
+                    ImageView.class.equals(mapObject.getClass()) &&
+                    ((ImageView) mapObject).getImage().getUrl().equals(Game.TRAP_PATH)) {
+                return NO_COLLISION;
+            }
             if (!mapObject.equals(player.getPlayerSprite())
                     && !isLight) {
 
@@ -233,13 +237,14 @@ public class MovementController {
                             ((HunterPlayer) player).canKill()) {
                         ((HunterPlayer) player).setVictimPlayerSprite((ImageView) mapObject);
                         Game.addMove(player, "killed a player");
-                        return 2;
+                        System.out.println("Player killed");
+                        return KILL_PLAYER;
                     }
-                    return 1;
+                    return COLLISION;
                 }
             }
         }
-        return 0;
+        return NO_COLLISION;
     }
 
     private boolean checkLight(Node mapObject) {
@@ -283,9 +288,6 @@ public class MovementController {
 
             if (e.getCode() == KeyCode.D) {
                 dPressed.set(false);
-            }
-            if (e.getCode() == KeyCode.SPACE) {
-                wPressed.set(false);
             }
             if (e.getCode() == KeyCode.SPACE) {
                 spaceClickFlag = false;

@@ -47,7 +47,7 @@ public class CollisionController {
 
             case "down":
                 if (playerMapPosition.intersects(0.0, mapBounds.getHeight(), mapBounds.getWidth(), mapBounds.getHeight())) {
-                    System.out.println("Down map Bound");
+                    System.out.println("Bottom map Bound");
                     return true;
                 } else {
                     return false;

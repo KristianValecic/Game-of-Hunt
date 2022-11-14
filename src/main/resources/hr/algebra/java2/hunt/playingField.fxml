@@ -8,11 +8,11 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="paneRootParent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="782.0" prefWidth="1148.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.GameScreenController">
+<Pane fx:id="paneRootParent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="854.0" prefWidth="1148.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.GameScreenController">
    <children>
       <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="782.0" prefWidth="1148.0">
          <children>
-            <Pane fx:id="paneGameMap" maxHeight="780.0" maxWidth="1145.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1145.0">
+            <Pane fx:id="paneGameMap" maxHeight="837.0" maxWidth="1145.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1145.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9a9a9a" height="132.0" layoutX="158.0" layoutY="218.0" stroke="#979797" strokeType="INSIDE" width="113.0" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9a9a9a" height="73.0" layoutX="678.0" layoutY="314.0" stroke="#979797" strokeType="INSIDE" width="25.0" />
@@ -27,7 +27,7 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9a9a9a" height="73.0" layoutX="907.0" layoutY="174.0" stroke="#979797" strokeType="INSIDE" width="82.0" />
                </children>
             </Pane>
-            <Pane fx:id="paneLightSource" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1145.0">
+            <Pane fx:id="paneLightSource" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="829.0" prefWidth="1145.0">
                <children>
                   <Label layoutX="14.0" layoutY="10.0" prefHeight="40.0" prefWidth="88.0" style="-fx-background-color: black;" text="Time left: " textFill="WHITE">
                      <font>
@@ -59,12 +59,12 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <Button fx:id="btnSaveGame" layoutX="14.0" layoutY="726.0" mnemonicParsing="false" onAction="#onSaveGame" text="Save Game">
+                  <Button fx:id="btnSaveGame" layoutX="14.0" layoutY="775.0" mnemonicParsing="false" onAction="#onSaveGame" text="Save Game">
                      <font>
                         <Font size="19.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnLoadGame" layoutX="147.0" layoutY="726.0" mnemonicParsing="false" onAction="#onLoadGame" text="Load Game">
+                  <Button fx:id="btnLoadGame" layoutX="141.0" layoutY="775.0" mnemonicParsing="false" onAction="#onLoadGame" text="Load Game">
                      <font>
                         <Font size="19.0" />
                      </font>
@@ -78,6 +78,9 @@
                      </padding>
                   </Label>
                </children>
+               <StackPane.margin>
+                  <Insets top="60.0" />
+               </StackPane.margin>
             </Pane>
          </children>
       </StackPane>
