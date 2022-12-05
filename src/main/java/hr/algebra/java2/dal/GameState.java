@@ -28,6 +28,7 @@ public class GameState implements Serializable {
     private Map<Player, Coordinate> alivePlayersPositionsList = new HashMap<>();
     private Map<Player, Coordinate> alivePlayersLightSourcePositionsList = new HashMap<>();
     private int trapCount;
+    private int playersAddedCounter;
 
     public  List<Player> getPlayersList() {
         return playersList;
@@ -112,5 +113,9 @@ public class GameState implements Serializable {
 
     public GameTimer getGameTimer() {
         return gameTimer;
+    }
+
+    public void savePlayerAddedCounter(int playerCounter) {
+        playersAddedCounter = playerCounter;
     }
 }

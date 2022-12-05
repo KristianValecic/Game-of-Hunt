@@ -6,8 +6,8 @@ public class GameTimer implements Serializable{
 
     private static final String DELIM = ":";
     private  int hour = 0;
-    private  int minute;
-    private  int second;
+    private  int minute = startMinute;
+    private  int second = startSecond;
     private  int pauseMinute;
     private  int pauseSecond;
     private  int puaseSecondDuration = 1;
@@ -59,9 +59,9 @@ public class GameTimer implements Serializable{
         return false;
     }
 
-    public void setGameTimer(GameTimer gameTimer) {
-
-    }
+//    public void setGameTimer(GameTimer gameTimer) {
+//
+//    }
 
     public void setMatchTime(int minutes, int seconds) {
         this.minute = minutes;
@@ -119,14 +119,6 @@ public class GameTimer implements Serializable{
         return matchMinutes + DELIM + matchSconds;
     }
 
-//    public static int getCurrentMintues() {
-//        return minute;
-//    }
-//
-//    public static int getCurrentSeconds() {
-//        return second;
-//    }
-
     public String getTime() {
         if (gamePauseState) {
             return formatTime(pauseMinute, pauseSecond);
@@ -135,24 +127,35 @@ public class GameTimer implements Serializable{
     }
 
     public void subMatchTime() {
-        if (startSecond == 0) {
-            startMinute--;
-            startSecond = 60 - matchTimeIncrement;
+//        if (startSecond == 0) {
+//            startMinute--;
+//            startSecond = 60 - matchTimeIncrement;
+//        } else {
+//            startSecond -= matchTimeIncrement;
+//        }
+//        second = startSecond;
+//        minute = startMinute;
+        if (second == 0) {
+            minute--;
+            second = 60 - matchTimeIncrement;
         } else {
-            startSecond -= matchTimeIncrement;
+            second -= matchTimeIncrement;
         }
-        second = startSecond;
-        minute = startMinute;
     }
 
     public void addMatchTime() {
-        startSecond += matchTimeIncrement;
-        if (startSecond == 60) {
-            startMinute++;
-            startSecond = 0;
+//        startSecond += matchTimeIncrement;
+//        if (startSecond == 60) {
+//            startMinute++;
+//            startSecond = 0;
+//        }
+//        second = startSecond;
+//        minute = startMinute;
+        second += matchTimeIncrement;
+        if (second == 60) {
+            minute++;
+            second = 0;
         }
-        second = startSecond;
-        minute = startMinute;
     }
 
     public boolean validateMinTime() {
@@ -175,6 +178,10 @@ public class GameTimer implements Serializable{
         }
         return false;
     }
+
+//    public void setTimer(GameTimer gameTimer) {
+//        this = gameTimer;
+//    }
 
 //    public static GameTimer getTimeForSave() {
 //        if (gameTimeState) {
