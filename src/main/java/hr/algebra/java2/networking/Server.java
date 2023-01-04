@@ -4,6 +4,8 @@ import hr.algebra.java2.model.ClientModel;
 import hr.algebra.java2.model.Game;
 
 import java.io.*;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 
 public class Server {
     public static final String HOST = "localhost";
+    public static final String GROUP = "230.0.0.1";
     public static final int PORT = 1989;
     public static List<ClientModel> connectedClientList;
 
@@ -19,14 +22,16 @@ public class Server {
     }
 
     private static void acceptRequests() {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)){
+        try (DatagramSocket serverSocket = new DatagramSocket(PORT)){ // ServerSocket
             System.err.println("Server listening on port: " + serverSocket.getLocalPort());
 
             connectedClientList = new ArrayList<>();
 
             while (true) {
                 if (connectedClientList.size() < Game.MAX_PLAYERS){
-                    Socket clientSocket = serverSocket.accept();
+//                    Socket clientSocket = serverSocket.accept();
+                    InetAddress groupAdress = InetAddress.getByName(GROUP);
+
                     System.err.println("Client connected from port: " + clientSocket.getPort());
                     // outer try catch blocks cannot handle the anonymous implementations
                     //new Thread(() ->  processPrimitiveClient(clientSocket)).start();

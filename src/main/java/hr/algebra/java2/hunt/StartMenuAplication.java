@@ -15,11 +15,9 @@ import java.net.Socket;
 
 public class StartMenuAplication extends Application {
     private static Stage mainStage;
-    public static int AppCounter = 0;
 
     @Override
     public void start(Stage stage) throws IOException {
-        AppCounter++;
         try (Socket clientSocket = new Socket(Server.HOST, Server.PORT)){
             System.err.println("Client is connecting to " + clientSocket.getInetAddress() + ":" +clientSocket.getPort());
 
@@ -27,7 +25,7 @@ public class StartMenuAplication extends Application {
             ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
 
 //            if (ois.available() > 0){
-                oos.writeObject("Client " + AppCounter + " connected to server");
+                oos.writeObject("Client " + " connected to server");
 
                 String rtrnMess = (String)ois.readObject();
                 System.out.println(rtrnMess);
