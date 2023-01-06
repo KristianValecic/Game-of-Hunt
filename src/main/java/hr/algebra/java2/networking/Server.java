@@ -1,13 +1,15 @@
 package hr.algebra.java2.networking;
 
+import hr.algebra.java2.dal.GameState;
 import hr.algebra.java2.model.ClientModel;
 import hr.algebra.java2.model.Game;
 
 import java.io.*;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,36 +17,113 @@ public class Server {
     public static final String HOST = "localhost";
     public static final String GROUP = "230.0.0.1";
     public static final int PORT = 1989;
+    private static final int RANDOM_PORT_HINT = 0;
+
     public static List<ClientModel> connectedClientList;
+    private static boolean isServerFull;
 
     public static void main(String[] args) {
         acceptRequests();
     }
 
     private static void acceptRequests() {
-        try (DatagramSocket serverSocket = new DatagramSocket(PORT)){ // ServerSocket
+        GameState gameState = new GameState();
+        gameState.setMatchAllCount(66);
+        gameState.setTrapCount(55);
+        connectedClientList = new ArrayList<>();
+        isServerFull = false;
+
+        try (MulticastSocket serverSocket = new MulticastSocket(PORT)) { // ServerSocket
             System.err.println("Server listening on port: " + serverSocket.getLocalPort());
 
-            connectedClientList = new ArrayList<>();
+            //Server joining gruop
+            InetAddress group = InetAddress.getByName(GROUP);
+            InetSocketAddress groupAddress = new InetSocketAddress(group, PORT);
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(InetAddress.getByName(HOST));
+
+            serverSocket.joinGroup(groupAddress, networkInterface);
+            System.err.println("Server joining group");
+
+            //RMI for chat
+            try {
+                Registry registry = LocateRegistry.createRegistry(PORT);
+                ChatServiceInterface chatService = new ChatServiceImpl();
+                ChatServiceInterface skeleton = (ChatServiceInterface) UnicastRemoteObject.exportObject(chatService, RANDOM_PORT_HINT);
+                registry.rebind(ChatServiceInterface.REMOTE_OBJECT_NAME, skeleton);
+                System.err.println("Object registered in RMI registry");
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
 
             while (true) {
-                if (connectedClientList.size() < Game.MAX_PLAYERS){
-//                    Socket clientSocket = serverSocket.accept();
-                    InetAddress groupAdress = InetAddress.getByName(GROUP);
+//                if (connectedClientList.size() < Game.MAX_PLAYERS){
+//                  Socket clientSocket = serverSocket.accept();
+                //new Thread(() ->{
 
-                    System.err.println("Client connected from port: " + clientSocket.getPort());
-                    // outer try catch blocks cannot handle the anonymous implementations
-                    //new Thread(() ->  processPrimitiveClient(clientSocket)).start();
-//                    returnConnectionMessage(clientSocket);
-                    new Thread(() ->  processSerializableClient(clientSocket)).start();
-                    connectedClientList.add(ClientModel.createClientModelFromIpAndPort(
-                            clientSocket.getPort(), clientSocket.getInetAddress().getHostAddress()));
-                }else{
-                    continue;
-                }
+                //recieves at least first connection message.
+                recievePacket(serverSocket);
 
+                sendPacket(serverSocket, gameState);
+                //dictates how often packets are sent
+                Thread.sleep(500);
+                //} ).start();
             }
-        }  catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void recievePacket(DatagramSocket serverSocket) throws IOException {
+        byte[] buffer = new byte[6400];
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+        serverSocket.receive(packet);
+        GameState gameState = new GameState();
+
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
+             ObjectInputStream ois = new ObjectInputStream(bis)) {
+            Object obj = ois.readObject();
+            //System.out.println(gameState);
+            //startMenuController.loadOnlineGameState(deserializedGameState);
+            //Platform.runLater(() -> startMenuController.loadOnlineGameState(gameState));
+
+            if (obj instanceof GameState) {
+                gameState = (GameState) obj;//ois.readObject()
+                System.out.println(gameState.getMatchAllCount() + " " + gameState.getTrapCount());
+                gameState.setTrapCount(55);
+                System.err.println("Server got gameState");
+
+            } else if (obj instanceof ClientModel && !isServerFull) {
+                ClientModel client = (ClientModel) obj;
+                System.out.println(obj);
+                connectedClientList.add(client);
+                if (connectedClientList.size() >= Game.MAX_PLAYERS){
+                    isServerFull = true;
+                }
+                System.err.println("Client Connected");
+            } else if (obj instanceof Boolean) {
+                Boolean bool = (Boolean) obj;
+                sendPacket(serverSocket, bool);
+            }
+
+            System.out.println("Server got client message.");
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void sendPacket(DatagramSocket serverSocket, Object ObjectForSend) {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(6400);
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+//            String message = "test message";
+            oos.writeObject(ObjectForSend);
+            //byte[] buffer = message.getBytes();
+            byte[] buffer = bos.toByteArray();
+            InetAddress groupAddress = InetAddress.getByName(GROUP);
+
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, groupAddress, PORT);
+            System.out.println("Server sending " + ObjectForSend.toString());
+            serverSocket.send(packet);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -62,35 +141,21 @@ public class Server {
         }
     }
 
-    private static void processPrimitiveClient(Socket clientSocket) {
-        // we have to manually close dis and dos since clientSocket is not in try with resources
-        // closing the streams closes the socket!
-        try (DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
-             DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream())) {
-
-            String message = dis.readUTF();
-            System.out.println("Server received: " + message);
-            dos.writeInt(countVowels(message));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static int countVowels(String message) {
-        return message.toLowerCase().replaceAll("[^aeiou]", "").length();
-    }
 
     private static void processSerializableClient(Socket clientSocket) {
         try (ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
-             ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream())){
+             ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream())) {
 
-            String message = (String)ois.readObject();
+            String message = (String) ois.readObject();
             System.out.println(message);
             oos.writeObject("Connection established");
             oos.writeObject("Thread finished work");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isServerFull() {
+        return isServerFull;
     }
 }

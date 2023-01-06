@@ -153,4 +153,9 @@ public class Player implements Serializable {
         );
         lightSource.relocate(position.getX(), position.getY());
     }
+
+    @Override
+    public String toString() {
+        return playerName;
+    }
 }

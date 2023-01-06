@@ -1,9 +1,13 @@
 package hr.algebra.java2.model;
 
-public class ClientModel {
+import java.io.Serializable;
+
+public class ClientModel implements Serializable {
     private int Port;
     private String IPAdress;
 
+    public ClientModel() {
+    }
 
     private ClientModel(int port, String IPAdress) {
         Port = port;
