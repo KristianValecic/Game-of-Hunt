@@ -1,6 +1,7 @@
 package hr.algebra.java2.dal;
 
 import hr.algebra.java2.model.Coordinate;
+import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.GameTimer;
 import hr.algebra.java2.model.Player;
 import javafx.collections.ObservableList;
@@ -117,5 +118,9 @@ public class GameState implements Serializable {
 
     public void savePlayerAddedCounter(int playerCounter) {
         playersAddedCounter = playerCounter;
+    }
+
+    public void removePlayer(Player player) {
+        this.playersList.remove(player);
     }
 }

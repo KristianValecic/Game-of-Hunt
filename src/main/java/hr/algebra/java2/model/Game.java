@@ -16,7 +16,7 @@ public class Game {
     public static final String SURVIVOR_IMAGE_PATH = "file:src/main/resources/hr/algebra/java2/hunt/images/survivorSprite.png";
     private static List<Player> playersList = new ArrayList<>();
     public static final int MIN_PLAYERS = 2;
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 5;//5 is usual max
     public static final int MAX_MATCHES = 7;
     public static final int MIN_MATCHES = 1;
     public static final int MIN_TRAPS = 5;
@@ -39,6 +39,9 @@ public class Game {
     private static String WindowTitle = "Game of Hunt";
     private static HunterPlayer hunterPlayer;
     public static GameTimer gameTimer = GameTimer.getInstance();
+    public static final int STOP_SEND = 0;
+    public static final int SEND_BOOLEAN = 1;
+    public static final int SEND_GAMESTATE = 2;
 
 
     public static int getAllMatchesCount() {

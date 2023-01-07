@@ -9,8 +9,11 @@ import javafx.scene.image.ImageView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Player implements Serializable {
+    private static int iDCounter = 0;
+    private int iD;
     private String playerName;
     private PlayerRole playerRole;
     public static final double playerWidth = 40;
@@ -23,14 +26,32 @@ public class Player implements Serializable {
     private transient ImageView playerSprite = new ImageView();
     private transient ImageView lightSource = new ImageView();
 
-    public Player() {}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return iD == player.iD;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(iD);
+    }
+
+    public Player() {
+        iDCounter++;
+        iD = iDCounter;
+    }
 
     public Player(PlayerRole playerRole, Image playerImage) {
+        this();
         this.playerRole = playerRole;
         this.playerSprite.setImage(playerImage);
     }
 
     public Player(String playerName, PlayerRole playerRole, Image playerImage) {
+        this();
         this.playerRole = playerRole;
         setPlayerSprite(playerImage);
         setPlayerName(playerName);

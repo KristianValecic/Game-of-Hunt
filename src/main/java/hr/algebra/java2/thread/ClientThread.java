@@ -4,6 +4,7 @@ import hr.algebra.java2.dal.GameState;
 import hr.algebra.java2.hunt.StartMenuController;
 import hr.algebra.java2.message.Message;
 import hr.algebra.java2.model.ClientModel;
+import hr.algebra.java2.model.Game;
 import hr.algebra.java2.networking.Server;
 import javafx.application.Platform;
 
@@ -60,9 +61,17 @@ public class ClientThread implements Runnable {
                     if (obj instanceof GameState){
                         gameState = (GameState) obj;//ois.readObject()
                         System.out.println(gameState.getMatchAllCount() + " " + gameState.getTrapCount());
-                        gameState.setTrapCount(55);
+                        //gameState.setTrapCount(55);
                         System.err.println("Client got gameState");
-
+                        //startMenuController.loadGameState();
+                        Platform.runLater(() -> {
+                            try {
+                                startMenuController.loadGameState();
+                            } catch (IOException | ClassNotFoundException e) {
+                                System.out.println("Error with refresh menu screen");
+                                throw new RuntimeException(e);
+                            }
+                        });
                     }else if(obj instanceof Boolean){
                         if (((Boolean)obj).booleanValue()){
                             System.err.println("Client got Boolean");
@@ -73,7 +82,7 @@ public class ClientThread implements Runnable {
                     //Platform.runLater(() -> startMenuController.loadOnlineGameState(gameState));
 
                 }
-                if (StartMenuController.sendStatus == 1) {
+                if (StartMenuController.sendStatus == Game.SEND_BOOLEAN) {
                     //ideja salji packet da se svi moraju refreshat
                     sendPakcet(clientSocket, groupAddress, Boolean.TRUE);
                 }

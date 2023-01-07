@@ -21,13 +21,15 @@ public class Server {
 
     public static List<ClientModel> connectedClientList;
     private static boolean isServerFull;
+    private static GameState gameState;
+    private static int testCounter = 0;
 
     public static void main(String[] args) {
         acceptRequests();
     }
 
     private static void acceptRequests() {
-        GameState gameState = new GameState();
+        gameState = new GameState();
         gameState.setMatchAllCount(66);
         gameState.setTrapCount(55);
         connectedClientList = new ArrayList<>();
@@ -77,7 +79,6 @@ public class Server {
         byte[] buffer = new byte[6400];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         serverSocket.receive(packet);
-        GameState gameState = new GameState();
 
         try (ByteArrayInputStream bis = new ByteArrayInputStream(packet.getData());
              ObjectInputStream ois = new ObjectInputStream(bis)) {
@@ -89,7 +90,7 @@ public class Server {
             if (obj instanceof GameState) {
                 gameState = (GameState) obj;//ois.readObject()
                 System.out.println(gameState.getMatchAllCount() + " " + gameState.getTrapCount());
-                gameState.setTrapCount(55);
+//                gameState.setTrapCount(testCounter++);
                 System.err.println("Server got gameState");
 
             } else if (obj instanceof ClientModel && !isServerFull) {

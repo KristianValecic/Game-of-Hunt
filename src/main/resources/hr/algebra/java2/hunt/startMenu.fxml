@@ -3,9 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -17,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="paneMainMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="722.0" prefWidth="971.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.StartMenuController">
+<GridPane fx:id="paneMainMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="722.0" prefWidth="1277.0" style="-fx-background-color: black;" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.algebra.java2.hunt.StartMenuController">
   <columnConstraints>
       <ColumnConstraints maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.0" minWidth="10.0" prefWidth="63.0" />
@@ -32,7 +29,7 @@
       <RowConstraints maxHeight="121.0" minHeight="10.0" prefHeight="121.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <FlowPane fx:id="flpnMainMenuPLayers" alignment="CENTER" columnHalignment="CENTER" hgap="20.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="402.0" prefWidth="659.0" vgap="20.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <FlowPane fx:id="flpnMainMenuPLayers" alignment="CENTER" columnHalignment="CENTER" hgap="20.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="410.0" prefWidth="610.0" vgap="20.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
       <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: none;" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="198.0" layoutY="21.0" style="-fx-background-color: none;" text="Game" textFill="WHITE">
@@ -50,20 +47,7 @@
                   <Font name="Century" size="72.0" />
                </font>
             </Label>
-            <StackPane layoutX="-62.0" layoutY="-14.0" prefHeight="55.0" prefWidth="971.0">
-               <children>
-                  <MenuBar>
-                    <menus>
-                      <Menu mnemonicParsing="false" text="File">
-                        <items>
-                          <MenuItem mnemonicParsing="false" onAction="#onSaveGame" text="Save" />
-                              <MenuItem mnemonicParsing="false" onAction="#onLoadGame" text="Load" />
-                        </items>
-                      </Menu>
-                    </menus>
-                  </MenuBar>
-               </children>
-            </StackPane>
+            <StackPane layoutX="-62.0" layoutY="-14.0" prefHeight="55.0" prefWidth="971.0" />
          </children>
       </Pane>
       <GridPane alignment="CENTER" prefHeight="123.0" prefWidth="854.0" style="-fx-background-color: black; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.rowIndex="3">
@@ -175,10 +159,11 @@
       </BorderPane>
       <Pane prefHeight="409.0" prefWidth="107.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
-            <TextArea fx:id="chatTextArea" layoutX="6.0" layoutY="-5.0" prefHeight="268.0" prefWidth="232.0" style="-fx-text-fill: white; -fx-control-inner-background: black;" />
-            <TextField fx:id="chatMsgTextField" layoutX="7.0" layoutY="270.0" prefHeight="25.0" prefWidth="232.0" promptText="Write message..." style="-fx-control-inner-background: black; -fx-text-fill: white;" />
-            <Button fx:id="btnSendMsg" layoutX="7.0" layoutY="306.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: black; -fx-border-color: white; -fx-border-radius: 4px;" text="Button" textFill="WHITE" />
+            <TextArea fx:id="chatTextArea" layoutX="6.0" layoutY="-5.0" prefHeight="338.0" prefWidth="232.0" style="-fx-text-fill: white; -fx-control-inner-background: black;" />
+            <TextField fx:id="chatMsgTextField" layoutX="6.0" layoutY="338.0" prefHeight="25.0" prefWidth="232.0" promptText="Write message..." style="-fx-control-inner-background: black; -fx-text-fill: white;" />
+            <Button fx:id="btnSendMsg" layoutX="6.0" layoutY="374.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: black; -fx-border-color: white; -fx-border-radius: 4px;" text="Button" textFill="WHITE" />
          </children>
       </Pane>
+      <Pane prefHeight="163.0" prefWidth="226.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
    </children>
 </GridPane>

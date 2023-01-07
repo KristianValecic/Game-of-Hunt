@@ -22,7 +22,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-import java.awt.event.InputMethodEvent;
 import java.io.*;
 import java.net.URL;
 import java.rmi.NotBoundException;
@@ -50,6 +49,7 @@ public class StartMenuController implements Initializable {
     private static Button btnAddPlayerFromParent;
     private static List<Player> playersList = new ArrayList<>(); //TODO: promijeni da je svaka instanca igre svoj igrac
     private static Player player;
+    private GameState gameState;
 
     //removed only left here cuz too much refactoring
     @FXML
@@ -88,45 +88,40 @@ public class StartMenuController implements Initializable {
     private TextField chatMsgTextField;
     @FXML
     private TextArea chatTextArea;
+    @FXML
+    private TextField playerNametxt;
     private GameTimer gameTimer;
     public static int sendStatus = 0;
 
     private ChatServiceInterface stub;
+    private Runnable clientThread;
 
-    public void loadOnlineGameState(GameState gameState) {
-        System.out.println("Got game state!");
-
-        matchCounter = gameState.getMatchAllCount();
-        gameTimer = gameState.getGameTimer();
-        clearAddedPlayers(playerCounter);
-        for (Player p : gameState.getPlayersList()) {
-            onClickAddPlayer();
-            //imena treba dodati
-        }
-        refreshLblMatch();
-        refreshLblMatchTime();
-    }
+    //private Node playerCard;
 
     @FXML
     protected void onClickAddPlayer() {
         if (playerCounter == Game.MAX_PLAYERS) {
             return;
         }
-
         createPLayerCard();
 
         //Game.addAlivePlayer(player);
-        if (playerCounter == Game.MAX_PLAYERS) {
-            flpnMainMenuPLayers.getChildren().remove(btnAddPlayer);
-        }
+        //commented code is for button which is removed
+//        if (playerCounter == Game.MAX_PLAYERS) {
+//            flpnMainMenuPLayers.getChildren().remove(btnAddPlayer);
+//        }
         lblPlayerCounter.setText(playerCounter + DELIMTER + Game.MAX_PLAYERS);
     }
 
-    private void createPLayerCard() {
+    private Node createPLayerCard() {
+        //need to save this player card, so it can be compared later
         FXMLLoader fxmlLoader = new FXMLLoader(StartMenuController.class.getResource("playerCard.fxml"));
+        playerCounter++;
 
         try {
-            flpnMainMenuPLayers.getChildren().add(fxmlLoader.load());
+            Node playerCardTemp = fxmlLoader.load();
+            flpnMainMenuPLayers.getChildren().add(playerCardTemp);
+            return playerCardTemp;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -196,10 +191,11 @@ public class StartMenuController implements Initializable {
     }
 
     private static void removePlayerFormMenu() {
-        if (playerCounter == Game.MAX_PLAYERS) {
-            flpnParentToPlayerCard.getChildren().add(0, btnAddPlayerFromParent);
-        }
-        flpnParentToPlayerCard.getChildren().remove(playerCounter == Game.MAX_PLAYERS ? playerCounter - 1 : playerCounter);
+        //commented part adds button which is removed!
+//        if (playerCounter == Game.MAX_PLAYERS) {
+//            flpnParentToPlayerCard.getChildren().add(0, btnAddPlayerFromParent);
+//        }
+        flpnParentToPlayerCard.getChildren().remove(/*playerCounter == Game.MAX_PLAYERS ?*/ playerCounter - 1 /*: playerCounter*/);
         playerCounter--;
         lblPlayerCounterFormParent.setText(playerCounter + DELIMTER + Game.MAX_PLAYERS);
     }
@@ -293,65 +289,98 @@ public class StartMenuController implements Initializable {
 
     @FXML
     void onLoadGame(ActionEvent event) throws IOException, ClassNotFoundException {
+        loadGameState();
+    }
+
+    public void loadGameState() throws IOException, ClassNotFoundException {
+        if (!new File(Game.SER_FILE).exists()){
+            gameState = new GameState();
+            return;
+        }
         try (ObjectInputStream deserializator = new ObjectInputStream(new FileInputStream(Game.SER_FILE))) {
-            GameState gameState = (GameState) deserializator.readObject();
+            gameState = (GameState) deserializator.readObject();
 
             matchCounter = gameState.getMatchAllCount();
-            gameTimer = gameState.getGameTimer();
+            if (gameState.getGameTimer() != null) {
+                gameTimer = gameState.getGameTimer();
+            }
             clearAddedPlayers(playerCounter);
-            for (Player p : gameState.getPlayersList()) {
+            for (int i =0; i < gameState.getPlayersList().size(); i++) {
                 onClickAddPlayer();
                 //imena treba dodati
             }
+            setPlayerCardNames();
             refreshLblMatch();
             refreshLblMatchTime();
+            sendStatus = Game.STOP_SEND;
         }
     }
 
+    private void setPlayerCardNames() {
+        int counter = 0;
+        for (Node node : flpnParentToPlayerCard.getChildren()) {
+            if (node.getClass().equals(Pane.class)) {
+                //gets main pane of playercard, not root
+                GridPane playerCard = ((GridPane) ((Pane) node).getChildren().get(0));//0 is index of gidpane in window
+                // 1 is index of wanted textfield
+                ((TextField) playerCard.getChildren().get(1)).setText(gameState.getPlayersList().get(counter).getPlayerName());
+
+                counter++;
+            }
+        }
+    }
 
     private void clearAddedPlayers(int playerCounterForLoop) {
         //flpnMainMenuPLayers.getChildren().removeIf(node -> !btnAddPlayer.equals(node));
         for (int i = 0; i < playerCounterForLoop; i++) {
             removePlayerFormMenu();
         }
+
+
         //playerCounter = 0;
     }
 
     @FXML
     void onSaveGame(ActionEvent event) throws IOException {
-        GameState gameState = new GameState();
+        saveGameState();
+    }
+
+    private void saveGameState() throws IOException {
+//        gameState = new GameState();
+//        File file = new File(Game.SER_FILE);
+//        if (!file.exists()){
+//            file
+//        }
 
         //spremiti matcheve, vrijeme i igrace
         gameState.setMatchAllCount(matchCounter);
         gameState.setTimerState(gameTimer);
         //gameState.savePlayerAddedCounter(playerCounter);
-        fillPlayerList();
-        gameState.setPlayersList(playersList);
+        //fillPlayerList();
+        //provejeri je li player ima ime, role i sliku
 
         try (ObjectOutputStream serializator = new ObjectOutputStream(new FileOutputStream(Game.SER_FILE)
         )) {
             serializator.writeObject(gameState);
+            sendStatus = Game.SEND_GAMESTATE;
         }
     }
 
-    public void sendMessage()  {
+    public void sendMessage() {
         try {
             String msg = chatMsgTextField.getText();
             Message messageFromPlayer = Message.createMessageFromPlayer(player, msg);
             stub.sendMessage(messageFromPlayer);
-            sendStatus = 1;
+            sendStatus = Game.SEND_BOOLEAN;
             //refreshChat();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @FXML
-    void onNameChanged(InputMethodEvent event) {
-        System.out.println(tfPlayerName.getText());
-    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         gameTimer = GameTimer.getInstance();
 
         if (url.toString().contains("startMenu.fxml")) {
@@ -369,7 +398,8 @@ public class StartMenuController implements Initializable {
 
             //starting client thread that get server messages
             ExecutorService executorService = Executors.newSingleThreadExecutor();
-            executorService.execute(new ClientThread(this));
+            clientThread = new ClientThread(this);
+            executorService.execute(clientThread);
 
             lblMatchCounter.setText(Integer.toString(matchCounter));
             lblPlayerCounter.setText(playerCounter + DELIMTER + Game.MAX_PLAYERS);
@@ -381,27 +411,74 @@ public class StartMenuController implements Initializable {
 //            }else if (flpnParentToPlayerCard.getChildren().stream().count() > 1){
 //                player = new Player("", PlayerRole.Survivor, new Image(Game.SURVIVOR_IMAGE_PATH));
 //            }
-            onClickAddPlayer();
+            try {
+                loadGameState();
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("Error with load gamestate on initial load");
+                throw new RuntimeException(e);
+            }
+
+            //ako postoji hunter u listi
+            if (/*gameState.getPlayersList().size() > 0 &&*/ !gameState.getPlayersList().stream().anyMatch(player -> player.getPlayerRole().equals(PlayerRole.Hunter))){
+                player = new HunterPlayer(StartMenuAplication.getName(), PlayerRole.Hunter, new Image(Game.HUNTER_IMAGE_PATH));
+            }else {
+                player = new SurvivorPlayer(StartMenuAplication.getName(), PlayerRole.Survivor, new Image(Game.SURVIVOR_IMAGE_PATH));
+            }
+            //onClickAddPlayer();
+            /*playerCard =*/ createPLayerCard();
+            gameState.addPlayer(player);
+            try {
+                saveGameState();
+            } catch (IOException e) {
+                System.out.println("Error with saving on initial load");
+                throw new RuntimeException(e);
+            }
+
+            StartMenuAplication.getMainStage().setOnCloseRequest(event -> closeWindow(this));
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() == 0) {
             lblPlayerRole.setText(PlayerRole.Hunter.toString());
             imgCharacter.setImage(new Image(Game.HUNTER_IMAGE_PATH));
-            player = new HunterPlayer("", PlayerRole.Hunter, new Image(Game.HUNTER_IMAGE_PATH));
+            //sets name of player
+            //tfPlayerName.setText();
         } else if (url.toString().contains("playerCard.fxml") && flpnParentToPlayerCard.getChildren().stream().count() >= 1) {
             lblPlayerRole.setText(PlayerRole.Survivor.toString());
             imgCharacter.setImage(new Image(Game.SURVIVOR_IMAGE_PATH));
-            player = new SurvivorPlayer("", PlayerRole.Survivor, new Image(Game.SURVIVOR_IMAGE_PATH));
+            //sets name of player
+            //tfPlayerName.setText();
+        }
+    }
+
+    @FXML
+    private void changePlayerName() {
+        player.setPlayerName(playerNametxt.getText());
+        try {
+            saveGameState();
+        } catch (IOException e) {
+            System.out.println("error while changing player name");
+            throw new RuntimeException(e);
+        }
+    }
+
+        private void closeWindow(StartMenuController startMenuController) {
+        //zaustaviti client thread KAKO?????
+        startMenuController.gameState.removePlayer(startMenuController.player);
+        try {
+            saveGameState();
+        } catch (IOException e) {
+            System.out.println("Failed save after close");
+            throw new RuntimeException(e);
         }
     }
 
     public void refreshChat() throws RemoteException {
         StringBuilder sb = new StringBuilder();
-        for (Message message:stub.getChatHistory()) {
+        for (Message message : stub.getChatHistory()) {
             sb.append(message);
             sb.append("\n");
         }
 
         chatTextArea.setText(sb.toString());
-        sendStatus = 0;
+        sendStatus = Game.STOP_SEND;
     }
 
 }
