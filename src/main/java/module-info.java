@@ -3,6 +3,7 @@ module hr.algebra.java2.hunt {
     requires javafx.fxml;
     requires java.desktop;
     requires java.rmi;
+    requires java.naming;
 
 
     opens hr.algebra.java2.hunt to javafx.fxml;

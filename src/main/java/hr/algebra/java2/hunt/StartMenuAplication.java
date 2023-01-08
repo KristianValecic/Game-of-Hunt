@@ -31,13 +31,22 @@ public class StartMenuAplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        name = JOptionPane.showInputDialog("Name: ");
+        dialogInputName(stage);
 
-//        while(name.isEmpty()){
-//            name = JOptionPane.showInputDialog("Ingresa el nombre con el que te deseas identificar");
-//        }
-        this.mainStage = stage;
-        SceneUtils.createScene(stage, "startMenu.fxml", "Game of Hunt");
+        if (name != null) {
+            while (name.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Name can't be empty", "Error", JOptionPane.WARNING_MESSAGE);
+                dialogInputName(stage);
+            }
+        }
+    }
+
+    private void dialogInputName(Stage stage) throws IOException {
+        name = JOptionPane.showInputDialog(null, "Name: ");
+        if (name != null && !name.isEmpty()){
+            this.mainStage = stage;
+            SceneUtils.createScene(stage, "startMenu.fxml", "Game of Hunt");
+        }
     }
 
     public static Stage getMainStage() {

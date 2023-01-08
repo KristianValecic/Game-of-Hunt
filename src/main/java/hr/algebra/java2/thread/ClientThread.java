@@ -7,12 +7,15 @@ import hr.algebra.java2.model.ClientModel;
 import hr.algebra.java2.model.Game;
 import hr.algebra.java2.networking.Server;
 import javafx.application.Platform;
+import jndi.helper.ConfigEnum;
+import jndi.helper.JndiHelper;
 
+import javax.naming.NamingException;
 import java.io.*;
 import java.net.*;
 
-
 public class ClientThread implements Runnable {
+    private int port;
     private GameState gameState;
     private StartMenuController startMenuController;
 
@@ -28,13 +31,21 @@ public class ClientThread implements Runnable {
     @Override
     public void run() {
         System.out.println("Client Server thread started.");
+        String groupString;
+        String hostString;
+        try {
+            port = Integer.parseInt(JndiHelper.getConfigurationParameter(ConfigEnum.PORT));
+            groupString = JndiHelper.getConfigurationParameter(ConfigEnum.GROUP);
+            hostString = JndiHelper.getConfigurationParameter(ConfigEnum.HOST);
+        } catch (NamingException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        try (MulticastSocket clientSocket = new MulticastSocket(Server.PORT)) { //Socket clientSocket = new Socket(Server.HOST, Server.PORT)
-            //System.err.println("Client is connecting to " + clientSocket.getInetAddress() + ":" +clientSocket.getPort());
+        try (MulticastSocket clientSocket = new MulticastSocket(port)) {
 
-            InetAddress group = InetAddress.getByName(Server.GROUP);
-            InetSocketAddress groupAddress = new InetSocketAddress(group, Server.PORT);
-            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(InetAddress.getByName(Server.HOST));
+            InetAddress group = InetAddress.getByName(groupString);
+            InetSocketAddress groupAddress = new InetSocketAddress(group, port);
+            NetworkInterface networkInterface = NetworkInterface.getByInetAddress(InetAddress.getByName(hostString));
 
             if (!Server.isServerFull()) {
                 System.err.println("Client joining group");
@@ -42,7 +53,7 @@ public class ClientThread implements Runnable {
             }
             ClientModel client = new ClientModel();
             //sending client
-            sendPakcet(clientSocket, groupAddress, client);
+            sendPakcet(clientSocket, groupAddress, client, port);
 
 //            DatagramPacket clientPacket = new DatagramPacket(client.getBytes(), client.length(), group, Server.PORT);
 //            clientSocket.send(clientPacket);
@@ -59,9 +70,7 @@ public class ClientThread implements Runnable {
                      ObjectInputStream ois = new ObjectInputStream(bis)) {
                     Object obj = ois.readObject();
                     if (obj instanceof GameState){
-                        gameState = (GameState) obj;//ois.readObject()
-                        System.out.println(gameState.getMatchAllCount() + " " + gameState.getTrapCount());
-                        //gameState.setTrapCount(55);
+                        gameState = (GameState) obj;
                         System.err.println("Client got gameState");
                         //startMenuController.loadGameState();
                         Platform.runLater(() -> {
@@ -84,7 +93,7 @@ public class ClientThread implements Runnable {
                 }
                 if (StartMenuController.sendStatus == Game.SEND_BOOLEAN) {
                     //ideja salji packet da se svi moraju refreshat
-                    sendPakcet(clientSocket, groupAddress, Boolean.TRUE);
+                    sendPakcet(clientSocket, groupAddress, Boolean.TRUE, port);
                 }
             }
 //            }
@@ -94,13 +103,13 @@ public class ClientThread implements Runnable {
         }
     }
 
-    private static void sendPakcet(MulticastSocket clientSocket, InetSocketAddress groupAddress, Object objectForSend) {
+    private static void sendPakcet(MulticastSocket clientSocket, InetSocketAddress groupAddress, Object objectForSend, int port) {
         try(ByteArrayOutputStream bos = new ByteArrayOutputStream(6400);
             ObjectOutputStream oos = new ObjectOutputStream(bos)){
             oos.writeObject(objectForSend);
             byte[] byteBuffer = bos.toByteArray();
 
-            DatagramPacket Packet = new DatagramPacket(byteBuffer, byteBuffer.length, groupAddress.getAddress(), Server.PORT);
+            DatagramPacket Packet = new DatagramPacket(byteBuffer, byteBuffer.length, groupAddress.getAddress(), port);
             clientSocket.send(Packet);
             System.err.println("Client sent " + objectForSend.toString());
         }catch(IOException e){

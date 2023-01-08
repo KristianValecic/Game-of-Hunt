@@ -3,7 +3,10 @@ package hr.algebra.java2.networking;
 import hr.algebra.java2.dal.GameState;
 import hr.algebra.java2.model.ClientModel;
 import hr.algebra.java2.model.Game;
+import jndi.helper.ConfigEnum;
+import jndi.helper.JndiHelper;
 
+import javax.naming.NamingException;
 import java.io.*;
 import java.net.*;
 import java.rmi.RemoteException;
@@ -14,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    public static final String HOST = "localhost";
-    public static final String GROUP = "230.0.0.1";
-    public static final int PORT = 1989;
+    private static String HOST;
+    private static String GROUP;
+    private static int PORT;
     private static final int RANDOM_PORT_HINT = 0;
 
     public static List<ClientModel> connectedClientList;
@@ -30,10 +33,19 @@ public class Server {
 
     private static void acceptRequests() {
         gameState = new GameState();
-        gameState.setMatchAllCount(66);
-        gameState.setTrapCount(55);
+//        gameState.setMatchAllCount(66);
+//        gameState.setTrapCount(55);
         connectedClientList = new ArrayList<>();
         isServerFull = false;
+
+
+        try {
+            PORT = Integer.parseInt(JndiHelper.getConfigurationParameter(ConfigEnum.PORT));
+            HOST = JndiHelper.getConfigurationParameter(ConfigEnum.HOST);
+            GROUP = JndiHelper.getConfigurationParameter(ConfigEnum.GROUP);
+        } catch (NamingException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
         try (MulticastSocket serverSocket = new MulticastSocket(PORT)) { // ServerSocket
             System.err.println("Server listening on port: " + serverSocket.getLocalPort());

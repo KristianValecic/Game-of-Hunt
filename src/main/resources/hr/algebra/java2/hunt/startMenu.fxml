@@ -157,11 +157,11 @@
                </font></Button>
          </center>
       </BorderPane>
-      <Pane prefHeight="409.0" prefWidth="107.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Pane onKeyReleased="#onKeySendMessage" prefHeight="409.0" prefWidth="107.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <TextArea fx:id="chatTextArea" layoutX="6.0" layoutY="-5.0" prefHeight="338.0" prefWidth="232.0" style="-fx-text-fill: white; -fx-control-inner-background: black;" />
             <TextField fx:id="chatMsgTextField" layoutX="6.0" layoutY="338.0" prefHeight="25.0" prefWidth="232.0" promptText="Write message..." style="-fx-control-inner-background: black; -fx-text-fill: white;" />
-            <Button fx:id="btnSendMsg" layoutX="6.0" layoutY="374.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: black; -fx-border-color: white; -fx-border-radius: 4px;" text="Button" textFill="WHITE" />
+            <Button fx:id="btnSendMsg" layoutX="6.0" layoutY="374.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: black; -fx-border-color: white; -fx-border-radius: 4px;" text="Send" textFill="WHITE" />
          </children>
       </Pane>
       <Pane prefHeight="163.0" prefWidth="226.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
