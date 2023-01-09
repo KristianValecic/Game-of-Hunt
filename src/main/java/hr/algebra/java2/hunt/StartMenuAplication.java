@@ -37,6 +37,9 @@ public class StartMenuAplication extends Application {
             while (name.isEmpty()){
                 JOptionPane.showMessageDialog(null, "Name can't be empty", "Error", JOptionPane.WARNING_MESSAGE);
                 dialogInputName(stage);
+                if (name == null){
+                    break;
+                }
             }
         }
     }
@@ -46,6 +49,8 @@ public class StartMenuAplication extends Application {
         if (name != null && !name.isEmpty()){
             this.mainStage = stage;
             SceneUtils.createScene(stage, "startMenu.fxml", "Game of Hunt");
+        } else if (name == null){
+            javafx.application.Platform.exit();
         }
     }
 

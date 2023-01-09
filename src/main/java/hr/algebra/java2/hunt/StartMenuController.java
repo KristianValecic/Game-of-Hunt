@@ -27,6 +27,7 @@ import jndi.helper.ConfigEnum;
 import jndi.helper.JndiHelper;
 
 import javax.naming.NamingException;
+import javax.swing.text.html.Option;
 import java.io.*;
 import java.net.URL;
 import java.rmi.NotBoundException;
@@ -35,9 +36,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class StartMenuController implements Initializable {
     private static final String DELIMTER = "/";
@@ -80,6 +83,9 @@ public class StartMenuController implements Initializable {
     private Label lblPlayerCounter;
     private static Label lblPlayerCounterFormParent;
 
+    @FXML
+    private Label lblGameFull;
+
     //PLAYER CARD VAR
     @FXML
     private TextField tfPlayerName;
@@ -95,11 +101,14 @@ public class StartMenuController implements Initializable {
     private TextArea chatTextArea;
     @FXML
     private TextField playerNametxt;
+    @FXML
+    private Label tfplayerNameDisplay;
     private GameTimer gameTimer;
     public static int sendStatus = 0;
 
     private ChatServiceInterface stub;
-    private Runnable clientThread;
+    private ClientThread clientThread;
+    private ExecutorService executorService;
     private boolean isBtnAddMatchClickable = true;
     private boolean isBtnSubMatchClickable = true;
 
@@ -313,21 +322,29 @@ public class StartMenuController implements Initializable {
                 onClickAddPlayer();
                 //imena treba dodati
             }
-            setPlayerCardNames();
+             //(gameState.getPlayersList().size() > Game.MAX_PLAYERS){lblGameFull.setVisible(true);}
+            if(gameState.getPlayersList().size() <= Game.MAX_PLAYERS) {lblGameFull.setVisible(false);}
+            if (player != null) {
+                setPlayerCardNamesAndRoles();
+            }
             refreshLblMatch();
             refreshLblMatchTime();
             sendStatus = Game.STOP_SEND;
         }
     }
 
-    private void setPlayerCardNames() {
+    private void setPlayerCardNamesAndRoles() {
         int counter = 0;
         for (Node node : flpnParentToPlayerCard.getChildren()) {
             if (node.getClass().equals(Pane.class)) {
                 //gets main pane of playercard, not root
                 GridPane playerCard = ((GridPane) ((Pane) node).getChildren().get(0));//0 is index of gidpane in window
-                // 1 is index of wanted textfield
+                // 1 is index of wanted textfield for player name
                 ((TextField) playerCard.getChildren().get(1)).setText(gameState.getPlayersList().get(counter).getPlayerName());
+                // 2 is index of wanted Label for role
+                Node roleLbl = ((FlowPane) playerCard.getChildren().get(2)).getChildren().get(0);
+                String text = ((Label)roleLbl).getText();
+                player.setPlayerRole(PlayerRole.valueOf(text));
 
                 counter++;
             }
@@ -340,8 +357,6 @@ public class StartMenuController implements Initializable {
             removePlayerFormMenu();
         }
 
-
-        //playerCounter = 0;
     }
 
     @FXML
@@ -350,11 +365,6 @@ public class StartMenuController implements Initializable {
     }
 
     private void saveGameState() throws IOException {
-//        gameState = new GameState();
-//        File file = new File(Game.SER_FILE);
-//        if (!file.exists()){
-//            file
-//        }
 
         //spremiti matcheve, vrijeme i igrace
         gameState.setMatchState(matchCounter);
@@ -385,6 +395,7 @@ public class StartMenuController implements Initializable {
             stub.sendMessage(messageFromPlayer);
             sendStatus = Game.SEND_BOOLEAN;
             //refreshChat();
+            chatMsgTextField.setText("");
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -411,8 +422,9 @@ public class StartMenuController implements Initializable {
             }
 
             //starting client thread that get server messages
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService = Executors.newSingleThreadExecutor();
             clientThread = new ClientThread(this);
+            //clientThread.setDaemon(true);
             executorService.execute(clientThread);
 
             lblMatchCounter.setText(Integer.toString(matchCounter));
@@ -420,11 +432,6 @@ public class StartMenuController implements Initializable {
 
             lblMatchTime.setText(GameTimer.DEFAULT_MATCH_START_TIME);/*formatTime(matchMinutes, matchSeconds)*/
 
-//            if (flpnParentToPlayerCard.getChildren().stream().count() == 1) {
-//                player = new Player("", PlayerRole.Hunter, new Image(Game.HUNTER_IMAGE_PATH));
-//            }else if (flpnParentToPlayerCard.getChildren().stream().count() > 1){
-//                player = new Player("", PlayerRole.Survivor, new Image(Game.SURVIVOR_IMAGE_PATH));
-//
             try {
                 loadGameState();
             } catch (IOException | ClassNotFoundException e) {
@@ -443,6 +450,8 @@ public class StartMenuController implements Initializable {
             createPLayerCard();
             gameState.addPlayer(player);
             gameState.setMatchState(matchCounter);
+            tfplayerNameDisplay.setText(player.getPlayerName());
+            if (gameState.getPlayersList().size() > Game.MAX_PLAYERS){lblGameFull.setVisible(true);}
             try {
                 saveGameState();
             } catch (IOException e) {
@@ -476,9 +485,10 @@ public class StartMenuController implements Initializable {
     }
 
     private void closeWindow(StartMenuController startMenuController) {
-        //zaustaviti client thread KAKO?????
         startMenuController.gameState.removePlayer(startMenuController.player);
         try {
+            clientThread.ShouldShutdown();
+            executorService.shutdownNow();
             saveGameState();
             javafx.application.Platform.exit();
         } catch (IOException e) {

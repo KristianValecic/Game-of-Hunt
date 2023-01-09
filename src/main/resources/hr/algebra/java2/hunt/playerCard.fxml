@@ -25,7 +25,7 @@
         </rowConstraints>
          <children>
             <ImageView fx:id="imgCharacter" fitHeight="110.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="tfPlayerName" alignment="CENTER" editable="false" onInputMethodTextChanged="#changePlayerName" onKeyReleased="#changePlayerName" prefHeight="27.0" prefWidth="125.0" promptText="Name" style="-fx-border-color: white;" stylesheets="@Style.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="tfPlayerName" alignment="CENTER" editable="false" prefHeight="27.0" prefWidth="125.0" promptText="Name" style="-fx-border-color: white;" stylesheets="@Style.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <FlowPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" stylesheets="@Style.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <Label fx:id="lblPlayerRole" alignment="CENTER" contentDisplay="CENTER" prefHeight="29.0" prefWidth="74.0" stylesheets="@Style.css" text="Placeholder" textFill="WHITE" />

@@ -20,6 +20,7 @@ public class Server {
     private static String HOST;
     private static String GROUP;
     private static int PORT;
+    private static int SERVER_SEND_RATE = 200;
     private static final int RANDOM_PORT_HINT = 0;
 
     public static List<ClientModel> connectedClientList;
@@ -79,7 +80,7 @@ public class Server {
 
                 sendPacket(serverSocket, gameState);
                 //dictates how often packets are sent
-                Thread.sleep(500);
+                Thread.sleep(SERVER_SEND_RATE);
                 //} ).start();
             }
         } catch (IOException | InterruptedException e) {
@@ -153,7 +154,6 @@ public class Server {
             e.printStackTrace();
         }
     }
-
 
     private static void processSerializableClient(Socket clientSocket) {
         try (ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());

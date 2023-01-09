@@ -18,6 +18,15 @@ public class ClientThread implements Runnable {
     private int port;
     private GameState gameState;
     private StartMenuController startMenuController;
+    private boolean shouldRun = true;
+
+    public void ShouldShutdown() {
+        this.shouldRun = false;
+    }
+
+//    public boolean isShouldRun() {
+//        return shouldRun;
+//    }
 
     public ClientThread(StartMenuController startMenuController) {
         this.startMenuController = startMenuController;
@@ -58,7 +67,7 @@ public class ClientThread implements Runnable {
 //            DatagramPacket clientPacket = new DatagramPacket(client.getBytes(), client.length(), group, Server.PORT);
 //            clientSocket.send(clientPacket);
 
-            while (true) {
+            while (shouldRun) {
 //                clientSocket.setSoTimeout(100);
 
                 byte[] buffer = new byte[6400];
@@ -96,7 +105,6 @@ public class ClientThread implements Runnable {
                     sendPakcet(clientSocket, groupAddress, Boolean.TRUE, port);
                 }
             }
-//            }
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Connection failed");
             e.printStackTrace();

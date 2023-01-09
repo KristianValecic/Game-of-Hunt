@@ -29,7 +29,19 @@
       <RowConstraints maxHeight="121.0" minHeight="10.0" prefHeight="121.0" valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <FlowPane fx:id="flpnMainMenuPLayers" alignment="CENTER" columnHalignment="CENTER" hgap="20.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="410.0" prefWidth="610.0" vgap="20.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <FlowPane fx:id="flpnMainMenuPLayers" columnHalignment="CENTER" prefHeight="410.0" prefWidth="610.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <children>
+            <FlowPane fx:id="flpnMainMenuPLayers" alignment="CENTER" columnHalignment="CENTER" hgap="20.0" prefHeight="356.0" prefWidth="841.0" vgap="20.0" />
+            <Pane prefHeight="47.0" prefWidth="343.0">
+               <children>
+                  <Label fx:id="lblGameFull" alignment="CENTER" contentDisplay="CENTER" layoutX="379.0" layoutY="8.0" text="Game is full" textFill="WHITE" visible="false">
+                     <font>
+                        <Font name="System Bold" size="21.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children></FlowPane>
       <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: none;" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="198.0" layoutY="21.0" style="-fx-background-color: none;" text="Game" textFill="WHITE">
@@ -165,5 +177,22 @@
          </children>
       </Pane>
       <Pane prefHeight="163.0" prefWidth="226.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <FlowPane alignment="CENTER" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <Label opacity="0.71" text="Name:" textFill="WHITE">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+            <Label fx:id="tfplayerNameDisplay" textFill="WHITE">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </FlowPane>
    </children>
 </GridPane>
