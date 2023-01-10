@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class JndiHelper {
 
-    private static final String PROVIDER_URL = "file:D:/Faks/3. GODINA/Java 2/Config";
+    private static final String PROVIDER_URL = "file:D:/Faks/3. GODINA/Java 2/GameOfHunt/Config";
 
     private static final String CONFIGURATION_FILE_NAME = "conf.properties";
 
