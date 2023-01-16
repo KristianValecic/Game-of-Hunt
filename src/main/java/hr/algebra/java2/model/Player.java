@@ -50,6 +50,11 @@ public class Player implements Serializable {
         this.playerSprite.setImage(playerImage);
     }
 
+    public Player(String playerName, PlayerRole playerRole) {
+        this();
+        this.playerRole = playerRole;
+        setPlayerName(playerName);
+    }
     public Player(String playerName, PlayerRole playerRole, Image playerImage) {
         this();
         this.playerRole = playerRole;

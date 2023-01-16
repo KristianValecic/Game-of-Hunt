@@ -4,10 +4,7 @@ import hr.algebra.java2.dal.GameState;
 import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Game {
     public static final String TRAP_PATH = "file:src/main/resources/hr/algebra/java2/hunt/images/Trap.png";
@@ -32,7 +29,7 @@ public class Game {
     private static Coordinate playerSpawnRightTop;
     public static final String SER_FILE = "saveGame.ser";
     private static List<Player> alivePlayersList = new ArrayList<>();
-    private static List<Move> moves = new ArrayList<>();
+    private static Set<Move> moves = new HashSet<>();
     private static int allMatchesCount;
     private static int matchCounter = 1;
     private static boolean gameOver = false;
@@ -110,7 +107,7 @@ public class Game {
         alivePlayersList.forEach(p -> {
             if (p.getClass().equals(SurvivorPlayer.class)) {
                 ((SurvivorPlayer) p).SurvivedMatch();
-                addMove(p, "Sruvived");
+                addMove(p, "Sruvived", null);
 
             }
         });
@@ -135,11 +132,11 @@ public class Game {
         return gameOver;
     }
 
-    public static void addMove(Player player, String move) {
-        moves.add(new Move(player, move));
+    public static void addMove(Player player, String move, Coordinate coordinate) {
+        moves.add(new Move(player, move, coordinate));
     }
 
-    public static List<Move> getMoves() {
+    public static Set<Move> getMoves() {
         return moves;
     }
 

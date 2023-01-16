@@ -23,6 +23,8 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GameScreenController implements Initializable {
     private static final String DELIM_MATCH = "/";
@@ -241,11 +243,16 @@ public class GameScreenController implements Initializable {
         gameTimer = GameTimer.getInstance();
         gameTimer.resetTimer();
         movementController = new MovementController(paneGameMap);
+//        MovementController movementControllerCopy = new MovementController(paneGameMap);
+//        movementControllerCopy.makeMovable();
         lblMatchOver.setVisible(false);
 
         spawnPlayers();
 
         movementController.makeMovable(paneRootParent);
+//        //starts a thread that duplicates the same movement as the main thread, just for demonstration purposes
+//        ExecutorService executorService = Executors.newCachedThreadPool();
+//        executorService.execute(movementController);
         //Set timer
         lblTimer.setText(gameTimer.getTime());
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -259,6 +266,7 @@ public class GameScreenController implements Initializable {
     private void spawnPlayers() {
         Game.setSpawnPointsOnMap(paneGameMap.getMaxWidth(), paneGameMap.getMaxHeight());
         for (Player player : Game.getAlivePlayersList()) {
+
             if (player.getPlayerRole() == PlayerRole.Survivor) {
                 Coordinate spawnPoint = Game.getRandomSawnPoint();
                 ImageView playerLightSource = player.setPlayerLightSourceInitial(spawnPoint);

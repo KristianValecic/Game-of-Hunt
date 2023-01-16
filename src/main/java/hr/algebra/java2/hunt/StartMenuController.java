@@ -144,14 +144,10 @@ public class StartMenuController implements Initializable {
     }
 
     public void startGame() {
-        //provjerava je li playerCount i je li su sva imena unesena
         if (!playersValid()) {
             return;
         }
-
         fillPlayerList();
-
-        //sets time of match
 
         try {
             //GameScreenController.setPlayersList(playersList);
@@ -364,22 +360,28 @@ public class StartMenuController implements Initializable {
         saveGameState();
     }
 
-    private void saveGameState() throws IOException {
-
-        //spremiti matcheve, vrijeme i igrace
+    private /*synchronized*/ void saveGameState() throws IOException {
         gameState.setMatchState(matchCounter);
         gameState.setTimerState(gameTimer);
-        //gameState.savePlayerAddedCounter(playerCounter);
-        //fillPlayerList();
-        //provejeri je li player ima ime, role i sliku
+
+//        while (GameState.isWritingInGameState) { // ako se zapisuje u gamestate
+//            try {
+//                System.out.println("Thread tried to write in gamestate");
+//                wait();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        GameState.isWritingInGameState = true;
 
         try (ObjectOutputStream serializator = new ObjectOutputStream(new FileOutputStream(Game.SER_FILE)
         )) {
             serializator.writeObject(gameState);
+//            GameState.isWritingInGameState = false;
+//            notifyAll();
             sendStatus = Game.SEND_GAMESTATE;
         }
     }
-
 
     @FXML
     void onKeySendMessage(KeyEvent event) {
@@ -438,9 +440,8 @@ public class StartMenuController implements Initializable {
                 System.out.println("Error with load gamestate on initial load");
                 throw new RuntimeException(e);
             }
-
             //ako postoji hunter u listi
-            if (/*gameState.getPlayersList().size() > 0 &&*/ !gameState.getPlayersList().stream().anyMatch(player -> player.getPlayerRole().equals(PlayerRole.Hunter))) {
+            if (!gameState.getPlayersList().stream().anyMatch(player -> player.getPlayerRole().equals(PlayerRole.Hunter))) {
                 player = new HunterPlayer(StartMenuAplication.getName(), PlayerRole.Hunter, new Image(Game.HUNTER_IMAGE_PATH));
             } else {
                 player = new SurvivorPlayer(StartMenuAplication.getName(), PlayerRole.Survivor, new Image(Game.SURVIVOR_IMAGE_PATH));
@@ -507,6 +508,4 @@ public class StartMenuController implements Initializable {
         chatTextArea.setText(sb.toString());
         sendStatus = Game.STOP_SEND;
     }
-
-
 }

@@ -80,7 +80,7 @@ public class ClientThread implements Runnable {
                     Object obj = ois.readObject();
                     if (obj instanceof GameState){
                         gameState = (GameState) obj;
-                        System.err.println("Client got gameState");
+                        //System.err.println("Client got gameState");
                         //startMenuController.loadGameState();
                         Platform.runLater(() -> {
                             try {
@@ -98,7 +98,6 @@ public class ClientThread implements Runnable {
                     }
                     //startMenuController.loadOnlineGameState(deserializedGameState);
                     //Platform.runLater(() -> startMenuController.loadOnlineGameState(gameState));
-
                 }
                 if (StartMenuController.sendStatus == Game.SEND_BOOLEAN) {
                     //ideja salji packet da se svi moraju refreshat

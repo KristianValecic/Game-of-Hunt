@@ -1,5 +1,7 @@
 package hr.algebra.java2.hunt;
 
+import hr.algebra.java2.model.Coordinate;
+import hr.algebra.java2.model.Game;
 import hr.algebra.java2.model.HunterPlayer;
 import hr.algebra.java2.model.Player;
 import javafx.beans.property.BooleanProperty;
@@ -30,7 +32,7 @@ public class CollisionController {
         this.mainMap = gameMapPane;
     }
 
-    public boolean checkCollisionWithMap(ImageView playerSprite, String keyPressed) {
+    public boolean checkCollisionWithMap(Player player, ImageView playerSprite, String keyPressed) {
         //1. get sprite position in world
         Bounds playerMapPosition = playerSprite.getBoundsInParent();
         Bounds mapBounds = mainMap.getLayoutBounds();
@@ -40,6 +42,7 @@ public class CollisionController {
             case "up":
                 if (playerMapPosition.intersects(0.0, 0.0, mapBounds.getWidth(), 0.0)) {
                     System.out.println("Top map Bounds");
+                    Game.addMove(player, player.getPlayerName()  + " hit map bounds", new Coordinate(playerSprite.getLayoutX(), playerSprite.getLayoutY()));
                     return true;
                 } else {
                     return false;
@@ -48,6 +51,7 @@ public class CollisionController {
             case "down":
                 if (playerMapPosition.intersects(0.0, mapBounds.getHeight(), mapBounds.getWidth(), mapBounds.getHeight())) {
                     System.out.println("Bottom map Bound");
+                    Game.addMove(player, player.getPlayerName()  + " hit map bounds", new Coordinate(playerSprite.getLayoutX(), playerSprite.getLayoutY()));
                     return true;
                 } else {
                     return false;
@@ -56,6 +60,7 @@ public class CollisionController {
             case "left":
                 if (playerMapPosition.intersects(-1.0, 0.0, mapBounds.getMinX(), mapBounds.getMaxY())) {
                     System.out.println("left map Bounds");
+                    Game.addMove(player, player.getPlayerName()  + " hit map bounds", new Coordinate(playerSprite.getLayoutX(), playerSprite.getLayoutY()));
                     return true;
                 } else {
                     return false;
@@ -64,6 +69,7 @@ public class CollisionController {
             case "right":
                 if (playerMapPosition.intersects(mapBounds.getMaxX(), mapBounds.getMinY(), mapBounds.getWidth(), mapBounds.getHeight())) {
                     System.out.println("right map Bounds");
+                    Game.addMove(player, player.getPlayerName()  + " hit map bounds", new Coordinate(playerSprite.getLayoutX(), playerSprite.getLayoutY()));
                     return true;
                 } else {
                     return false;

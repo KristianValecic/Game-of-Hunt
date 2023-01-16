@@ -71,6 +71,11 @@
               <MenuItem mnemonicParsing="false" onAction="#onCreateDocumentation" text="Create" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Replay">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#playReplay" text="play" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </children>

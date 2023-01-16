@@ -1,5 +1,6 @@
 package hr.algebra.java2.hunt;
 
+import hr.algebra.java2.dal.GameState;
 import hr.algebra.java2.model.*;
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.BooleanBinding;
@@ -13,7 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
-public class MovementController {
+import java.util.Iterator;
+
+public class MovementController /*implements Runnable*/{
     private static final String up = "up";
     private static final String down = "down";
     private static final String left = "left";
@@ -76,6 +79,7 @@ public class MovementController {
         });
     }
 
+    private double elapsedSeconds;
     private AnimationTimer timer = new AnimationTimer() {
         private long lastRun = 0;
 
@@ -110,87 +114,93 @@ public class MovementController {
             long elapsedNanoSeconds = timestamp - lastRun;
 
             // 1 second = 1,000,000,000 (1 billion) nanoseconds
-            double elapsedSeconds = elapsedNanoSeconds / 1_000_000_000.0;
+            elapsedSeconds = elapsedNanoSeconds / 1_000_000_000.0;
 
-            for (Player p : Game.getAlivePlayersList()) {//players+
-                ImageView sprite = p.getPlayerSprite();
-                ImageView lightSource = p.getLightSource();
-                Bounds lightSourceBounds = lightSource.getBoundsInParent();
-                if (SurvivorPlayer.class.equals(p.getClass()) && ((SurvivorPlayer) p).isCaughtInTrap(gameTimer.getTime())) {
-                    System.out.println(p.getPlayerName() + "still in trap");
-                    //return;
-                }
-                int collision;
-                if (wPressed.get()) {
-                    collision = collisionWithObj(p, up);
-                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, up)) {
-                        lightSource.setLayoutY(lightSource.getLayoutY() - (p.getPlayerSpeed() * elapsedSeconds));
-                        lightSource.setViewport(new Rectangle2D(
-                                lightSourceBounds.getMinX(),
-                                lightSourceBounds.getMinY() - (p.getPlayerSpeed() * elapsedSeconds),
-                                Player.getLightSourceWidth(),
-                                Player.getLightSourceHeight()));
-                        sprite.setLayoutY(sprite.getLayoutY() - (p.getPlayerSpeed() * elapsedSeconds));
-                        System.out.println("w");
-                    } else if (collision == 2) {
-                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
-                    } else if (collision == 3) {
-                        caugthInTrap(p);
-                    }
-                }
-
-                if (sPressed.get()) {
-                    collision = collisionWithObj(p, down);
-                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, down)) {
-                        lightSource.setLayoutY(lightSource.getLayoutY() + (p.getPlayerSpeed() * elapsedSeconds));
-                        lightSource.setViewport(new Rectangle2D(
-                                lightSourceBounds.getMinX(),
-                                lightSourceBounds.getMinY() + (p.getPlayerSpeed() * elapsedSeconds),
-                                Player.getLightSourceWidth(),
-                                Player.getLightSourceHeight()));
-                        sprite.setLayoutY(sprite.getLayoutY() + (p.getPlayerSpeed() * elapsedSeconds));
-                        System.out.println("s");
-                    } else if (collision == 2) {
-                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
-                    }
-                }
-
-                if (aPressed.get()) {
-                    collision = collisionWithObj(p, left);
-                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, left)) {
-                        lightSource.setLayoutX(lightSource.getLayoutX() - (p.getPlayerSpeed() * elapsedSeconds));
-                        lightSource.setViewport(new Rectangle2D(
-                                lightSourceBounds.getMinX() - (p.getPlayerSpeed() * elapsedSeconds),
-                                lightSourceBounds.getMinY(),
-                                Player.getLightSourceWidth(),
-                                Player.getLightSourceHeight()));
-                        sprite.setLayoutX(sprite.getLayoutX() - (p.getPlayerSpeed() * elapsedSeconds));
-                        System.out.println("a");
-                    } else if (collision == 2) {
-                        //((HunterPlayer)p).setVictimPlayer();
-                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
-                    }
-                }
-
-                if (dPressed.get()) {
-                    collision = collisionWithObj(p, right);
-                    if (collision == 0 && !collisionController.checkCollisionWithMap(sprite, right)) {
-                        lightSource.setLayoutX(lightSource.getLayoutX() + (p.getPlayerSpeed() * elapsedSeconds));
-                        lightSource.setViewport(new Rectangle2D(
-                                lightSourceBounds.getMinX() + (p.getPlayerSpeed() * elapsedSeconds),
-                                lightSourceBounds.getMinY(),
-                                Player.getLightSourceWidth(),
-                                Player.getLightSourceHeight()));
-                        sprite.setLayoutX(sprite.getLayoutX() + (p.getPlayerSpeed() * elapsedSeconds));
-                        System.out.println("d");
-                    } else if (collision == 2) {
-                        killPlayer(((HunterPlayer) p).getVictimPlayerSprite());
-                    }
-                }
-            }
+            movePlayers();
             lastRun = timestamp;
         }
     };
+
+    private /*synchronized*/ void movePlayers() {
+        for (Player p : Game.getAlivePlayersList()) {//players+
+            ImageView sprite = p.getPlayerSprite();
+            ImageView lightSource = p.getLightSource();
+            Bounds lightSourceBounds = lightSource.getBoundsInParent();
+            if (SurvivorPlayer.class.equals(p.getClass()) && ((SurvivorPlayer) p).isCaughtInTrap(gameTimer.getTime())) {
+                System.out.println(p.getPlayerName() + "still in trap");
+                //return;
+            }
+            int collision;
+            if (wPressed.get()) {
+                collision = collisionWithObj(p, up, new Coordinate(sprite.getLayoutX(), sprite.getLayoutY()));
+                if (collision == 0 && !collisionController.checkCollisionWithMap(p, sprite, up)) {
+                    lightSource.setLayoutY(lightSource.getLayoutY() - (p.getPlayerSpeed() * elapsedSeconds));
+                    lightSource.setViewport(new Rectangle2D(
+                            lightSourceBounds.getMinX(),
+                            lightSourceBounds.getMinY() - (p.getPlayerSpeed() * elapsedSeconds),
+                            Player.getLightSourceWidth(),
+                            Player.getLightSourceHeight()));
+                    sprite.setLayoutY(sprite.getLayoutY() - (p.getPlayerSpeed() * elapsedSeconds));
+                    System.out.println("w");
+                } else if (collision == 2) {
+                    killPlayer(((HunterPlayer) p).getVictimPlayerSprite(), new Coordinate(sprite.getLayoutX(), sprite.getLayoutY()));
+                } else if (collision == 3) {
+                    caugthInTrap(p);
+                }
+            }
+
+            if (sPressed.get()) {
+                collision = collisionWithObj(p, down, new Coordinate(sprite.getLayoutX(), sprite.getLayoutY()));
+                if (collision == 0 && !collisionController.checkCollisionWithMap(p, sprite, down)) {
+                    lightSource.setLayoutY(lightSource.getLayoutY() + (p.getPlayerSpeed() * elapsedSeconds));
+                    lightSource.setViewport(new Rectangle2D(
+                            lightSourceBounds.getMinX(),
+                            lightSourceBounds.getMinY() + (p.getPlayerSpeed() * elapsedSeconds),
+                            Player.getLightSourceWidth(),
+                            Player.getLightSourceHeight()));
+                    sprite.setLayoutY(sprite.getLayoutY() + (p.getPlayerSpeed() * elapsedSeconds));
+                    System.out.println("s");
+                } else if (collision == 2) {
+                    killPlayer(((HunterPlayer) p).getVictimPlayerSprite(), new Coordinate(sprite.getLayoutX(), sprite.getLayoutY()));
+                }
+            }
+
+            if (aPressed.get()) {
+                collision = collisionWithObj(p, left, new Coordinate(sprite.getLayoutX(), sprite.getLayoutY()));
+                if (collision == 0 && !collisionController.checkCollisionWithMap(p, sprite, left)) {
+                    lightSource.setLayoutX(lightSource.getLayoutX() - (p.getPlayerSpeed() * elapsedSeconds));
+                    lightSource.setViewport(new Rectangle2D(
+                            lightSourceBounds.getMinX() - (p.getPlayerSpeed() * elapsedSeconds),
+                            lightSourceBounds.getMinY(),
+                            Player.getLightSourceWidth(),
+                            Player.getLightSourceHeight()));
+                    sprite.setLayoutX(sprite.getLayoutX() - (p.getPlayerSpeed() * elapsedSeconds));
+                    System.out.println("a");
+                } else if (collision == 2) {
+                    //((HunterPlayer)p).setVictimPlayer();
+                    double layoutX = sprite.getLayoutX();
+                    double layoutY = sprite.getLayoutY();
+                    killPlayer(((HunterPlayer) p).getVictimPlayerSprite(),new Coordinate(layoutX, layoutY));
+                }
+            }
+
+            if (dPressed.get()) {
+                collision = collisionWithObj(p, right, new Coordinate(sprite.getLayoutX(), sprite.getLayoutY()));
+                if (collision == 0 && !collisionController.checkCollisionWithMap(p, sprite, right)) {
+                    lightSource.setLayoutX(lightSource.getLayoutX() + (p.getPlayerSpeed() * elapsedSeconds));
+                    lightSource.setViewport(new Rectangle2D(
+                            lightSourceBounds.getMinX() + (p.getPlayerSpeed() * elapsedSeconds),
+                            lightSourceBounds.getMinY(),
+                            Player.getLightSourceWidth(),
+                            Player.getLightSourceHeight()));
+                    sprite.setLayoutX(sprite.getLayoutX() + (p.getPlayerSpeed() * elapsedSeconds));
+                    System.out.println("d");
+                } else if (collision == 2) {
+                    killPlayer(((HunterPlayer) p).getVictimPlayerSprite(),new Coordinate(sprite.getLayoutX(), sprite.getLayoutY()));
+                }
+            }
+        }
+    }
 
     private void caugthInTrap(Player p) {
         System.out.println(p.getPlayerName() + " caught in trap");
@@ -211,20 +221,40 @@ public class MovementController {
         return frameRate * 1e9;
     }
 
-    private void killPlayer(ImageView victimPlayerSprite) {
+    private /*synchronized*/ void killPlayer(ImageView victimPlayerSprite, Coordinate coordinate) {
+//        while (GameState.isWritingInGameState) {
+//            try {
+//                System.out.println("Thread tried to write in gamestate");
+//                wait();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        GameState.isWritingInGameState = true;
         for (Player p : Game.getAlivePlayersList()) {
             if (p.getPlayerSprite().equals(victimPlayerSprite)
                     && p.getClass().equals(SurvivorPlayer.class)
                 /* && !((SurvivorPlayer) p).isDead()*/) {
-                Game.addMove(p, "Player killed");
+                Game.addMove(p, p.getPlayerName() + " got killed", coordinate);
                 gameMapPane.getChildren().remove(p.getPlayerSprite());
                 gameMapPane.getChildren().remove(p.getLightSource());
                 Game.playerKilled((SurvivorPlayer) p);
+
+//               GameState.isWritingInGameState = false;
+//                notifyAll();
             }
         }
     }
 
-    private int collisionWithObj(Player player, String moveDirection) {
+    private /*synchronized*/ int collisionWithObj(Player player, String moveDirection, Coordinate coordinate) {
+//        while (GameState.isWritingInGameState) {
+//            try {
+//                System.out.println("Thread tried to move players");
+//                wait();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
         boolean collision = false;
         for (Node mapObject : gameMapPane.getChildren()) {
             boolean isLight = checkLight(mapObject);
@@ -243,7 +273,7 @@ public class MovementController {
                             mapObject.getClass().equals(player.getPlayerSprite().getClass()) &&
                             ((HunterPlayer) player).canKill()) {
                         ((HunterPlayer) player).setVictimPlayerSprite((ImageView) mapObject);
-                        Game.addMove(player, "killed a player");
+                        Game.addMove(player, player.getPlayerName() + " killed a player", coordinate);
                         System.out.println("Player killed");
                         return KILL_PLAYER;
                     }
@@ -251,6 +281,7 @@ public class MovementController {
                             ((ImageView) mapObject).getImage().getUrl().equals(Game.TRAP_PATH)) {
                         return CAUGHT_IN_TRAP;
                     }
+                    Game.addMove(player, player.getPlayerName()  + " hit a wall", coordinate);
                     return COLLISION;
                 }
             }
@@ -306,4 +337,11 @@ public class MovementController {
             }
         });
     }
+
+//    @Override
+//    public void run() {
+//        while (true) {
+//            movePlayers();
+//        }
+//    }
 }

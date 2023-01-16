@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GameState implements Serializable {
+    public static boolean isWritingInGameState;
     //private String timerState;
     private int minutesState;
     private int secondsState;
